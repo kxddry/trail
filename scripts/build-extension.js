@@ -61,24 +61,5 @@ iconFiles.forEach(file => {
   }
 });
 
-// Copy sidepanel HTML and CSS
-console.log('Copying sidepanel files...');
-const sidepanelSourceDir = path.join(publicDir, 'sidepanel');
-const sidepanelDestDir = path.join(distDir, 'sidepanel');
-
-if (!fs.existsSync(sidepanelDestDir)) {
-  fs.mkdirSync(sidepanelDestDir, { recursive: true });
-}
-
-fs.copyFileSync(
-  path.join(sidepanelSourceDir, 'sidepanel.html'),
-  path.join(sidepanelDestDir, 'sidepanel.html')
-);
-
-fs.copyFileSync(
-  path.join(sidepanelSourceDir, 'sidepanel.css'),
-  path.join(sidepanelDestDir, 'sidepanel.css')
-);
-
 console.log('Build extension assets complete!');
 console.log('Extension ready to load from dist/ directory.');
