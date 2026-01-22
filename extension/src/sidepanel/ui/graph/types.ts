@@ -27,6 +27,21 @@ export interface NodePosition {
   node: NavigationNode;
 }
 
+export type CanonicalNodePosition = {
+  x: number;
+  y: number;
+  radial?: {
+    radius: number;
+    angle: number;
+  };
+};
+
+export interface LayoutResult {
+  positions: Map<NodeId, NodePosition>;
+  canonical: Map<NodeId, CanonicalNodePosition>;
+  width: number;
+}
+
 export interface CanvasBounds {
   minX: number;
   minY: number;

@@ -1,6 +1,13 @@
 import type { NodeId } from '../../../../shared/types/ids.js';
 import type { NavigationNode } from '../../../../shared/types/node.js';
-import type { LayoutConfig, NodePosition, CanvasBounds, RadialLayoutConfig } from '../types.js';
+import type {
+  LayoutConfig,
+  NodePosition,
+  CanvasBounds,
+  RadialLayoutConfig,
+  LayoutResult,
+  CanonicalNodePosition,
+} from '../types.js';
 import { PADDING } from './config.js';
 
 
@@ -8,9 +15,10 @@ export function calculateLayout(
   root: NavigationNode,
   layoutConfig: LayoutConfig,
   startX: number = PADDING
-): { positions: Map<NodeId, NodePosition>, width: number } {
+): LayoutResult {
   const positions = new Map<NodeId, NodePosition>();
   const { nodeWidth, nodeHeight, verticalGap, horizontalGap } = layoutConfig;
+  const canonical = new Map<NodeId, CanonicalNodePosition>();
 
   type TidyNode = {
     node: NavigationNode;
@@ -196,6 +204,9 @@ export function calculateLayout(
   firstWalk(tidyRoot);
   secondWalk(tidyRoot, 0);
 
+  const rootTopLeftX = tidyRoot.x - nodeWidth / 2;
+  const rootTopLeftY = 0;
+
   let minX = Infinity;
   let minY = Infinity;
   let maxX = -Infinity;
@@ -226,7 +237,21 @@ export function calculateLayout(
   }
 
   const width = maxX - minX + PADDING * 2;
-  return { positions, width };
+  const rootPos = positions.get(root.id);
+  if (rootPos) {
+    const rootCenterX = rootPos.x + nodeWidth / 2;
+    const rootCenterY = rootPos.y + nodeHeight / 2;
+    canonical.clear();
+    positions.forEach((pos) => {
+      const centerX = pos.x + nodeWidth / 2;
+      const centerY = pos.y + nodeHeight / 2;
+      canonical.set(pos.node.id, {
+        x: centerX - rootCenterX,
+        y: centerY - rootCenterY,
+      });
+    });
+  }
+  return { positions, canonical, width };
 }
 
 /**
@@ -236,10 +261,11 @@ export function calculateLayout(
 export function calculateMindmapLayout(
   root: NavigationNode,
   layoutConfig: LayoutConfig
-): { positions: Map<NodeId, NodePosition>, width: number } {
+): LayoutResult {
   const positions = new Map<NodeId, NodePosition>();
   const { nodeWidth, nodeHeight, verticalGap, horizontalGap } = layoutConfig;
   const subtreeHeights = new Map<NodeId, number>();
+  const canonical = new Map<NodeId, CanonicalNodePosition>();
   const sideById = new Map<NodeId, 'left' | 'right'>();
 
   function calcHeights(node: NavigationNode | null): number {
@@ -348,7 +374,21 @@ export function calculateMindmapLayout(
   }
 
   const width = maxX - minX + PADDING * 2;
-  return { positions, width };
+  const rootPos = positions.get(root.id);
+  if (rootPos) {
+    const rootCenterX = rootPos.x + nodeWidth / 2;
+    const rootCenterY = rootPos.y + nodeHeight / 2;
+    canonical.clear();
+    positions.forEach((pos) => {
+      const centerX = pos.x + nodeWidth / 2;
+      const centerY = pos.y + nodeHeight / 2;
+      canonical.set(pos.node.id, {
+        x: centerX - rootCenterX,
+        y: centerY - rootCenterY,
+      });
+    });
+  }
+  return { positions, canonical, width };
 }
 
 /**
@@ -359,9 +399,10 @@ export function calculateRadialLayout(
   root: NavigationNode,
   layoutConfig: RadialLayoutConfig,
   baseLayout: LayoutConfig
-): { positions: Map<NodeId, NodePosition>, width: number } {
+): LayoutResult {
   const positions = new Map<NodeId, NodePosition>();
   const { nodeWidth, nodeHeight } = baseLayout;
+  const canonical = new Map<NodeId, CanonicalNodePosition>();
 
   const ANGLE_WEIGHT_EXP = layoutConfig.angleWeightExp;
   const MIN_SPAN_FACTOR = layoutConfig.minSpanFactor;
@@ -666,8 +707,26 @@ export function calculateRadialLayout(
     });
   }
 
+  const rootPos = positions.get(root.id);
+  if (rootPos) {
+    const rootCenterX = rootPos.x + nodeWidth / 2;
+    const rootCenterY = rootPos.y + nodeHeight / 2;
+    canonical.clear();
+    positions.forEach((pos) => {
+      const centerX = pos.x + nodeWidth / 2;
+      const centerY = pos.y + nodeHeight / 2;
+      const dx = centerX - rootCenterX;
+      const dy = centerY - rootCenterY;
+      canonical.set(pos.node.id, {
+        x: dx,
+        y: dy,
+        radial: { radius: Math.hypot(dx, dy), angle: Math.atan2(dy, dx) },
+      });
+    });
+  }
+
   const maxRadius = Math.max(...Array.from(radiusByDepth.values()), nodeWidth);
-  return { positions, width: maxRadius * 2 + nodeWidth };
+  return { positions, canonical, width: maxRadius * 2 + nodeWidth };
 }
 
 

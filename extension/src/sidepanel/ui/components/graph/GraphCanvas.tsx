@@ -20,7 +20,14 @@ import {
   getCanvasBounds,
 } from '../../graph/layout/calculator.js';
 import { deriveLayoutOptions } from '../../graph/layout/options.js';
-import type { CanvasBounds, LayoutMode, NodePosition, ViewState } from '../../graph/types.js';
+import type {
+  CanvasBounds,
+  CanonicalNodePosition,
+  LayoutMode,
+  LayoutResult,
+  NodePosition,
+  ViewState,
+} from '../../graph/types.js';
 import GraphZoomControls from './GraphZoomControls.js';
 import { buildConnections, getPathBetweenNodes, getPathToNode } from './graph-utils.js';
 import { GraphPixiRenderer } from '../../graph/render/GraphPixiRenderer.js';
@@ -94,6 +101,19 @@ type PointerInfo = {
   ctrlKey: boolean;
 };
 
+type NodeAnimationType = 'enter' | 'exit';
+
+type NodeAnimationState = {
+  id: NodeId;
+  type: NodeAnimationType;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  startTime: number;
+  duration: number;
+};
+
 export default function GraphCanvas({
   tree,
   currentNodeId,
@@ -135,6 +155,64 @@ export default function GraphCanvas({
   const didInitView = useRef(false);
   const pendingViewRef = useRef<Partial<ViewState> | null>(null);
   const viewRafRef = useRef<number | null>(null);
+  const canonicalPositionsRef = useRef<Map<NodeId, CanonicalNodePosition>>(new Map());
+  const animationStatesRef = useRef<Map<NodeId, NodeAnimationState>>(new Map());
+  const animatedPositionsRef = useRef<Map<NodeId, { x: number; y: number }>>(new Map());
+  const exitNodesRef = useRef<Map<NodeId, NodePosition>>(new Map());
+  const prevPositionsRef = useRef<Map<NodeId, NodePosition>>(new Map());
+  const animationFrameRef = useRef<number | null>(null);
+  const [animationVersion, setAnimationVersion] = useState(0);
+  const animationDuration = 320;
+  const invalidateAnimation = useCallback(() => {
+    setAnimationVersion((version) => version + 1);
+  }, []);
+
+  const animateTick = useCallback(
+    function animateTick(time: number) {
+      const states = animationStatesRef.current;
+      if (states.size === 0) {
+        animationFrameRef.current = null;
+        return;
+      }
+      const entries = Array.from(states.entries());
+      entries.forEach(([id, state]) => {
+        const elapsed = time - state.startTime;
+        const progress = Math.min(1, elapsed / state.duration);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const x = state.startX + (state.endX - state.startX) * eased;
+        const y = state.startY + (state.endY - state.startY) * eased;
+        animatedPositionsRef.current.set(id, { x, y });
+        if (progress >= 1) {
+          states.delete(id);
+          animatedPositionsRef.current.delete(id);
+          if (state.type === 'exit') {
+            exitNodesRef.current.delete(id);
+          }
+        }
+      });
+      invalidateAnimation();
+      if (states.size > 0) {
+        animationFrameRef.current = window.requestAnimationFrame(animateTick);
+      } else {
+        animationFrameRef.current = null;
+      }
+    },
+    [invalidateAnimation],
+  );
+
+  const startAnimationLoop = useCallback(() => {
+    if (animationFrameRef.current !== null) return;
+    animationFrameRef.current = window.requestAnimationFrame(animateTick);
+  }, [animateTick]);
+
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current !== null) {
+        window.cancelAnimationFrame(animationFrameRef.current);
+        animationFrameRef.current = null;
+      }
+    };
+  }, []);
 
   const [selectionBox, setSelectionBox] = useState<SelectionBox | null>(null);
   const [previewSelection, setPreviewSelection] = useState<Set<NodeId>>(new Set());
@@ -218,6 +296,8 @@ export default function GraphCanvas({
   const baseLayoutConfig =
     layoutOptions.mode === 'mindmap' ? layoutOptions.mindmap : layoutOptions.tree;
   const hideTreeRoot = settings?.layout?.tree?.hideRoot ?? false;
+  const root = tree?.getRoot() ?? null;
+  const { nodeWidth, nodeHeight } = baseLayoutConfig;
 
   useEffect(() => {
     viewRef.current = graphView;
@@ -295,10 +375,7 @@ export default function GraphCanvas({
     [cancelViewAnimation, onGraphViewChange],
   );
 
-  const root = tree?.getRoot() ?? null;
-  const { nodeWidth, nodeHeight } = baseLayoutConfig;
-
-  const layout = useMemo(() => {
+  const layout = useMemo<LayoutResult | null>(() => {
     if (!root) return null;
     switch (layoutOptions.mode) {
       case 'tree':
@@ -311,6 +388,7 @@ export default function GraphCanvas({
   }, [baseLayoutConfig, layoutOptions.mode, layoutOptions.mindmap, layoutOptions.radial, layoutOptions.tree, root]);
 
   const basePositions = layout?.positions ?? new Map<NodeId, NodePosition>();
+  const canonicalPositions = layout?.canonical ?? new Map<NodeId, CanonicalNodePosition>();
   const positions = useMemo(() => {
     if (basePositions.size === 0) return basePositions;
     if (layoutOptions.mode !== 'radial') {
@@ -374,6 +452,86 @@ export default function GraphCanvas({
     return next;
   }, [basePositions, layoutOptions.mode, layoutVersion, nodeHeight, nodeWidth, root]);
 
+  canonicalPositionsRef.current = canonicalPositions;
+
+  const startEnter = useCallback(
+    (pos: NodePosition, rootCenter: { x: number; y: number }) => {
+      const id = pos.node.id;
+      animationStatesRef.current.delete(id);
+      exitNodesRef.current.delete(id);
+      const startX = rootCenter.x - nodeWidth / 2;
+      const startY = rootCenter.y - nodeHeight / 2;
+      const state: NodeAnimationState = {
+        id,
+        type: 'enter',
+        startX,
+        startY,
+        endX: pos.x,
+        endY: pos.y,
+        startTime: performance.now(),
+        duration: animationDuration,
+      };
+      animationStatesRef.current.set(id, state);
+      animatedPositionsRef.current.set(id, { x: startX, y: startY });
+      invalidateAnimation();
+      startAnimationLoop();
+    },
+    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
+  );
+
+  const startExit = useCallback(
+    (pos: NodePosition, rootCenter: { x: number; y: number }) => {
+      const id = pos.node.id;
+      if (exitNodesRef.current.has(id)) return;
+      animationStatesRef.current.delete(id);
+      const startX = pos.x;
+      const startY = pos.y;
+      const endX = rootCenter.x - nodeWidth / 2;
+      const endY = rootCenter.y - nodeHeight / 2;
+      const state: NodeAnimationState = {
+        id,
+        type: 'exit',
+        startX,
+        startY,
+        endX,
+        endY,
+        startTime: performance.now(),
+        duration: animationDuration,
+      };
+      animationStatesRef.current.set(id, state);
+      animatedPositionsRef.current.set(id, { x: startX, y: startY });
+      exitNodesRef.current.set(id, { ...pos });
+      invalidateAnimation();
+      startAnimationLoop();
+    },
+    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
+  );
+
+  useEffect(() => {
+    const prev = prevPositionsRef.current;
+    const current = new Map(positions);
+    if (prev.size === 0) {
+      prevPositionsRef.current = current;
+      return;
+    }
+    const rootPos = root ? positions.get(root.id) : undefined;
+    const rootCenter = {
+      x: rootPos ? rootPos.x + nodeWidth / 2 : 0,
+      y: rootPos ? rootPos.y + nodeHeight / 2 : 0,
+    };
+    current.forEach((pos, id) => {
+      if (!prev.has(id)) {
+        startEnter(pos, rootCenter);
+      }
+    });
+    prev.forEach((pos, id) => {
+      if (!current.has(id)) {
+        startExit(pos, rootCenter);
+      }
+    });
+    prevPositionsRef.current = current;
+  }, [nodeHeight, nodeWidth, positions, root, startEnter, startExit]);
+
   const bounds: CanvasBounds = useMemo(() => {
     if (!layout) {
       return { minX: 0, minY: 0, maxX: 100, maxY: 100, width: 100, height: 100 };
@@ -381,11 +539,17 @@ export default function GraphCanvas({
     return getCanvasBounds(positions, nodeWidth, nodeHeight);
   }, [layout, nodeHeight, nodeWidth, positions]);
 
-  const nodes = useMemo(() => {
+  const activeNodes = useMemo(() => {
     const list = Array.from(positions.values());
     if (layoutOptions.mode !== 'tree' || !root || !hideTreeRoot) return list;
     return list.filter((pos) => pos.node.id !== root.id);
   }, [hideTreeRoot, layoutOptions.mode, positions, root]);
+
+  const displayNodes = useMemo(() => {
+    const list = Array.from(positions.values());
+    exitNodesRef.current.forEach((pos) => list.push(pos));
+    return list;
+  }, [positions, animationVersion]);
   const searchSet = useMemo(() => new Set(search.results), [search.results]);
   const focusedSearchId = search.results[search.index];
   const display = useMemo(
@@ -613,15 +777,18 @@ export default function GraphCanvas({
 
   const renderNodes = useMemo<NodeRenderModel[]>(() => {
     const dimmedBySearch = searchActive;
-    return nodes.map((pos) => {
+    return displayNodes.map((pos) => {
       const id = pos.node.id;
+      const override = animatedPositionsRef.current.get(id);
+      const x = override?.x ?? pos.x;
+      const y = override?.y ?? pos.y;
       const tabState = tabStates[id];
       const isSearchMatch = searchSet.has(id);
       return {
         id,
         node: pos.node,
-        x: pos.x,
-        y: pos.y,
+        x,
+        y,
         width: nodeWidth,
         height: nodeHeight,
         isCurrent: currentNodeId === id,
@@ -641,12 +808,12 @@ export default function GraphCanvas({
   }, [
     currentNodeId,
     display,
+    displayNodes,
     focusedSearchId,
     hoverNodeId,
     nodeHeight,
     nodeTabCounts,
     nodeWidth,
-    nodes,
     openNodeIds,
     previewSelection,
     searchActive,
@@ -1062,7 +1229,7 @@ export default function GraphCanvas({
       const graphRight = (left + width - translateX) / scale;
       const graphBottom = (top + height - translateY) / scale;
       const intersects = new Set<NodeId>();
-      nodes.forEach((pos) => {
+      activeNodes.forEach((pos) => {
         const nodeLeft = pos.x;
         const nodeRight = pos.x + nodeWidth;
         const nodeTop = pos.y;
