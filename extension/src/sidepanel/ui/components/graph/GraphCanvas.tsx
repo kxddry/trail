@@ -31,7 +31,7 @@ import type {
 import GraphZoomControls from './GraphZoomControls.js';
 import { buildConnections, getPathBetweenNodes, getPathToNode } from './graph-utils.js';
 import { GraphPixiRenderer } from '../../graph/render/GraphPixiRenderer.js';
-import type { NodeRenderModel } from '../../graph/render/types.js';
+import type { NodeRenderModel, ParticleRenderModel } from '../../graph/render/types.js';
 import React from 'react';
 
 type GraphTool = 'hand' | 'select';
@@ -101,7 +101,7 @@ type PointerInfo = {
   ctrlKey: boolean;
 };
 
-type NodeAnimationType = 'enter' | 'exit';
+type NodeAnimationType = 'enter' | 'exit' | 'move';
 
 type NodeAnimationState = {
   id: NodeId;
@@ -112,6 +112,17 @@ type NodeAnimationState = {
   endY: number;
   startTime: number;
   duration: number;
+};
+
+type ParticleState = {
+  id: string;
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+  life: number;
+  age: number;
+  radius: number;
 };
 
 export default function GraphCanvas({
@@ -160,21 +171,26 @@ export default function GraphCanvas({
   const animatedPositionsRef = useRef<Map<NodeId, { x: number; y: number }>>(new Map());
   const exitNodesRef = useRef<Map<NodeId, NodePosition>>(new Map());
   const prevPositionsRef = useRef<Map<NodeId, NodePosition>>(new Map());
+  const particleAnimationsRef = useRef<ParticleState[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const [animationVersion, setAnimationVersion] = useState(0);
   const animationDuration = 320;
   const invalidateAnimation = useCallback(() => {
     setAnimationVersion((version) => version + 1);
   }, []);
+  const [particleVersion, setParticleVersion] = useState(0);
+  const invalidateParticles = useCallback(() => {
+    setParticleVersion((version) => version + 1);
+  }, []);
+  const lastAnimationTimeRef = useRef<number | null>(null);
 
   const animateTick = useCallback(
     function animateTick(time: number) {
+      const deltaTime = lastAnimationTimeRef.current === null ? 16 : time - lastAnimationTimeRef.current;
+      lastAnimationTimeRef.current = time;
       const states = animationStatesRef.current;
-      if (states.size === 0) {
-        animationFrameRef.current = null;
-        return;
-      }
       const entries = Array.from(states.entries());
+      let nodesDirty = false;
       entries.forEach(([id, state]) => {
         const elapsed = time - state.startTime;
         const progress = Math.min(1, elapsed / state.duration);
@@ -182,6 +198,7 @@ export default function GraphCanvas({
         const x = state.startX + (state.endX - state.startX) * eased;
         const y = state.startY + (state.endY - state.startY) * eased;
         animatedPositionsRef.current.set(id, { x, y });
+        nodesDirty = true;
         if (progress >= 1) {
           states.delete(id);
           animatedPositionsRef.current.delete(id);
@@ -190,14 +207,32 @@ export default function GraphCanvas({
           }
         }
       });
-      invalidateAnimation();
-      if (states.size > 0) {
+      if (nodesDirty) {
+        invalidateAnimation();
+      }
+      const particles = particleAnimationsRef.current;
+      let particlesDirty = false;
+      for (let i = particles.length - 1; i >= 0; i -= 1) {
+        const particle = particles[i]!;
+        particle.age += deltaTime;
+        particlesDirty = true;
+        if (particle.age >= particle.life) {
+          particles.splice(i, 1);
+          particlesDirty = true;
+        }
+      }
+      if (particlesDirty) {
+        invalidateParticles();
+      }
+      const needsLoop = states.size > 0 || particles.length > 0;
+      if (needsLoop) {
         animationFrameRef.current = window.requestAnimationFrame(animateTick);
       } else {
         animationFrameRef.current = null;
+        lastAnimationTimeRef.current = null;
       }
     },
-    [invalidateAnimation],
+    [invalidateAnimation, invalidateParticles],
   );
 
   const startAnimationLoop = useCallback(() => {
@@ -210,6 +245,7 @@ export default function GraphCanvas({
       if (animationFrameRef.current !== null) {
         window.cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
+        lastAnimationTimeRef.current = null;
       }
     };
   }, []);
@@ -454,13 +490,41 @@ export default function GraphCanvas({
 
   canonicalPositionsRef.current = canonicalPositions;
 
+  const spawnExitParticles = useCallback(
+    (pos: NodePosition) => {
+      const centerX = pos.x + nodeWidth / 2;
+      const centerY = pos.y + nodeHeight / 2;
+      const particles = particleAnimationsRef.current;
+      const count = 8;
+      const now = performance.now();
+      const baseDist = Math.max(nodeWidth, nodeHeight);
+      for (let i = 0; i < count; i += 1) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.4;
+        const distance = baseDist * (0.5 + Math.random() * 0.8);
+        particles.push({
+          id: `${pos.node.id}-exit-${now}-${i}`,
+          startX: centerX,
+          startY: centerY,
+          endX: centerX + Math.cos(angle) * distance,
+          endY: centerY + Math.sin(angle) * distance,
+          life: animationDuration,
+          age: 0,
+          radius: Math.random() * 3 + 1.5,
+        });
+      }
+      invalidateParticles();
+      startAnimationLoop();
+    },
+    [animationDuration, invalidateParticles, nodeHeight, nodeWidth, startAnimationLoop],
+  );
+
   const startEnter = useCallback(
-    (pos: NodePosition, rootCenter: { x: number; y: number }) => {
+    (pos: NodePosition, startCenter: { x: number; y: number }) => {
       const id = pos.node.id;
       animationStatesRef.current.delete(id);
       exitNodesRef.current.delete(id);
-      const startX = rootCenter.x - nodeWidth / 2;
-      const startY = rootCenter.y - nodeHeight / 2;
+      const startX = startCenter.x - nodeWidth / 2;
+      const startY = startCenter.y - nodeHeight / 2;
       const state: NodeAnimationState = {
         id,
         type: 'enter',
@@ -476,7 +540,7 @@ export default function GraphCanvas({
       invalidateAnimation();
       startAnimationLoop();
     },
-    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
+    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, spawnExitParticles, startAnimationLoop],
   );
 
   const startExit = useCallback(
@@ -503,8 +567,30 @@ export default function GraphCanvas({
       exitNodesRef.current.set(id, { ...pos });
       invalidateAnimation();
       startAnimationLoop();
+      spawnExitParticles(pos);
     },
     [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
+  );
+
+  const startMove = useCallback(
+    (id: NodeId, fromX: number, fromY: number, toX: number, toY: number) => {
+      animationStatesRef.current.delete(id);
+      const state: NodeAnimationState = {
+        id,
+        type: 'move',
+        startX: fromX,
+        startY: fromY,
+        endX: toX,
+        endY: toY,
+        startTime: performance.now(),
+        duration: animationDuration,
+      };
+      animationStatesRef.current.set(id, state);
+      animatedPositionsRef.current.set(id, { x: fromX, y: fromY });
+      invalidateAnimation();
+      startAnimationLoop();
+    },
+    [animationDuration, invalidateAnimation, startAnimationLoop],
   );
 
   useEffect(() => {
@@ -521,7 +607,20 @@ export default function GraphCanvas({
     };
     current.forEach((pos, id) => {
       if (!prev.has(id)) {
-        startEnter(pos, rootCenter);
+        const parent = pos.node.getParent?.();
+        const parentPos = parent ? positions.get(parent.id) : undefined;
+        const startCenter = parentPos
+          ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
+          : rootCenter;
+        startEnter(pos, startCenter);
+        return;
+      }
+      const prevPos = prev.get(id);
+      if (!prevPos) return;
+      const dx = pos.x - prevPos.x;
+      const dy = pos.y - prevPos.y;
+      if (dx * dx + dy * dy > 1) {
+        startMove(id, prevPos.x, prevPos.y, pos.x, pos.y);
       }
     });
     prev.forEach((pos, id) => {
@@ -530,7 +629,7 @@ export default function GraphCanvas({
       }
     });
     prevPositionsRef.current = current;
-  }, [nodeHeight, nodeWidth, positions, root, startEnter, startExit]);
+  }, [nodeHeight, nodeWidth, positions, root, startEnter, startExit, startMove]);
 
   const bounds: CanvasBounds = useMemo(() => {
     if (!layout) {
@@ -822,6 +921,21 @@ export default function GraphCanvas({
     tabStates,
     tagDefs,
   ]);
+
+  const particleRenderModels = useMemo<ParticleRenderModel[]>(() => {
+    return particleAnimationsRef.current.map((particle) => {
+      const progress = Math.min(1, particle.age / particle.life);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const alpha = Math.max(0, 1 - progress);
+      return {
+        id: particle.id,
+        x: particle.startX + (particle.endX - particle.startX) * eased,
+        y: particle.startY + (particle.endY - particle.startY) * eased,
+        radius: particle.radius,
+        alpha,
+      };
+    });
+  }, [particleVersion]);
   const pathNodeIds = useMemo(() => {
     if (!root || currentNodeId === null) return null;
     return getPathToNode(root, currentNodeId);
@@ -859,8 +973,17 @@ export default function GraphCanvas({
       nodeWidth,
       nodeHeight,
       showConnections: effectiveShowConnections,
+      particles: particleRenderModels,
     });
-  }, [connections, effectiveShowConnections, nodeHeight, nodeWidth, renderNodes]);
+  }, [
+    connections,
+    effectiveShowConnections,
+    nodeHeight,
+    nodeWidth,
+    particleRenderModels,
+    particleVersion,
+    renderNodes,
+  ]);
 
   useEffect(() => {
     rendererRef.current?.setDetailMode(detailMode);

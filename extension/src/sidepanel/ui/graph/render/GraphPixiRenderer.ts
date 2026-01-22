@@ -3,7 +3,7 @@ import type { TextStyleFontWeight } from 'pixi.js';
 import type { FaviconUrl, NodeId } from '../../../../shared/types/ids.js';
 import { formatUrl } from '../../shared/format.js';
 import type { ViewState } from '../types.js';
-import type { ConnectionSegment, GraphDisplayOptions, NodeRenderModel } from './types.js';
+import type { ConnectionSegment, GraphDisplayOptions, NodeRenderModel, ParticleRenderModel } from './types.js';
 import { SpatialIndex } from './spatial-index.js';
 import { readGraphTheme } from './theme.js';
 
@@ -13,6 +13,7 @@ type RenderData = {
   nodeWidth: number;
   nodeHeight: number;
   showConnections: boolean;
+  particles: ParticleRenderModel[];
 };
 
 type LODLevel = 'hidden' | 'dot' | 'low' | 'full';
@@ -451,12 +452,14 @@ export class GraphPixiRenderer {
   private readonly connectionLayer = new PIXI.Graphics();
   private readonly pathLayer = new PIXI.Graphics();
   private readonly nodeLayer = new PIXI.Container();
+  private readonly particleLayer = new PIXI.Container();
   private readonly nodeMap = new Map<NodeId, NodeVisual>();
   private readonly nodeData = new Map<NodeId, NodeRenderModel>();
   private index = new SpatialIndex<NodeId>(300);
   private connections: ConnectionSegment[] = [];
+  private particles: ParticleRenderModel[] = [];
   private view: ViewState = { translateX: 0, translateY: 0, scale: 1 };
-  private data: RenderData = { nodes: [], connections: [], nodeWidth: 180, nodeHeight: 60, showConnections: true };
+  private data: RenderData = { nodes: [], connections: [], nodeWidth: 180, nodeHeight: 60, showConnections: true, particles: [] };
   private theme = readGraphTheme({ host: document.body });
   private themeVersion = 0;
   private fontFamily = '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif';
@@ -479,6 +482,7 @@ export class GraphPixiRenderer {
     this.world.addChild(this.connectionLayer);
     this.world.addChild(this.pathLayer);
     this.world.addChild(this.nodeLayer);
+    this.world.addChild(this.particleLayer);
     this.nodeLayer.sortableChildren = true;
     this.initPromise = this.init();
   }
@@ -550,6 +554,7 @@ export class GraphPixiRenderer {
 
   setData(data: RenderData) {
     this.data = data;
+    this.particles = data.particles ?? [];
     this.connections = data.connections;
     this.nodeData.clear();
     this.index = new SpatialIndex<NodeId>(Math.max(data.nodeWidth, data.nodeHeight) * 3);
@@ -729,6 +734,22 @@ export class GraphPixiRenderer {
       this.connectionLayer.stroke();
       this.pathLayer.stroke();
     }
+
+    this.updateParticles();
+  }
+
+  private updateParticles() {
+    this.particleLayer.removeChildren();
+    if (!this.isReady) return;
+    const color = this.theme.connection.path;
+    this.particles.forEach((particle) => {
+      const circle = new PIXI.Graphics();
+      circle.beginFill(color, particle.alpha);
+      circle.drawCircle(0, 0, particle.radius);
+      circle.endFill();
+      circle.position.set(particle.x - this.origin.x, particle.y - this.origin.y);
+      this.particleLayer.addChild(circle);
+    });
   }
 
   private getViewRect() {
