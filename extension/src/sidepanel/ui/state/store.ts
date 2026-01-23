@@ -9,6 +9,7 @@ import { PinnedManager } from '../../../background/state/pinned.js';
 import type { TagDefinition } from '../../../shared/types/tags.js';
 import type { NotificationItem } from '../notifications/types.js';
 import type { TreeMeta, TreeSummary } from '../../../shared/types/tree.js';
+import type { NodeData } from '../../../shared/types/node.js';
 import type {
   AccountError,
   AccountSnapshot,
@@ -22,6 +23,7 @@ import type {
 export type MetaKeyPair = { short: '^'; long: 'ctrl' } | { short: '⌘'; long: 'cmd' };
 
 type GraphTool = 'hand' | 'select';
+type LayoutData = NodeData['layout'];
 
 export type ViewState = {
   translateX: number;
@@ -117,6 +119,7 @@ type StoreState = {
     selectedNodeIds: Set<NodeId>;
     view: ViewState;
     layoutVersion: number;
+    layoutOverrides: Map<NodeId, LayoutData>;
     resetVersion: number;
     viewIntent: TreeUpdatedInput['view'] | null;
     hoverNodeId: NodeId | null;
@@ -186,6 +189,17 @@ const openUiPopup = (ui: StoreState['ui'], key: PopupKey): StoreState['ui'] => (
   [key]: true,
 });
 
+const layoutsEqual = (a?: LayoutData, b?: LayoutData): boolean => {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  if (a.offsetX !== b.offsetX || a.offsetY !== b.offsetY) return false;
+  const ar = a.radial;
+  const br = b.radial;
+  if (!ar && !br) return true;
+  if (!ar || !br) return false;
+  return ar.angleDelta === br.angleDelta && ar.radiusDelta === br.radiusDelta;
+};
+
 export const useStore = create<StoreState & StoreActions>((set, get) => ({
   settings: null,
   account: {
@@ -243,6 +257,7 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
     selectedNodeIds: new Set<NodeId>(),
     view: { translateX: 0, translateY: 0, scale: 1 },
     layoutVersion: 0,
+    layoutOverrides: new Map<NodeId, LayoutData>(),
     resetVersion: 0,
     viewIntent: null,
     hoverNodeId: null,
@@ -276,9 +291,49 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
     const pins = new PinnedManager(tree);
     const currentId = tree.getCurrentId();
     const nodeCount = tree.size();
+    const treeHasLayouts = (() => {
+      for (const node of tree.iter() ?? []) {
+        if (node.data.layout) return true;
+      }
+      return false;
+    })();
     set((state) => {
       const nextViewIntent = payload.view ?? state.graph.viewIntent;
       const shouldResetTransient = payload.reason === 'tree-switch' || payload.reason === 'tree-reset';
+      const shouldResetOverrides = shouldResetTransient || (payload.reason === 'layout' && !treeHasLayouts);
+      let layoutOverrides = shouldResetOverrides ? new Map<NodeId, LayoutData>() : state.graph.layoutOverrides;
+
+      if (!shouldResetOverrides && layoutOverrides.size > 0) {
+        const nextOverrides = new Map(layoutOverrides);
+        if (payload.reason === 'layout') {
+          nextOverrides.forEach((layout, id) => {
+            const node = tree.findNodeById(id);
+            if (!node) {
+              nextOverrides.delete(id);
+              return;
+            }
+            if (layoutsEqual(node.data.layout, layout)) {
+              nextOverrides.delete(id);
+            }
+          });
+        }
+        layoutOverrides = nextOverrides;
+      }
+
+      if (!shouldResetOverrides && layoutOverrides.size > 0) {
+        layoutOverrides.forEach((layout, id) => {
+          if (!layout) return;
+          const node = tree.findNodeById(id);
+          if (node) {
+            node.data.layout = layout;
+          }
+        });
+      }
+
+      const nextGraph = nextViewIntent
+        ? { ...state.graph, viewIntent: nextViewIntent, layoutOverrides }
+        : { ...state.graph, layoutOverrides };
+
       return {
         tree,
         treeUpdate: { reason: payload.reason, at: Date.now() },
@@ -288,7 +343,7 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
         openNodeIds: new Set(payload.openNodeIds),
         currentNodeId: currentId,
         nodeCount,
-        graph: nextViewIntent ? { ...state.graph, viewIntent: nextViewIntent } : state.graph,
+        graph: nextGraph,
         ...(shouldResetTransient
           ? {
               search: {
@@ -301,7 +356,7 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
               },
               contextMenu: null,
               graph: {
-                ...state.graph,
+                ...nextGraph,
                 selectedNodeIds: new Set<NodeId>(),
                 hoverNodeId: null,
                 viewIntent: nextViewIntent ?? null,
@@ -553,9 +608,15 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
       if (!node) return state;
       const radial = node.data.layout?.radial;
       node.data.layout = radial ? { offsetX, offsetY, radial } : { offsetX, offsetY };
+      const nextOverrides = new Map(state.graph.layoutOverrides);
+      nextOverrides.set(nodeId, node.data.layout);
       return {
         tree,
-        graph: { ...state.graph, layoutVersion: state.graph.layoutVersion + 1 },
+        graph: {
+          ...state.graph,
+          layoutVersion: state.graph.layoutVersion + 1,
+          layoutOverrides: nextOverrides,
+        },
       };
     }),
   setNodeLayoutRadial: (nodeId, angleDelta, radiusDelta) =>
@@ -567,9 +628,15 @@ export const useStore = create<StoreState & StoreActions>((set, get) => ({
       const offsetX = node.data.layout?.offsetX ?? 0;
       const offsetY = node.data.layout?.offsetY ?? 0;
       node.data.layout = { offsetX, offsetY, radial: { angleDelta, radiusDelta } };
+      const nextOverrides = new Map(state.graph.layoutOverrides);
+      nextOverrides.set(nodeId, node.data.layout);
       return {
         tree,
-        graph: { ...state.graph, layoutVersion: state.graph.layoutVersion + 1 },
+        graph: {
+          ...state.graph,
+          layoutVersion: state.graph.layoutVersion + 1,
+          layoutOverrides: nextOverrides,
+        },
       };
     }),
   requestGraphReset: () =>
