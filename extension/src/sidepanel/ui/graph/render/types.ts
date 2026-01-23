@@ -22,6 +22,7 @@ export type NodeRenderModel = {
   height: number;
   isCurrent: boolean;
   isOpen: boolean;
+  openProgress: number;
   tabCount: number;
   tabState?: TabState;
   isSelected: boolean;

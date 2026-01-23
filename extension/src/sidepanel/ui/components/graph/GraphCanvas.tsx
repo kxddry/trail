@@ -115,6 +115,14 @@ type NodeAnimationState = {
   duration: number;
 };
 
+type OpenAnimationState = {
+  id: NodeId;
+  from: number;
+  to: number;
+  startTime: number;
+  duration: number;
+};
+
 type ParticleState = {
   id: string;
   startX: number;
@@ -170,6 +178,8 @@ export default function GraphCanvas({
   const viewRafRef = useRef<number | null>(null);
   const canonicalPositionsRef = useRef<Map<NodeId, CanonicalNodePosition>>(new Map());
   const animationStatesRef = useRef<Map<NodeId, NodeAnimationState>>(new Map());
+  const openAnimationStatesRef = useRef<Map<NodeId, OpenAnimationState>>(new Map());
+  const openProgressRef = useRef<Map<NodeId, number>>(new Map());
   const animatedPositionsRef = useRef<Map<NodeId, { x: number; y: number }>>(new Map());
   const exitNodesRef = useRef<Map<NodeId, NodePosition>>(new Map());
   const prevPositionsRef = useRef<Map<NodeId, NodePosition>>(new Map());
@@ -177,8 +187,9 @@ export default function GraphCanvas({
   const particleAnimationsRef = useRef<ParticleState[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const [animationVersion, setAnimationVersion] = useState(0);
-  const animationDuration = 800;
+  const animationDuration = 150;
   const animationStagger = Math.round(animationDuration * 0.3);
+  const openAnimationDuration = 240;
   const invalidateAnimation = useCallback(() => {
     setAnimationVersion((version) => version + 1);
   }, []);
@@ -188,6 +199,7 @@ export default function GraphCanvas({
   }, []);
   const lastAnimationTimeRef = useRef<number | null>(null);
   const animationNowRef = useRef<number | null>(null);
+  const prevOpenNodesRef = useRef<Set<NodeId>>(new Set());
   const animateTick = useCallback(
     function animateTick(time: number) {
       const deltaTime = lastAnimationTimeRef.current === null ? 16 : time - lastAnimationTimeRef.current;
@@ -770,6 +782,68 @@ export default function GraphCanvas({
     [settings],
   );
 
+  useLayoutEffect(() => {
+    const activeIds = new Set<NodeId>();
+    positions.forEach((_pos, id) => {
+      activeIds.add(id);
+    });
+    exitNodesRef.current.forEach((_pos, id) => {
+      activeIds.add(id);
+    });
+
+    const openStates = openAnimationStatesRef.current;
+    const openProgress = openProgressRef.current;
+
+    if (!display.dimClosedNodes) {
+      activeIds.forEach((id) => {
+        openProgress.set(id, 1);
+      });
+      openProgress.forEach((_value, id) => {
+        if (!activeIds.has(id)) {
+          openProgress.delete(id);
+        }
+      });
+      openStates.clear();
+      prevOpenNodesRef.current = new Set(openNodeIds);
+      invalidateAnimation();
+      return;
+    }
+
+    const prevOpen = prevOpenNodesRef.current;
+    const isInitial = prevOpen.size === 0 && openProgress.size === 0;
+    const now = performance.now();
+
+    activeIds.forEach((id) => {
+      const target = openNodeIds.has(id) ? 1 : 0;
+      if (isInitial) {
+        openProgress.set(id, target);
+        return;
+      }
+      const current = openProgress.get(id) ?? (prevOpen.has(id) ? 1 : target);
+      if (current === target) return;
+      openStates.set(id, {
+        id,
+        from: current,
+        to: target,
+        startTime: now,
+        duration: openAnimationDuration,
+      });
+    });
+
+    openProgress.forEach((_value, id) => {
+      if (!activeIds.has(id)) {
+        openProgress.delete(id);
+        openStates.delete(id);
+      }
+    });
+
+    prevOpenNodesRef.current = new Set(openNodeIds);
+    if (openStates.size > 0) {
+      invalidateAnimation();
+      startAnimationLoop();
+    }
+  }, [display.dimClosedNodes, invalidateAnimation, openNodeIds, positions, startAnimationLoop]);
+
   const handleNodeClick = useCallback(async (node: NavigationNode, info: PointerInfo) => {
     if (dragMovedRef.current) {
       dragMovedRef.current = false;
@@ -988,6 +1062,7 @@ export default function GraphCanvas({
       const x = override?.x ?? pos.x;
       const y = override?.y ?? pos.y;
       const tabState = tabStates[id];
+      const isOpen = openNodeIds.has(id);
       const isSearchMatch = searchSet.has(id);
       return {
         id,
@@ -997,7 +1072,10 @@ export default function GraphCanvas({
         width: nodeWidth,
         height: nodeHeight,
         isCurrent: currentNodeId === id,
-        isOpen: openNodeIds.has(id),
+        isOpen,
+        openProgress: display.dimClosedNodes
+          ? openProgressRef.current.get(id) ?? (isOpen ? 1 : 0)
+          : 1,
         tabCount: nodeTabCounts[id] ?? 0,
         ...(tabState !== undefined ? { tabState } : {}),
         isSelected: selectedNodeIds.has(id),
@@ -1011,6 +1089,7 @@ export default function GraphCanvas({
       };
     });
   }, [
+    animationVersion,
     currentNodeId,
     display,
     focusedSearchId,
@@ -1127,11 +1206,11 @@ export default function GraphCanvas({
   const fitToView = (animate = false) => {
     const fitView = getFitToViewView();
     if (!fitView) return;
-    viewRef.current = fitView;
     if (animate) {
       animateViewTo(fitView, 300);
     } else {
       cancelViewAnimation();
+      viewRef.current = fitView;
       onGraphViewChange(fitView);
       rendererRef.current?.setView(fitView);
     }
@@ -1167,11 +1246,11 @@ export default function GraphCanvas({
   const centerOnNode = (nodeId: NodeId, animate = true): boolean => {
     const nextView = getCenteredView(nodeId);
     if (!nextView) return false;
-    viewRef.current = nextView;
     if (animate) {
       animateViewTo(nextView, 300);
     } else {
       cancelViewAnimation();
+      viewRef.current = nextView;
       onGraphViewChange(nextView);
       rendererRef.current?.setView(nextView);
     }
@@ -1285,10 +1364,10 @@ export default function GraphCanvas({
     (pointerX: number, pointerY: number, scaleFactor: number, animate = false) => {
       const nextView = computeZoomView(pointerX, pointerY, scaleFactor);
       if (!nextView) return;
-      viewRef.current = nextView;
       if (animate) {
         animateViewTo(nextView, 180);
       } else {
+        viewRef.current = nextView;
         scheduleGraphView(nextView);
       }
     },
@@ -1314,11 +1393,11 @@ export default function GraphCanvas({
       fitToView(animate);
       return;
     }
-    viewRef.current = nextView;
     if (animate) {
       animateViewTo(nextView, 300);
     } else {
       cancelViewAnimation();
+      viewRef.current = nextView;
       onGraphViewChange(nextView);
       rendererRef.current?.setView(nextView);
     }

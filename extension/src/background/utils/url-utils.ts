@@ -38,10 +38,6 @@ export function isNewTabUrl(url: Url): boolean {
   return newTabUrlPatterns.some(pattern => pattern.test(url));
 }
 
-export function isPlaceholderUrl(url: Url): boolean {
-  return isBlankUrl(url) || isNewTabUrl(url);
-}
-
 export function getFaviconUrl(pageUrl: Url, size = 32): FaviconUrl {
   const url = new URL(chrome.runtime.getURL("/_favicon/"));
   url.searchParams.set("pageUrl", pageUrl);
