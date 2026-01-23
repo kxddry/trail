@@ -1,5 +1,5 @@
 // messaging/handlers/content-handlers.ts
-import { isPlaceholderUrl, shouldTrackUrl } from "../../utils/url-utils.js";
+import { isBlankUrl, shouldTrackUrl } from "../../utils/url-utils.js";
 import { treeStorage } from "../../services/tree-storage.js";
 import { tabManager } from "../../state/tab-manager.js";
 import { notifyTreeUpdate } from "../notifications.js";
@@ -30,7 +30,7 @@ export const contentHandlers = defineHandlers({
 
     const url = message.url;
 
-    if (!newTitle || !shouldTrackUrl(url as Url) || isPlaceholderUrl(url as Url)) return ok();
+    if (!newTitle || !shouldTrackUrl(url as Url) || isBlankUrl(url as Url)) return ok();
 
     if (node.data.title === newTitle) return ok();
     if (node.data.url !== url) return err("URL mismatch");

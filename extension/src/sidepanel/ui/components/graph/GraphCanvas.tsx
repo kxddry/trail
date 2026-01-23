@@ -697,20 +697,8 @@ export default function GraphCanvas({
       }
     });
 
-    const skipExitAnimation = treeUpdate?.reason === 'delete';
     prev.forEach((pos, id) => {
       if (!exitingIds.has(id)) return;
-      if (skipExitAnimation) {
-        animationStatesRef.current.delete(id);
-        animatedPositionsRef.current.delete(id);
-        exitNodesRef.current.delete(id);
-        const timeoutId = exitParticleTimeoutsRef.current.get(id);
-        if (timeoutId !== undefined) {
-          window.clearTimeout(timeoutId);
-          exitParticleTimeoutsRef.current.delete(id);
-        }
-        return;
-      }
       const parent = pos.node.getParent?.();
       const parentPos = parent ? current.get(parent.id) ?? prev.get(parent.id) : undefined;
       const endCenter = parentPos
@@ -729,7 +717,6 @@ export default function GraphCanvas({
     startEnter,
     startExit,
     startMove,
-    treeUpdate?.reason,
   ]);
 
   const bounds: CanvasBounds = useMemo(() => {

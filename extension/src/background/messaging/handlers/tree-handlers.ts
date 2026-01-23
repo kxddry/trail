@@ -8,7 +8,7 @@ import type { Description, FaviconUrl, NodeId, TabId, Title, Url } from '../../.
 import { NavigationTree } from '../../state/nav-tree.js';
 import { ForEacher } from '../../../shared/types/foreach.js';
 import { updateNodeData, updateNodeMeta, type NodeData, type NavigationNode } from '../../../shared/types/node.js';
-import { normalizeFaviconUrl, isPlaceholderUrl } from '../../utils/url-utils.js';
+import { normalizeFaviconUrl, isBlankUrl } from '../../utils/url-utils.js';
 import { settingsManager } from '../../services/settings.js';
 import { tempSelectionManager } from '../../services/temporary-selection.js';
 import type { TreeMeta } from '../../../shared/types/tree.js';
@@ -66,11 +66,11 @@ function buildNodeDataFromTab(tab: chrome.tabs.Tab): NodeData | null {
   const urlCandidate = tab.url ?? null;
   const pendingCandidate = tab.pendingUrl ?? null;
   let rawUrl = urlCandidate ?? pendingCandidate ?? 'about:blank';
-  if (isPlaceholderUrl(rawUrl as Url) && pendingCandidate && !isPlaceholderUrl(pendingCandidate as Url)) {
+  if (isBlankUrl(rawUrl as Url) && pendingCandidate && !isBlankUrl(pendingCandidate as Url)) {
     rawUrl = pendingCandidate;
   }
   const url = rawUrl as Url;
-  const title = tab.title || (isPlaceholderUrl(url) ? 'New Tab' : rawUrl);
+  const title = tab.title || (isBlankUrl(url) ? 'New Tab' : rawUrl);
   return {
     url,
     title: title as Title,
