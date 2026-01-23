@@ -940,13 +940,26 @@ export default function GraphCanvas({
     if (!root || currentNodeId === null) return null;
     return getPathToNode(root, currentNodeId);
   }, [currentNodeId, root]);
+  const connectionPositions = useMemo(() => {
+    if (animatedPositionsRef.current.size === 0) return positions;
+    const next = new Map<NodeId, NodePosition>();
+    positions.forEach((pos, id) => {
+      const override = animatedPositionsRef.current.get(id);
+      if (override) {
+        next.set(id, { ...pos, x: override.x, y: override.y });
+      } else {
+        next.set(id, pos);
+      }
+    });
+    return next;
+  }, [animationVersion, positions]);
 
   const connections = useMemo(
     () =>
       effectiveShowConnections
         ? buildConnections(
             root,
-            positions,
+            connectionPositions,
             pathNodeIds,
             layoutOptions.mode,
             hideTreeRoot,
@@ -961,7 +974,7 @@ export default function GraphCanvas({
       nodeHeight,
       nodeWidth,
       pathNodeIds,
-      positions,
+      connectionPositions,
       root,
     ],
   );
