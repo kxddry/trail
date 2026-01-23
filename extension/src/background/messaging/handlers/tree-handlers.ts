@@ -227,7 +227,7 @@ export const treeHandlers = defineHandlers({
     if (removed.length === 0) return err('Node not found');
     await closeTabsForNodes(removed.map(node => node.id));
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 
@@ -239,7 +239,7 @@ export const treeHandlers = defineHandlers({
     if (removed.length === 0) return err('Node not found');
     await closeTabsForNodes(removed.map(node => node.id));
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 
@@ -251,7 +251,7 @@ export const treeHandlers = defineHandlers({
     if (removed.length === 0) return err('Node not found');
     await closeTabsForNodes(removed.map(node => node.id));
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 
@@ -267,7 +267,7 @@ export const treeHandlers = defineHandlers({
 
     await closeTabsForNodes(removedIds);
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 
@@ -283,7 +283,7 @@ export const treeHandlers = defineHandlers({
 
     await closeTabsForNodes(removedIds);
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 
@@ -302,7 +302,7 @@ export const treeHandlers = defineHandlers({
         removedIds.push(...removed.map(n => n.id));
         await closeTabsForNodes(removedIds);
         treeStorage.cacheTree(tree);
-        await notifyTreeUpdate(tree, 'sync');
+        await notifyTreeUpdate(tree, 'delete');
         return ok();
       }
       candidates.push(id);
@@ -331,7 +331,7 @@ export const treeHandlers = defineHandlers({
 
     await closeTabsForNodes(removedIds);
     treeStorage.cacheTree(tree);
-    await notifyTreeUpdate(tree, 'sync');
+    await notifyTreeUpdate(tree, 'delete');
     return ok();
   },
 

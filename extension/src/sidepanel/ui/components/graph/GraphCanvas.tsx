@@ -57,6 +57,7 @@ type ContextMenuState =
 
 type GraphCanvasProps = {
   tree: NavigationTree | null;
+  treeUpdate: { reason: TreeUpdatedInput['reason']; at: number } | null;
   currentNodeId: NodeId | null;
   openNodeIds: Set<NodeId>;
   nodeTabCounts: Record<NodeId, number>;
@@ -127,6 +128,7 @@ type ParticleState = {
 
 export default function GraphCanvas({
   tree,
+  treeUpdate,
   currentNodeId,
   openNodeIds,
   nodeTabCounts,
@@ -171,10 +173,12 @@ export default function GraphCanvas({
   const animatedPositionsRef = useRef<Map<NodeId, { x: number; y: number }>>(new Map());
   const exitNodesRef = useRef<Map<NodeId, NodePosition>>(new Map());
   const prevPositionsRef = useRef<Map<NodeId, NodePosition>>(new Map());
+  const exitParticleTimeoutsRef = useRef<Map<NodeId, number>>(new Map());
   const particleAnimationsRef = useRef<ParticleState[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const [animationVersion, setAnimationVersion] = useState(0);
   const animationDuration = 800;
+  const animationStagger = Math.round(animationDuration * 0.3);
   const invalidateAnimation = useCallback(() => {
     setAnimationVersion((version) => version + 1);
   }, []);
@@ -183,16 +187,22 @@ export default function GraphCanvas({
     setParticleVersion((version) => version + 1);
   }, []);
   const lastAnimationTimeRef = useRef<number | null>(null);
+  const animationNowRef = useRef<number | null>(null);
 
   const animateTick = useCallback(
     function animateTick(time: number) {
       const deltaTime = lastAnimationTimeRef.current === null ? 16 : time - lastAnimationTimeRef.current;
       lastAnimationTimeRef.current = time;
+      animationNowRef.current = time;
       const states = animationStatesRef.current;
       const entries = Array.from(states.entries());
       let nodesDirty = false;
       entries.forEach(([id, state]) => {
         const elapsed = time - state.startTime;
+        if (elapsed < 0) {
+          nodesDirty = true;
+          return;
+        }
         const progress = Math.min(1, elapsed / state.duration);
         const eased = 1 - Math.pow(1 - progress, 3);
         const x = state.startX + (state.endX - state.startX) * eased;
@@ -230,6 +240,7 @@ export default function GraphCanvas({
       } else {
         animationFrameRef.current = null;
         lastAnimationTimeRef.current = null;
+        animationNowRef.current = null;
       }
     },
     [invalidateAnimation, invalidateParticles],
@@ -246,7 +257,12 @@ export default function GraphCanvas({
         window.cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
         lastAnimationTimeRef.current = null;
+        animationNowRef.current = null;
       }
+      exitParticleTimeoutsRef.current.forEach((timeoutId) => {
+        window.clearTimeout(timeoutId);
+      });
+      exitParticleTimeoutsRef.current.clear();
     };
   }, []);
 
@@ -519,7 +535,7 @@ export default function GraphCanvas({
   );
 
   const startEnter = useCallback(
-    (pos: NodePosition, startCenter: { x: number; y: number }) => {
+    (pos: NodePosition, startCenter: { x: number; y: number }, delayMs = 0) => {
       const id = pos.node.id;
       animationStatesRef.current.delete(id);
       exitNodesRef.current.delete(id);
@@ -532,7 +548,7 @@ export default function GraphCanvas({
         startY,
         endX: pos.x,
         endY: pos.y,
-        startTime: performance.now(),
+        startTime: performance.now() + delayMs,
         duration: animationDuration,
       };
       animationStatesRef.current.set(id, state);
@@ -540,18 +556,18 @@ export default function GraphCanvas({
       invalidateAnimation();
       startAnimationLoop();
     },
-    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, spawnExitParticles, startAnimationLoop],
+    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
   );
 
   const startExit = useCallback(
-    (pos: NodePosition, rootCenter: { x: number; y: number }) => {
+    (pos: NodePosition, endCenter: { x: number; y: number }, delayMs = 0) => {
       const id = pos.node.id;
       if (exitNodesRef.current.has(id)) return;
       animationStatesRef.current.delete(id);
       const startX = pos.x;
       const startY = pos.y;
-      const endX = rootCenter.x - nodeWidth / 2;
-      const endY = rootCenter.y - nodeHeight / 2;
+      const endX = endCenter.x - nodeWidth / 2;
+      const endY = endCenter.y - nodeHeight / 2;
       const state: NodeAnimationState = {
         id,
         type: 'exit',
@@ -559,7 +575,7 @@ export default function GraphCanvas({
         startY,
         endX,
         endY,
-        startTime: performance.now(),
+        startTime: performance.now() + delayMs,
         duration: animationDuration,
       };
       animationStatesRef.current.set(id, state);
@@ -567,9 +583,22 @@ export default function GraphCanvas({
       exitNodesRef.current.set(id, { ...pos });
       invalidateAnimation();
       startAnimationLoop();
-      spawnExitParticles(pos);
+      const existingTimeout = exitParticleTimeoutsRef.current.get(id);
+      if (existingTimeout !== undefined) {
+        window.clearTimeout(existingTimeout);
+        exitParticleTimeoutsRef.current.delete(id);
+      }
+      if (delayMs <= 0) {
+        spawnExitParticles(pos);
+      } else {
+        const timeoutId = window.setTimeout(() => {
+          exitParticleTimeoutsRef.current.delete(id);
+          spawnExitParticles(pos);
+        }, delayMs);
+        exitParticleTimeoutsRef.current.set(id, timeoutId);
+      }
     },
-    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, startAnimationLoop],
+    [animationDuration, invalidateAnimation, nodeHeight, nodeWidth, spawnExitParticles, startAnimationLoop],
   );
 
   const startMove = useCallback(
@@ -600,19 +629,63 @@ export default function GraphCanvas({
       prevPositionsRef.current = current;
       return;
     }
-    const rootPos = root ? positions.get(root.id) : undefined;
-    const rootCenter = {
-      x: rootPos ? rootPos.x + nodeWidth / 2 : 0,
-      y: rootPos ? rootPos.y + nodeHeight / 2 : 0,
+    const enteringIds = new Set<NodeId>();
+    const exitingIds = new Set<NodeId>();
+    current.forEach((_pos, id) => {
+      if (!prev.has(id)) enteringIds.add(id);
+    });
+    prev.forEach((_pos, id) => {
+      if (!current.has(id)) exitingIds.add(id);
+    });
+
+    const enterDepthCache = new Map<NodeId, number>();
+    const getEnterDepth = (node: NavigationNode): number => {
+      if (!enteringIds.has(node.id)) return 0;
+      const cached = enterDepthCache.get(node.id);
+      if (cached !== undefined) return cached;
+      const parent = node.getParent?.();
+      const depth = parent && enteringIds.has(parent.id) ? getEnterDepth(parent) + 1 : 0;
+      enterDepthCache.set(node.id, depth);
+      return depth;
     };
+
+    const exitDepthCache = new Map<NodeId, number>();
+    const getExitDepth = (node: NavigationNode): number => {
+      if (!exitingIds.has(node.id)) return -1;
+      const cached = exitDepthCache.get(node.id);
+      if (cached !== undefined) return cached;
+      let maxChildDepth = -1;
+      node.getChildren().forEach((child) => {
+        if (!exitingIds.has(child.id)) return;
+        maxChildDepth = Math.max(maxChildDepth, getExitDepth(child));
+      });
+      const depth = maxChildDepth + 1;
+      exitDepthCache.set(node.id, depth);
+      return depth;
+    };
+
+    const currentRootPos = root ? current.get(root.id) : undefined;
+    const currentRootCenter = {
+      x: currentRootPos ? currentRootPos.x + nodeWidth / 2 : 0,
+      y: currentRootPos ? currentRootPos.y + nodeHeight / 2 : 0,
+    };
+    let prevRootCenter = currentRootCenter;
+    for (const pos of prev.values()) {
+      if (pos.node.isRoot?.()) {
+        prevRootCenter = { x: pos.x + nodeWidth / 2, y: pos.y + nodeHeight / 2 };
+        break;
+      }
+    }
+
     current.forEach((pos, id) => {
-      if (!prev.has(id)) {
+      if (enteringIds.has(id)) {
         const parent = pos.node.getParent?.();
-        const parentPos = parent ? positions.get(parent.id) : undefined;
+        const parentPos = parent ? current.get(parent.id) : undefined;
         const startCenter = parentPos
           ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
-          : rootCenter;
-        startEnter(pos, startCenter);
+          : currentRootCenter;
+        const depth = getEnterDepth(pos.node);
+        startEnter(pos, startCenter, depth * animationStagger);
         return;
       }
       const prevPos = prev.get(id);
@@ -623,13 +696,41 @@ export default function GraphCanvas({
         startMove(id, prevPos.x, prevPos.y, pos.x, pos.y);
       }
     });
+
+    const skipExitAnimation = treeUpdate?.reason === 'delete';
     prev.forEach((pos, id) => {
-      if (!current.has(id)) {
-        startExit(pos, rootCenter);
+      if (!exitingIds.has(id)) return;
+      if (skipExitAnimation) {
+        animationStatesRef.current.delete(id);
+        animatedPositionsRef.current.delete(id);
+        exitNodesRef.current.delete(id);
+        const timeoutId = exitParticleTimeoutsRef.current.get(id);
+        if (timeoutId !== undefined) {
+          window.clearTimeout(timeoutId);
+          exitParticleTimeoutsRef.current.delete(id);
+        }
+        return;
       }
+      const parent = pos.node.getParent?.();
+      const parentPos = parent ? current.get(parent.id) ?? prev.get(parent.id) : undefined;
+      const endCenter = parentPos
+        ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
+        : prevRootCenter;
+      const depth = getExitDepth(pos.node);
+      startExit(pos, endCenter, depth * animationStagger);
     });
     prevPositionsRef.current = current;
-  }, [nodeHeight, nodeWidth, positions, root, startEnter, startExit, startMove]);
+  }, [
+    animationStagger,
+    nodeHeight,
+    nodeWidth,
+    positions,
+    root,
+    startEnter,
+    startExit,
+    startMove,
+    treeUpdate?.reason,
+  ]);
 
   const bounds: CanvasBounds = useMemo(() => {
     if (!layout) {
@@ -649,10 +750,22 @@ export default function GraphCanvas({
     exitNodesRef.current.forEach((pos) => list.push(pos));
     return list;
   }, [positions, animationVersion]);
+  const pendingEnterIds = useMemo(() => {
+    if (animationStatesRef.current.size === 0) return new Set<NodeId>();
+    const now = animationNowRef.current ?? performance.now();
+    const pending = new Set<NodeId>();
+    animationStatesRef.current.forEach((state, id) => {
+      if (state.type === 'enter' && state.startTime > now) {
+        pending.add(id);
+      }
+    });
+    return pending;
+  }, [animationVersion]);
   const visibleDisplayNodes = useMemo(() => {
-    if (layoutOptions.mode !== 'tree' || !root || !hideTreeRoot) return displayNodes;
-    return displayNodes.filter((pos) => pos.node.id !== root.id);
-  }, [displayNodes, hideTreeRoot, layoutOptions.mode, root]);
+    const filtered = displayNodes.filter((pos) => !pendingEnterIds.has(pos.node.id));
+    if (layoutOptions.mode !== 'tree' || !root || !hideTreeRoot) return filtered;
+    return filtered.filter((pos) => pos.node.id !== root.id);
+  }, [displayNodes, hideTreeRoot, layoutOptions.mode, pendingEnterIds, root]);
   const searchSet = useMemo(() => new Set(search.results), [search.results]);
   const focusedSearchId = search.results[search.index];
   const display = useMemo(
@@ -945,9 +1058,10 @@ export default function GraphCanvas({
     return getPathToNode(root, currentNodeId);
   }, [currentNodeId, root]);
   const connectionPositions = useMemo(() => {
-    if (animatedPositionsRef.current.size === 0) return positions;
+    if (animatedPositionsRef.current.size === 0 && pendingEnterIds.size === 0) return positions;
     const next = new Map<NodeId, NodePosition>();
     positions.forEach((pos, id) => {
+      if (pendingEnterIds.has(id)) return;
       const override = animatedPositionsRef.current.get(id);
       if (override) {
         next.set(id, { ...pos, x: override.x, y: override.y });
@@ -956,7 +1070,7 @@ export default function GraphCanvas({
       }
     });
     return next;
-  }, [animationVersion, positions]);
+  }, [animationVersion, pendingEnterIds, positions]);
 
   const connections = useMemo(
     () =>

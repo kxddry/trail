@@ -368,6 +368,7 @@ export type TreeUpdateReason =
     | 'tree-reset'
     | 'tree-switch'
     | 'layout'
+    | 'delete'
     | 'undo'
     | 'pins'
     | 'tags'
