@@ -593,7 +593,7 @@ export default function GraphCanvas({
     [animationDuration, invalidateAnimation, startAnimationLoop],
   );
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const prev = prevPositionsRef.current;
     const current = new Map(positions);
     if (prev.size === 0) {
