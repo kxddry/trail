@@ -560,7 +560,12 @@ export default function GraphCanvas({
   );
 
   const startExit = useCallback(
-    (pos: NodePosition, endCenter: { x: number; y: number }, delayMs = 0) => {
+    (
+      pos: NodePosition,
+      endCenter: { x: number; y: number },
+      delayMs = 0,
+      durationMs = animationDuration,
+    ) => {
       const id = pos.node.id;
       if (exitNodesRef.current.has(id)) return;
       animationStatesRef.current.delete(id);
@@ -576,7 +581,7 @@ export default function GraphCanvas({
         endX,
         endY,
         startTime: performance.now() + delayMs,
-        duration: animationDuration,
+        duration: durationMs,
       };
       animationStatesRef.current.set(id, state);
       animatedPositionsRef.current.set(id, { x: startX, y: startY });
@@ -697,18 +702,23 @@ export default function GraphCanvas({
       }
     });
 
+    const isDelete = treeUpdate?.reason === 'delete';
+    const popDuration = Math.max(120, Math.round(animationDuration * 0.4));
     prev.forEach((pos, id) => {
       if (!exitingIds.has(id)) return;
       const parent = pos.node.getParent?.();
       const parentPos = parent ? current.get(parent.id) ?? prev.get(parent.id) : undefined;
-      const endCenter = parentPos
-        ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
-        : prevRootCenter;
-      const depth = getExitDepth(pos.node);
-      startExit(pos, endCenter, depth * animationStagger);
+      const endCenter = isDelete
+        ? { x: pos.x + nodeWidth / 2, y: pos.y + nodeHeight / 2 }
+        : parentPos
+          ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
+          : prevRootCenter;
+      const delayMs = isDelete ? 0 : getExitDepth(pos.node) * animationStagger;
+      startExit(pos, endCenter, delayMs, isDelete ? popDuration : animationDuration);
     });
     prevPositionsRef.current = current;
   }, [
+    animationDuration,
     animationStagger,
     nodeHeight,
     nodeWidth,
@@ -717,6 +727,7 @@ export default function GraphCanvas({
     startEnter,
     startExit,
     startMove,
+    treeUpdate?.reason,
   ]);
 
   const bounds: CanvasBounds = useMemo(() => {
