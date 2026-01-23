@@ -174,7 +174,7 @@ export default function GraphCanvas({
   const particleAnimationsRef = useRef<ParticleState[]>([]);
   const animationFrameRef = useRef<number | null>(null);
   const [animationVersion, setAnimationVersion] = useState(0);
-  const animationDuration = 320;
+  const animationDuration = 800;
   const invalidateAnimation = useCallback(() => {
     setAnimationVersion((version) => version + 1);
   }, []);
@@ -649,6 +649,10 @@ export default function GraphCanvas({
     exitNodesRef.current.forEach((pos) => list.push(pos));
     return list;
   }, [positions, animationVersion]);
+  const visibleDisplayNodes = useMemo(() => {
+    if (layoutOptions.mode !== 'tree' || !root || !hideTreeRoot) return displayNodes;
+    return displayNodes.filter((pos) => pos.node.id !== root.id);
+  }, [displayNodes, hideTreeRoot, layoutOptions.mode, root]);
   const searchSet = useMemo(() => new Set(search.results), [search.results]);
   const focusedSearchId = search.results[search.index];
   const display = useMemo(
@@ -876,7 +880,7 @@ export default function GraphCanvas({
 
   const renderNodes = useMemo<NodeRenderModel[]>(() => {
     const dimmedBySearch = searchActive;
-    return displayNodes.map((pos) => {
+    return visibleDisplayNodes.map((pos) => {
       const id = pos.node.id;
       const override = animatedPositionsRef.current.get(id);
       const x = override?.x ?? pos.x;
@@ -907,7 +911,6 @@ export default function GraphCanvas({
   }, [
     currentNodeId,
     display,
-    displayNodes,
     focusedSearchId,
     hoverNodeId,
     nodeHeight,
@@ -920,6 +923,7 @@ export default function GraphCanvas({
     selectedNodeIds,
     tabStates,
     tagDefs,
+    visibleDisplayNodes,
   ]);
 
   const particleRenderModels = useMemo<ParticleRenderModel[]>(() => {
