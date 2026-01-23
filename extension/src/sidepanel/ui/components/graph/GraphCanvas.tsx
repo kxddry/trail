@@ -188,7 +188,6 @@ export default function GraphCanvas({
   }, []);
   const lastAnimationTimeRef = useRef<number | null>(null);
   const animationNowRef = useRef<number | null>(null);
-
   const animateTick = useCallback(
     function animateTick(time: number) {
       const deltaTime = lastAnimationTimeRef.current === null ? 16 : time - lastAnimationTimeRef.current;
@@ -674,14 +673,6 @@ export default function GraphCanvas({
       x: currentRootPos ? currentRootPos.x + nodeWidth / 2 : 0,
       y: currentRootPos ? currentRootPos.y + nodeHeight / 2 : 0,
     };
-    let prevRootCenter = currentRootCenter;
-    for (const pos of prev.values()) {
-      if (pos.node.isRoot?.()) {
-        prevRootCenter = { x: pos.x + nodeWidth / 2, y: pos.y + nodeHeight / 2 };
-        break;
-      }
-    }
-
     current.forEach((pos, id) => {
       if (enteringIds.has(id)) {
         const parent = pos.node.getParent?.();
@@ -706,13 +697,13 @@ export default function GraphCanvas({
     const popDuration = Math.max(120, Math.round(animationDuration * 0.4));
     prev.forEach((pos, id) => {
       if (!exitingIds.has(id)) return;
-      const parent = pos.node.getParent?.();
-      const parentPos = parent ? current.get(parent.id) ?? prev.get(parent.id) : undefined;
-      const endCenter = isDelete
-        ? { x: pos.x + nodeWidth / 2, y: pos.y + nodeHeight / 2 }
-        : parentPos
-          ? { x: parentPos.x + nodeWidth / 2, y: parentPos.y + nodeHeight / 2 }
-          : prevRootCenter;
+      if (isDelete) {
+        const parent = pos.node.getParent?.();
+        if (parent && exitingIds.has(parent.id)) {
+          return;
+        }
+      }
+      const endCenter = { x: pos.x + nodeWidth / 2, y: pos.y + nodeHeight / 2 };
       const delayMs = isDelete ? 0 : getExitDepth(pos.node) * animationStagger;
       startExit(pos, endCenter, delayMs, isDelete ? popDuration : animationDuration);
     });
