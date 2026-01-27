@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_Слой_1" data-name="Слой 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.76 126.8">
+  <defs>
+    <style>
+      .cls-1 {
+        stroke: #111827;
+      }
+
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke-width: 5px;
+      }
+
+      .cls-3 {
+        fill: #111827;
+      }
+
+      .cls-2 {
+        stroke: #000;
+      }
+    </style>
+  </defs>
+  <g>
+    <circle class="cls-3" cx="7" cy="7" r="7"/>
+    <circle class="cls-3" cx="42.04" cy="32.46" r="7"/>
+    <circle class="cls-3" cx="91.28" cy="94.94" r="7"/>
+    <circle class="cls-3" cx="112.46" cy="73.8" r="7"/>
+    <circle class="cls-3" cx="34.05" cy="68.98" r="7"/>
+    <circle class="cls-3" cx="76.1" cy="49.81" r="7"/>
+    <circle class="cls-3" cx="52.8" cy="98.32" r="7"/>
+  </g>
+  <path class="cls-2" d="M7,7c21.37,2.73,27.08,12.29,35.03,25.46s-17.05,16.81-7.98,36.52"/>
+  <path class="cls-2" d="M76.1,49.81c-4.81-22-22.09,0-34.06-17.35"/>
+  <path class="cls-2" d="M34.05,68.98c12,6.48,17.91,16.45,18.74,29.34"/>
+  <path class="cls-2" d="M76.1,49.81c-.03,18.26,1.91,35.27,15.18,45.13"/>
+  <path class="cls-1" d="M76.1,49.81c15.58.09,27.7,8.09,36.36,23.99"/>
+</svg>

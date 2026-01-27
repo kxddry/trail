@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trail Logo Demo</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar__brand">
+        <div class="icon icon--sm" aria-hidden="true">
+          <svg
+            class="trail-logo trail-logo--loop"
+            viewBox="0 0 188.16 188.16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <g
+              stroke="rgb(var(--trail-border))"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              opacity="0.7"
+            >
+              <path d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09" />
+              <path d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61" />
+              <path d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44" />
+              <path d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95" />
+              <path d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58" />
+              <path d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44" />
+            </g>
+
+            <g
+              stroke="rgb(var(--trail-accent))"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              pointer-events="none"
+            >
+              <path
+                d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 0ms"
+              />
+              <path
+                d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 520ms"
+              />
+              <path
+                d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 520ms"
+              />
+              <path
+                d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 1040ms"
+              />
+              <path
+                d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 1040ms"
+              />
+              <path
+                d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44"
+                pathLength="1"
+                class="trail-logo__sparkPath"
+                style="--trail-logo-delay: 1040ms"
+              />
+            </g>
+
+            <g fill="rgb(var(--trail-accent))" opacity="0.9">
+              <circle cx="53.23" cy="43.64" r="7" />
+              <circle cx="88.26" cy="69.09" r="7" />
+              <circle cx="122.32" cy="86.44" r="7" />
+              <circle cx="80.28" cy="105.61" r="7" />
+              <circle cx="99.02" cy="134.95" r="7" />
+              <circle cx="137.5" cy="131.58" r="7" />
+              <circle cx="158.69" cy="110.44" r="7" />
+            </g>
+          </svg>
+        </div>
+        <div class="topbar__text">
+          <div class="topbar__name">Trail Logo</div>
+          <div class="topbar__sub">SVG + CSS animation (demo)</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button type="button" class="btn" data-action="toggle-theme">Theme</button>
+        <button type="button" class="btn" data-action="toggle-motion">Motion</button>
+      </div>
+    </header>
+
+    <main class="content">
+      <section class="grid">
+        <article class="card">
+          <div class="card__title">Loop</div>
+          <div class="card__subtitle">Постоянная, но спокойная анимация.</div>
+          <div class="showcase">
+            <div class="icon">
+              <svg class="trail-logo trail-logo--loop" viewBox="0 0 188.16 188.16" fill="none">
+                <defs>
+                  <radialGradient id="node-loop" cx="30%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="rgb(var(--trail-accent))" stop-opacity="1" />
+                    <stop offset="100%" stop-color="rgb(var(--trail-accent))" stop-opacity="0.55" />
+                  </radialGradient>
+                  <radialGradient id="glow-loop" cx="30%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="rgb(var(--trail-accent))" stop-opacity="0.55" />
+                    <stop offset="100%" stop-color="rgb(var(--trail-accent))" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+
+                <g
+                  stroke="rgb(var(--trail-border))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  opacity="0.7"
+                >
+                  <path d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09" />
+                  <path d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61" />
+                  <path d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44" />
+                  <path d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95" />
+                  <path d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58" />
+                  <path d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44" />
+                </g>
+
+                <g
+                  stroke="rgb(var(--trail-accent))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 0ms"
+                  />
+                  <path
+                    d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <path
+                    d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <path
+                    d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <path
+                    d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <path
+                    d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                </g>
+
+                <g fill="url(#node-loop)">
+                  <circle cx="53.23" cy="43.64" r="7" />
+                  <circle cx="88.26" cy="69.09" r="7" />
+                  <circle cx="122.32" cy="86.44" r="7" />
+                  <circle cx="80.28" cy="105.61" r="7" />
+                  <circle cx="99.02" cy="134.95" r="7" />
+                  <circle cx="137.5" cy="131.58" r="7" />
+                  <circle cx="158.69" cy="110.44" r="7" />
+                </g>
+
+                <g fill="url(#glow-loop)" pointer-events="none">
+                  <circle
+                    cx="53.23"
+                    cy="43.64"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 0ms"
+                  />
+                  <circle
+                    cx="88.26"
+                    cy="69.09"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <circle
+                    cx="122.32"
+                    cy="86.44"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <circle
+                    cx="80.28"
+                    cy="105.61"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <circle
+                    cx="99.02"
+                    cy="134.95"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                  <circle
+                    cx="158.69"
+                    cy="110.44"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                  <circle
+                    cx="137.5"
+                    cy="131.58"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card__title">Hover</div>
+          <div class="card__subtitle">Анимация только при наведении.</div>
+          <div class="showcase">
+            <div class="icon icon--interactive">
+              <svg class="trail-logo trail-logo--hover" viewBox="0 0 188.16 188.16" fill="none">
+                <defs>
+                  <radialGradient id="node-hover" cx="30%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="rgb(var(--trail-accent))" stop-opacity="1" />
+                    <stop offset="100%" stop-color="rgb(var(--trail-accent))" stop-opacity="0.55" />
+                  </radialGradient>
+                  <radialGradient id="glow-hover" cx="30%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="rgb(var(--trail-accent))" stop-opacity="0.55" />
+                    <stop offset="100%" stop-color="rgb(var(--trail-accent))" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+
+                <g
+                  stroke="rgb(var(--trail-border))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  opacity="0.7"
+                >
+                  <path d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09" />
+                  <path d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61" />
+                  <path d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44" />
+                  <path d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95" />
+                  <path d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58" />
+                  <path d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44" />
+                </g>
+
+                <g
+                  stroke="rgb(var(--trail-accent))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 0ms"
+                  />
+                  <path
+                    d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <path
+                    d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <path
+                    d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <path
+                    d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <path
+                    d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44"
+                    pathLength="1"
+                    class="trail-logo__sparkPath"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                </g>
+
+                <g fill="url(#node-hover)">
+                  <circle cx="53.23" cy="43.64" r="7" />
+                  <circle cx="88.26" cy="69.09" r="7" />
+                  <circle cx="122.32" cy="86.44" r="7" />
+                  <circle cx="80.28" cy="105.61" r="7" />
+                  <circle cx="99.02" cy="134.95" r="7" />
+                  <circle cx="137.5" cy="131.58" r="7" />
+                  <circle cx="158.69" cy="110.44" r="7" />
+                </g>
+
+                <g fill="url(#glow-hover)" pointer-events="none">
+                  <circle
+                    cx="53.23"
+                    cy="43.64"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 0ms"
+                  />
+                  <circle
+                    cx="88.26"
+                    cy="69.09"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 520ms"
+                  />
+                  <circle
+                    cx="122.32"
+                    cy="86.44"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <circle
+                    cx="80.28"
+                    cy="105.61"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1040ms"
+                  />
+                  <circle
+                    cx="99.02"
+                    cy="134.95"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                  <circle
+                    cx="158.69"
+                    cy="110.44"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                  <circle
+                    cx="137.5"
+                    cy="131.58"
+                    r="14"
+                    class="trail-logo__nodeGlow"
+                    style="--trail-logo-delay: 1280ms"
+                  />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card__title">Static</div>
+          <div class="card__subtitle">Без анимации (иконка/фавикон).</div>
+          <div class="showcase">
+            <div class="icon">
+              <svg class="trail-logo" viewBox="0 0 188.16 188.16" fill="none" aria-hidden="true">
+                <g
+                  stroke="rgb(var(--trail-border))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  opacity="0.7"
+                >
+                  <path d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09" />
+                  <path d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61" />
+                  <path d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44" />
+                  <path d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95" />
+                  <path d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58" />
+                  <path d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44" />
+                </g>
+                <g
+                  stroke="rgb(var(--trail-accent))"
+                  stroke-width="5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  opacity="0.9"
+                >
+                  <path d="M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09" />
+                  <path d="M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61" />
+                  <path d="M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44" />
+                  <path d="M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95" />
+                  <path d="M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58" />
+                  <path d="M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44" />
+                </g>
+                <g fill="rgb(var(--trail-accent))" opacity="0.9">
+                  <circle cx="53.23" cy="43.64" r="7" />
+                  <circle cx="88.26" cy="69.09" r="7" />
+                  <circle cx="122.32" cy="86.44" r="7" />
+                  <circle cx="80.28" cy="105.61" r="7" />
+                  <circle cx="99.02" cy="134.95" r="7" />
+                  <circle cx="137.5" cy="131.58" r="7" />
+                  <circle cx="158.69" cy="110.44" r="7" />
+                </g>
+              </svg>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="card card--wide">
+        <div class="card__title">Что это за логика</div>
+        <div class="card__subtitle">
+          “Тропа” — одна кривая линия (маршрут) + точки (шаги/вехи). Анимация: блик пробегает по
+          пути и на развилках расходится по веткам, точки “загораются” по уровням (сверху вниз).
+        </div>
+        <pre class="code"><code>Ствол (A→B):
+  M53.23 43.64 C74.6 46.37 80.31 55.93 88.26 69.09
+
+Развилка #1 (из B — одновременно):
+  B→D: M88.26 69.09 C96.21 82.27 71.21 85.9 80.28 105.61
+  B→C: M88.26 69.09 C100.23 86.44 117.51 64.44 122.32 86.44
+
+Развилка #2 (из C — одновременно):
+  C→F: M122.32 86.44 C122.29 104.7 124.23 121.71 137.5 131.58
+  C→G: M122.32 86.44 C137.9 86.53 150.02 94.53 158.69 110.44
+
+Хвост:
+  D→E: M80.28 105.61 C92.28 112.09 98.19 122.06 99.02 134.95
+
+Spark:
+  stroke-dasharray + stroke-dashoffset (бегущий сегмент)
+  задержки по “уровням”: 0ms → 520ms → 1040ms (ветки стартуют одновременно)
+
+Glow:
+  opacity + scale, с задержками (delay) для последовательности</code></pre>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
