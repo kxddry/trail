@@ -1,0 +1,274 @@
+:root,
+html[data-theme="light"] {
+  --trail-bg: 248 249 251;
+  --trail-surface: 255 255 255;
+  --trail-surface-high: 241 242 246;
+  --trail-border: 200 204 214;
+  --trail-ink: 12 14 18;
+  --trail-ink-muted: 75 82 96;
+  --trail-accent: 12 14 18;
+}
+
+html[data-theme="dark"] {
+  --trail-bg: 10 12 16;
+  --trail-surface: 18 21 28;
+  --trail-surface-high: 26 31 41;
+  --trail-border: 44 50 63;
+  --trail-ink: 245 246 250;
+  --trail-ink-muted: 164 172 188;
+  --trail-accent: 255 255 255;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji",
+    "Segoe UI Emoji";
+  background: rgb(var(--trail-bg));
+  color: rgb(var(--trail-ink));
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(var(--trail-border), 0.5);
+  background: rgba(var(--trail-bg), 0.92);
+}
+
+.topbar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topbar__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.topbar__name {
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.topbar__sub {
+  font-size: 12px;
+  color: rgb(var(--trail-ink-muted));
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid rgba(var(--trail-border), 0.65);
+  background: rgba(var(--trail-surface), 0.7);
+  color: rgb(var(--trail-ink));
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: rgba(var(--trail-surface-high), 0.8);
+}
+
+.content {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 20px 40px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (min-width: 920px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.card {
+  border: 1px solid rgba(var(--trail-border), 0.55);
+  background: rgba(var(--trail-surface), 0.72);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+html[data-theme="light"] .card {
+  box-shadow: 0 10px 30px rgba(12, 14, 18, 0.08);
+}
+
+.card--wide {
+  margin-top: 14px;
+}
+
+.card__title {
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.card__subtitle {
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgb(var(--trail-ink-muted));
+}
+
+.showcase {
+  margin-top: 16px;
+  display: grid;
+  place-items: center;
+  padding: 12px 0 2px;
+}
+
+.icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  border: 1px solid rgba(var(--trail-border), 0.55);
+  background: linear-gradient(
+    145deg,
+    rgba(var(--trail-surface), 0.85),
+    rgba(var(--trail-surface-high), 0.7)
+  );
+  display: grid;
+  place-items: center;
+}
+
+.icon--interactive {
+  cursor: pointer;
+}
+
+.icon--sm {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+}
+
+.trail-logo {
+  width: 90px;
+  height: 90px;
+  display: block;
+}
+
+.icon--sm .trail-logo {
+  width: 30px;
+  height: 30px;
+}
+
+/* Spark & pulse animation */
+.trail-logo__sparkPath {
+  opacity: 0;
+  stroke-dasharray: 0.12 0.88;
+  stroke-dashoffset: 0.12;
+  will-change: stroke-dashoffset, opacity;
+}
+
+.trail-logo__nodeGlow {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+html[data-motion="off"] .trail-logo__sparkPath,
+html[data-motion="off"] .trail-logo__nodeGlow {
+  animation: none !important;
+}
+
+.trail-logo--loop .trail-logo__sparkPath,
+.trail-logo--hover:hover .trail-logo__sparkPath,
+.trail-logo--hover:focus-visible .trail-logo__sparkPath {
+  animation: trailLogoSpark 1600ms linear infinite;
+  animation-delay: var(--trail-logo-delay, 0ms);
+}
+
+.trail-logo--loop .trail-logo__nodeGlow,
+.trail-logo--hover:hover .trail-logo__nodeGlow,
+.trail-logo--hover:focus-visible .trail-logo__nodeGlow {
+  animation: trailLogoNodePulse 1600ms ease-out infinite;
+  animation-delay: var(--trail-logo-delay, 0ms);
+}
+
+@keyframes trailLogoSpark {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 0.12;
+  }
+  2% {
+    opacity: 1;
+  }
+  33% {
+    opacity: 1;
+    stroke-dashoffset: -0.88;
+  }
+  35% {
+    opacity: 0;
+    stroke-dashoffset: -0.88;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -0.88;
+  }
+}
+
+@keyframes trailLogoNodePulse {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  10% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  20% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .trail-logo__sparkPath,
+  .trail-logo__nodeGlow {
+    animation: none !important;
+  }
+}
+
+.code {
+  margin: 14px 0 0;
+  padding: 14px;
+  border-radius: 18px;
+  border: 1px solid rgba(var(--trail-border), 0.55);
+  background: rgba(var(--trail-surface-high), 0.55);
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgb(var(--trail-ink));
+}
