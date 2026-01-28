@@ -1,0 +1,52 @@
+<svg
+  width="128"
+  height="128"
+  viewBox="0 0 188.16 188.16"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="188.16" y2="188.16" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFFFFF" />
+      <stop offset="1" stop-color="#F1F5F9" />
+    </linearGradient>
+
+    <linearGradient id="stroke" x1="44" y1="30" x2="164" y2="164" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0EA5E9" />
+      <stop offset="0.52" stop-color="#14B8A6" />
+      <stop offset="1" stop-color="#22C55E" />
+    </linearGradient>
+
+    <filter
+      id="shadow"
+      x="-30%"
+      y="-30%"
+      width="160%"
+      height="160%"
+      color-interpolation-filters="sRGB"
+    >
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#0F172A" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <rect width="188.16" height="188.16" rx="38" fill="url(#bg)" />
+
+  <g filter="url(#shadow)" stroke="url(#stroke)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M53.23,43.64c21.37,2.73,27.08,12.29,35.03,25.46s-17.05,16.81-7.98,36.52" />
+    <path d="M122.32,86.44c-4.81-22-22.09,0-34.06-17.35" />
+    <path d="M80.28,105.61c12,6.48,17.91,16.45,18.74,29.34" />
+    <path d="M122.32,86.44c-.03,18.26,1.91,35.27,15.18,45.13" />
+    <path d="M122.32,86.44c15.58.09,27.7,8.09,36.36,23.99" />
+  </g>
+
+  <g fill="#0F172A">
+    <circle cx="53.23" cy="43.64" r="7" />
+    <circle cx="88.26" cy="69.09" r="7" />
+    <circle cx="122.32" cy="86.44" r="7" />
+    <circle cx="80.28" cy="105.61" r="7" />
+    <circle cx="99.02" cy="134.95" r="7" />
+    <circle cx="137.5" cy="131.58" r="7" />
+    <circle cx="158.69" cy="110.44" r="7" />
+  </g>
+</svg>
+
