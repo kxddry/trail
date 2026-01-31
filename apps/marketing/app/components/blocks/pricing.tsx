@@ -65,11 +65,7 @@ export function Pricing({
           x: x / window.innerWidth,
           y: y / window.innerHeight
         },
-        colors: [
-          "hsl(var(--trail-ink))",
-          "hsl(var(--trail-ink-muted))",
-          "hsl(var(--trail-accent))"
-        ],
+        colors: ["#F97316", "#0D9488", "#14B8A6"],
         ticks: 200,
         gravity: 1.2,
         decay: 0.94,
@@ -129,14 +125,14 @@ export function Pricing({
               }}
               className={cn(
                 "relative rounded-3xl border p-6 text-center lg:flex lg:flex-col lg:justify-between",
-                "bg-surface/80 shadow-elev-1 backdrop-blur",
+                "bg-surface",
                 plan.isPopular
-                  ? "border-ink/70 bg-surface-high"
+                  ? "border-accent/60 bg-surface-high"
                   : "border-border/60"
               )}
             >
               {plan.isPopular && (
-                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full border border-ink/40 bg-ink px-2 py-1 text-xs font-semibold text-[color:rgb(var(--cta-fg))]">
+                <div className="absolute right-4 top-4 flex items-center gap-1 rounded-full border border-accent/40 bg-cta px-2 py-1 text-xs font-semibold text-cta-fg">
                   <Star className="h-3.5 w-3.5 fill-current" />
                   {popularBadge}
                 </div>
@@ -193,7 +189,7 @@ export function Pricing({
                 className={cn(
                   buttonVariants({ variant: "outline" }),
                   "group relative w-full gap-2 overflow-hidden text-sm font-semibold",
-                  "transition-all duration-300 ease-out hover:bg-ink hover:text-[color:rgb(var(--cta-fg))]"
+                  "transition-all duration-300 ease-out hover:bg-cta hover:text-cta-fg"
                 )}
               >
                 {plan.buttonText}

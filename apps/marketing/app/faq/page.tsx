@@ -26,7 +26,7 @@ export default function FaqPage() {
               <AccordionItem
                 key={item.question}
                 value={item.question}
-                className="rounded-3xl border border-stroke/30 bg-surface/60 px-6 py-2 shadow-elev-1 backdrop-blur-sm reveal"
+                className="rounded-3xl border border-stroke/40 bg-surface px-6 py-2 reveal"
               >
                 <AccordionTrigger className="text-base text-ink">
                   {item.question}

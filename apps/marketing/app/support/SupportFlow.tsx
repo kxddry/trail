@@ -137,7 +137,7 @@ function formatDiagnostics(input: {
 function StepBadge({ step, label }: { step: number; label: string }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-ink text-sm font-semibold text-surface">
+      <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-semibold text-cta-fg">
         {step}
       </span>
       <p className="font-display text-base font-semibold text-ink">{label}</p>
@@ -163,11 +163,11 @@ function TriageCard({
       type="button"
       onClick={onClick}
       className={cn(
-        "group relative w-full rounded-3xl border p-5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ink/30",
+        "group relative w-full rounded-3xl border p-5 text-left transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40",
         tone === "default" ? "bg-surface/70" : "bg-surface/50",
         selected
-          ? "border-ink/25 shadow-elev-1"
-          : "border-stroke/40 hover:border-ink/20 hover:bg-surface/70"
+          ? "border-accent/40 shadow-elev-1"
+          : "border-stroke/40 hover:border-accent/30 hover:bg-surface/70"
       )}
     >
       <div className="flex items-start justify-between gap-4">
@@ -587,7 +587,7 @@ export function SupportFlow() {
                         onChange={(event) => setWhatHappened(event.target.value)}
                         rows={3}
                         placeholder="Describe what you see (error, loop, missing capture, etc.)"
-                        className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                        className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                       />
                     </div>
 
@@ -612,7 +612,7 @@ export function SupportFlow() {
                         onChange={(event) => setStepsToReproduce(event.target.value)}
                         rows={3}
                         placeholder="1) Open… 2) Click… 3) See…"
-                        className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                        className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                       />
                     </div>
                   </div>
@@ -627,7 +627,7 @@ export function SupportFlow() {
                     <ul className="mt-4 space-y-2 text-sm text-ink-muted">
                       {support.include.map((item) => (
                         <li key={item} className="flex items-start gap-3">
-                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-ink/60" />
+                          <span className="mt-1.5 h-1.5 w-1.5 rounded-full bg-accent/60" />
                           <span>{item}</span>
                         </li>
                       ))}
@@ -666,7 +666,7 @@ export function SupportFlow() {
                   onChange={(event) => setFeatureGoal(event.target.value)}
                   rows={3}
                   placeholder="Describe your goal (the job you are trying to get done)."
-                  className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                  className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                 />
               </div>
               <div className="space-y-2">
@@ -678,7 +678,7 @@ export function SupportFlow() {
                   onChange={(event) => setFeatureBlocker(event.target.value)}
                   rows={3}
                   placeholder="What is missing or painful right now?"
-                  className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                  className="w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                 />
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
@@ -689,7 +689,7 @@ export function SupportFlow() {
                   <select
                     value={featureFrequency}
                     onChange={(event) => setFeatureFrequency(event.target.value)}
-                    className="h-11 w-full rounded-full border border-stroke/60 bg-surface px-4 text-sm text-ink shadow-inner focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                    className="h-11 w-full rounded-full border border-stroke/60 bg-surface px-4 text-sm text-ink shadow-inner focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                   >
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
@@ -707,7 +707,7 @@ export function SupportFlow() {
                     onChange={(event) => setFeatureMore(event.target.value)}
                     rows={4}
                     placeholder="Links, screenshots, examples, rough mockups…"
-                    className="mt-3 w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-ink focus:outline-none focus:ring-2 focus:ring-ink/30"
+                    className="mt-3 w-full rounded-3xl border border-stroke/60 bg-surface/80 px-4 py-3 text-sm text-ink shadow-inner placeholder:text-ink-subtle focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/40"
                   />
                 </details>
               </div>

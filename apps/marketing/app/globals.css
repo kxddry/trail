@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Work+Sans:wght@400;500;600;700&display=swap");
-
 @config "../tailwind.config.ts";
 @import "tailwindcss";
 @source "../../../packages/ui/src";
@@ -11,159 +9,170 @@
 :root,
 [data-theme="light"] {
   color-scheme: light;
-  --base: 236 238 244;
-  --surface: 252 252 255;
-  --surface-strong: 245 247 250;
-  --stroke: 202 206 216;
-  --ink: 14 16 20;
-  --ink-muted: 40 44 52;
-  --ink-subtle: 92 98 112;
+  --base: 240 253 250;
+  --surface: 255 255 255;
+  --surface-strong: 230 246 242;
+  --stroke: 199 229 221;
+  --ink: 19 78 74;
+  --ink-muted: 36 107 102;
+  --ink-subtle: 76 134 129;
+  --cta: 249 115 22;
+  --cta-hover: 234 88 12;
   --cta-fg: 255 255 255;
-  --accent: 14 16 20;
-  --accent-soft: 226 229 238;
-  --glow: 248 248 252;
-  --glow-strong: 226 229 238;
-  --grid-line: rgb(14 16 20 / 0.08);
-  --grid-size: 120px;
-
-  --trail-bg: var(--base);
-  --trail-surface: var(--surface);
-  --trail-surface-high: var(--surface-strong);
-  --trail-surface-low: var(--surface);
-  --trail-border: var(--stroke);
-  --trail-ink: var(--ink);
-  --trail-ink-muted: var(--ink-muted);
-  --trail-accent: var(--accent);
-  --trail-accent-contrast: var(--surface);
-  --trail-highlight: var(--accent-soft);
-  --trail-glass: var(--surface);
-  --trail-glass-strong: var(--surface-strong);
-  --trail-ring: var(--accent);
-
-  --font-sans: "Work Sans", system-ui, sans-serif;
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-}
-
-[data-theme="dark"] {
-  color-scheme: dark;
-  --base: 13 13 16;
-  --surface: 24 24 29;
-  --surface-strong: 24 24 29;
-  --stroke: 111 111 111;
-  --ink: 242 242 242;
-  --ink-muted: 197 197 213;
-  --ink-subtle: 146 152 168;
-  --cta-fg: 13 13 16;
-  --accent: 242 242 242;
-  --accent-soft: 52 55 66;
-  --glow: 197 197 213;
-  --glow-strong: 111 111 111;
-  --grid-line: rgb(255 255 255 / 0.06);
+  --accent: 13 148 136;
+  --accent-soft: 153 225 215;
+  --glow: 240 253 250;
+  --glow-strong: 230 246 242;
+  --grid-line: rgb(19 78 74 / 0.08);
   --grid-size: 140px;
 
   --trail-bg: var(--base);
   --trail-surface: var(--surface);
   --trail-surface-high: var(--surface-strong);
-  --trail-surface-low: var(--surface);
+  --trail-surface-low: 248 254 252;
   --trail-border: var(--stroke);
   --trail-ink: var(--ink);
   --trail-ink-muted: var(--ink-muted);
   --trail-accent: var(--accent);
-  --trail-accent-contrast: var(--surface);
-  --trail-highlight: var(--accent-soft);
+  --trail-accent-contrast: 255 255 255;
+  --trail-highlight: 207 237 231;
   --trail-glass: var(--surface);
   --trail-glass-strong: var(--surface-strong);
+  --trail-elev-1: 0 0 0 rgba(0, 0, 0, 0);
+  --trail-elev-2: 0 0 0 rgba(0, 0, 0, 0);
+  --trail-elev-3: 0 0 0 rgba(0, 0, 0, 0);
   --trail-ring: var(--accent);
+  --trail-gradient-1: none;
+  --trail-gradient-2: none;
+
+  --font-sans: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-display: var(--font-sans);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --base: 6 23 21;
+  --surface: 9 33 30;
+  --surface-strong: 13 46 42;
+  --stroke: 30 86 80;
+  --ink: 227 251 248;
+  --ink-muted: 166 216 210;
+  --ink-subtle: 118 170 165;
+  --cta: 249 115 22;
+  --cta-hover: 234 88 12;
+  --cta-fg: 255 255 255;
+  --accent: 20 184 166;
+  --accent-soft: 30 102 95;
+  --glow: 6 23 21;
+  --glow-strong: 13 46 42;
+  --grid-line: rgb(227 251 248 / 0.08);
+  --grid-size: 160px;
+
+  --trail-bg: var(--base);
+  --trail-surface: var(--surface);
+  --trail-surface-high: var(--surface-strong);
+  --trail-surface-low: 7 28 25;
+  --trail-border: var(--stroke);
+  --trail-ink: var(--ink);
+  --trail-ink-muted: var(--ink-muted);
+  --trail-accent: var(--accent);
+  --trail-accent-contrast: 6 23 21;
+  --trail-highlight: 30 86 80;
+  --trail-glass: var(--surface);
+  --trail-glass-strong: var(--surface-strong);
+  --trail-elev-1: 0 0 0 rgba(0, 0, 0, 0);
+  --trail-elev-2: 0 0 0 rgba(0, 0, 0, 0);
+  --trail-elev-3: 0 0 0 rgba(0, 0, 0, 0);
+  --trail-ring: var(--accent);
+  --trail-gradient-1: none;
+  --trail-gradient-2: none;
 }
 
 @media (prefers-color-scheme: dark) {
   [data-theme="system"] {
     color-scheme: dark;
-    --base: 13 13 16;
-    --surface: 24 24 29;
-    --surface-strong: 24 24 29;
-    --stroke: 111 111 111;
-    --ink: 242 242 242;
-    --ink-muted: 197 197 213;
-    --ink-subtle: 146 152 168;
-    --cta-fg: 13 13 16;
-    --accent: 242 242 242;
-    --accent-soft: 52 55 66;
-    --glow: 197 197 213;
-    --glow-strong: 111 111 111;
-    --grid-line: rgb(255 255 255 / 0.06);
-    --grid-size: 140px;
+    --base: 6 23 21;
+    --surface: 9 33 30;
+    --surface-strong: 13 46 42;
+    --stroke: 30 86 80;
+    --ink: 227 251 248;
+    --ink-muted: 166 216 210;
+    --ink-subtle: 118 170 165;
+    --cta: 249 115 22;
+    --cta-hover: 234 88 12;
+    --cta-fg: 255 255 255;
+    --accent: 20 184 166;
+    --accent-soft: 30 102 95;
+    --glow: 6 23 21;
+    --glow-strong: 13 46 42;
+    --grid-line: rgb(227 251 248 / 0.08);
+    --grid-size: 160px;
 
     --trail-bg: var(--base);
     --trail-surface: var(--surface);
     --trail-surface-high: var(--surface-strong);
-    --trail-surface-low: var(--surface);
+    --trail-surface-low: 7 28 25;
     --trail-border: var(--stroke);
     --trail-ink: var(--ink);
     --trail-ink-muted: var(--ink-muted);
     --trail-accent: var(--accent);
-    --trail-accent-contrast: var(--surface);
-    --trail-highlight: var(--accent-soft);
+    --trail-accent-contrast: 6 23 21;
+    --trail-highlight: 30 86 80;
     --trail-glass: var(--surface);
     --trail-glass-strong: var(--surface-strong);
+    --trail-elev-1: 0 0 0 rgba(0, 0, 0, 0);
+    --trail-elev-2: 0 0 0 rgba(0, 0, 0, 0);
+    --trail-elev-3: 0 0 0 rgba(0, 0, 0, 0);
     --trail-ring: var(--accent);
+    --trail-gradient-1: none;
+    --trail-gradient-2: none;
   }
 }
 
 @media (prefers-color-scheme: light) {
   [data-theme="system"] {
     color-scheme: light;
-    --base: 236 238 244;
-    --surface: 252 252 255;
-    --surface-strong: 245 247 250;
-    --stroke: 202 206 216;
-    --ink: 14 16 20;
-    --ink-muted: 40 44 52;
-    --ink-subtle: 92 98 112;
+    --base: 240 253 250;
+    --surface: 255 255 255;
+    --surface-strong: 230 246 242;
+    --stroke: 199 229 221;
+    --ink: 19 78 74;
+    --ink-muted: 36 107 102;
+    --ink-subtle: 76 134 129;
+    --cta: 249 115 22;
+    --cta-hover: 234 88 12;
     --cta-fg: 255 255 255;
-    --accent: 14 16 20;
-    --accent-soft: 226 229 238;
-    --glow: 248 248 252;
-    --glow-strong: 226 229 238;
-    --grid-line: rgb(14 16 20 / 0.08);
-    --grid-size: 120px;
+    --accent: 13 148 136;
+    --accent-soft: 153 225 215;
+    --glow: 240 253 250;
+    --glow-strong: 230 246 242;
+    --grid-line: rgb(19 78 74 / 0.08);
+    --grid-size: 140px;
 
     --trail-bg: var(--base);
     --trail-surface: var(--surface);
     --trail-surface-high: var(--surface-strong);
-    --trail-surface-low: var(--surface);
+    --trail-surface-low: 248 254 252;
     --trail-border: var(--stroke);
     --trail-ink: var(--ink);
     --trail-ink-muted: var(--ink-muted);
     --trail-accent: var(--accent);
-    --trail-accent-contrast: var(--surface);
-    --trail-highlight: var(--accent-soft);
+    --trail-accent-contrast: 255 255 255;
+    --trail-highlight: 207 237 231;
     --trail-glass: var(--surface);
     --trail-glass-strong: var(--surface-strong);
+    --trail-elev-1: 0 0 0 rgba(0, 0, 0, 0);
+    --trail-elev-2: 0 0 0 rgba(0, 0, 0, 0);
+    --trail-elev-3: 0 0 0 rgba(0, 0, 0, 0);
     --trail-ring: var(--accent);
+    --trail-gradient-1: none;
+    --trail-gradient-2: none;
   }
 }
 
 body {
   font-family: var(--font-sans);
-  background:
-    radial-gradient(circle at top, rgb(var(--glow) / 0.35), transparent 60%),
-    radial-gradient(circle at 20% 10%, rgb(var(--glow-strong) / 0.22), transparent 45%),
-    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
-    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px),
-    rgb(var(--base));
-  background-size:
-    160% 160%,
-    140% 140%,
-    var(--grid-size) var(--grid-size),
-    var(--grid-size) var(--grid-size),
-    auto;
-  background-position:
-    top left,
-    top right,
-    0 0,
-    0 0,
-    0 0;
+  background: rgb(var(--base));
   color: rgb(var(--ink));
   min-height: 100vh;
 }

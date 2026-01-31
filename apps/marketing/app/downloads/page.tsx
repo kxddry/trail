@@ -85,11 +85,6 @@ export default async function DownloadsPage() {
       <MarketingNav />
       <main className="relative overflow-hidden">
         <BackgroundArt variant="graph" />
-        <div className="pointer-events-none absolute inset-0">
-          <div className="absolute -left-12 top-16 h-32 w-32 rounded-full bg-ink/5 blur-3xl float-slow" />
-          <div className="absolute right-10 top-24 h-40 w-40 rounded-full bg-ink/10 blur-3xl float-slower" />
-          <div className="absolute bottom-12 left-1/2 h-44 w-44 -translate-x-1/2 rounded-full bg-ink/5 blur-3xl float-slow" />
-        </div>
         <section className="relative mx-auto max-w-6xl px-6 pb-20 pt-16">
           <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="space-y-8">
@@ -130,7 +125,7 @@ export default async function DownloadsPage() {
                       key={item.label}
                       className={cn(
                         "rounded-full border border-stroke/50 bg-surface/70 px-3 py-1 text-[11px] font-semibold text-ink-subtle",
-                        item.active ? "border-ink/30 text-ink shadow-elev-1" : null
+                        item.active ? "border-accent/40 text-ink shadow-elev-1" : null
                       )}
                     >
                       {item.label} · {item.status}
@@ -144,7 +139,7 @@ export default async function DownloadsPage() {
                     key={card.title}
                     className={cn(
                       "trail-card p-5",
-                      recommendedCard === card.title ? "border-ink/30 shadow-elev-1" : null
+                      recommendedCard === card.title ? "border-accent/40 shadow-elev-1" : null
                     )}
                   >
                     <div className="flex items-center justify-between gap-3">
@@ -167,7 +162,7 @@ export default async function DownloadsPage() {
                       key={step.title}
                       className="trail-step flex items-start gap-4"
                     >
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-surface">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-sm font-semibold text-cta-fg">
                         {index + 1}
                       </div>
                       <div>
