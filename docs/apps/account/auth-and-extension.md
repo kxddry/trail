@@ -65,12 +65,48 @@ verifyExtensionAccessToken(token: string): ExtensionTokenPayload | null
 
 ## Env
 
-- Account: Auth0 vars; `TRAIL_EXTENSION_JWT_SECRET` for signing.  
+- Account: Auth0 vars; `TRAIL_EXTENSION_JWT_SECRET` for signing.
+- Account CORS (extension → account `/v1/*`):
+  - `TRAIL_EXTENSION_ORIGINS` (preferred) or `TRAIL_CORS_ORIGINS`
+  - Comma/space-separated list of exact Origins.
+  - Example: `chrome-extension://<your_extension_id>`
 - API: internal key for account→API calls; extension login code creation.
+
+---
+
+## Test Plan (CORS for extension)
+
+1. Set allowlist (local dev example):
+
+   ```bash
+   export TRAIL_EXTENSION_ORIGINS="chrome-extension://<extension_id>"
+   ```
+
+2. Preflight should succeed (OPTIONS):
+
+   ```bash
+   curl -i -X OPTIONS "http://localhost:3001/v1/account" \
+     -H "Origin: chrome-extension://<extension_id>" \
+     -H "Access-Control-Request-Method: GET" \
+     -H "Access-Control-Request-Headers: authorization, content-type"
+   ```
+
+   Expect: `204` + `Access-Control-Allow-Origin: chrome-extension://<extension_id>`.
+
+3. Actual request should include CORS headers too:
+
+   ```bash
+   curl -i "http://localhost:3001/v1/plans" \
+     -H "Origin: chrome-extension://<extension_id>"
+   ```
+
+   Expect: `200` + `Access-Control-Allow-Origin: ...`.
+
+4. Negative case: unlisted Origin should not be allowed (no `Access-Control-Allow-Origin` header).
 
 ---
 
 ## AI Agent Notes
 
-- New internal endpoint: add route in API app, protect with requireInternalKey; call from internal-api in account app.  
+- New internal endpoint: add route in API app, protect with requireInternalKey; call from internal-api in account app.
 - Token claims: extend payload in extension-auth and document for extension; extension should validate exp and sub.

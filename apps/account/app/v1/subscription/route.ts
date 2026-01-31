@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { corsPreflight, applyCorsHeaders } from "@/src/server/cors";
 import { verifyExtensionAccessToken } from "@/src/server/extension-auth";
 
 export const runtime = "nodejs";
+
+const CORS_OPTIONS = { methods: ["GET"] } as const;
 
 function getBearerToken(headers: Headers): string | null {
   const auth = headers.get("authorization") ?? headers.get("Authorization");
@@ -11,14 +14,22 @@ function getBearerToken(headers: Headers): string | null {
   return token;
 }
 
+export async function OPTIONS(request: Request) {
+  return corsPreflight(request, CORS_OPTIONS);
+}
+
 export async function GET(request: Request) {
   const token = getBearerToken(request.headers);
   if (!token || !verifyExtensionAccessToken(token)) {
-    return NextResponse.json(
-      { code: "auth", message: "Unauthorized", retryable: false },
-      { status: 401 }
+    return applyCorsHeaders(
+      request,
+      NextResponse.json(
+        { code: "auth", message: "Unauthorized", retryable: false },
+        { status: 401 }
+      ),
+      CORS_OPTIONS
     );
   }
 
-  return NextResponse.json(null);
+  return applyCorsHeaders(request, NextResponse.json(null), CORS_OPTIONS);
 }

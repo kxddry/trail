@@ -1,17 +1,27 @@
 import { NextResponse } from "next/server";
 import { buildAccountSnapshot } from "@/src/server/account-snapshot";
+import { corsPreflight, applyCorsHeaders } from "@/src/server/cors";
 import { createExtensionAccessToken } from "@/src/server/extension-auth";
 import { internalApiJson } from "@/src/server/internal-api";
 
 export const runtime = "nodejs";
 
+const CORS_OPTIONS = { methods: ["GET"] } as const;
+
+export async function OPTIONS(
+  request: Request,
+  _context: { params: Promise<{ id: string }> }
+) {
+  return corsPreflight(request, CORS_OPTIONS);
+}
+
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id: sessionId } = await params;
   if (!sessionId) {
-    return NextResponse.json({ status: "expired" });
+    return applyCorsHeaders(request, NextResponse.json({ status: "expired" }), CORS_OPTIONS);
   }
 
   let response: {
@@ -31,28 +41,40 @@ export async function GET(
       { method: "GET" }
     );
   } catch (error) {
-    return NextResponse.json({ error: "internal_error" }, { status: 500 });
+    return applyCorsHeaders(
+      request,
+      NextResponse.json({ error: "internal_error" }, { status: 500 }),
+      CORS_OPTIONS
+    );
   }
 
   if (response.status !== "approved") {
-    return NextResponse.json({ status: response.status });
+    return applyCorsHeaders(
+      request,
+      NextResponse.json({ status: response.status }),
+      CORS_OPTIONS
+    );
   }
 
   if (!response.user) {
-    return NextResponse.json({ status: "expired" });
+    return applyCorsHeaders(request, NextResponse.json({ status: "expired" }), CORS_OPTIONS);
   }
 
   const token = createExtensionAccessToken(response.user.id);
 
-  return NextResponse.json({
-    status: "approved",
-    snapshot: buildAccountSnapshot({
-      user: {
-        ...response.user,
-        createdAt: new Date(response.user.createdAt)
-      },
-      accessToken: token.token,
-      expiresAt: token.expiresAt
-    })
-  });
+  return applyCorsHeaders(
+    request,
+    NextResponse.json({
+      status: "approved",
+      snapshot: buildAccountSnapshot({
+        user: {
+          ...response.user,
+          createdAt: new Date(response.user.createdAt)
+        },
+        accessToken: token.token,
+        expiresAt: token.expiresAt
+      })
+    }),
+    CORS_OPTIONS
+  );
 }

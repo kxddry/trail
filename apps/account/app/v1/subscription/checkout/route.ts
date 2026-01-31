@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
+import { corsPreflight, applyCorsHeaders } from "@/src/server/cors";
 import { verifyExtensionAccessToken } from "@/src/server/extension-auth";
 
 export const runtime = "nodejs";
+
+const CORS_OPTIONS = { methods: ["POST"] } as const;
 
 function getBearerToken(headers: Headers): string | null {
   const auth = headers.get("authorization") ?? headers.get("Authorization");
@@ -11,12 +14,20 @@ function getBearerToken(headers: Headers): string | null {
   return token;
 }
 
+export async function OPTIONS(request: Request) {
+  return corsPreflight(request, CORS_OPTIONS);
+}
+
 export async function POST(request: Request) {
   const token = getBearerToken(request.headers);
   if (!token || !verifyExtensionAccessToken(token)) {
-    return NextResponse.json(
-      { code: "auth", message: "Unauthorized", retryable: false },
-      { status: 401 }
+    return applyCorsHeaders(
+      request,
+      NextResponse.json(
+        { code: "auth", message: "Unauthorized", retryable: false },
+        { status: 401 }
+      ),
+      CORS_OPTIONS
     );
   }
 
@@ -26,8 +37,12 @@ export async function POST(request: Request) {
       ? body.successUrl
       : "https://app.gettrail.net/billing";
 
-  return NextResponse.json({
-    url: successUrl,
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
-  });
+  return applyCorsHeaders(
+    request,
+    NextResponse.json({
+      url: successUrl,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    }),
+    CORS_OPTIONS
+  );
 }
