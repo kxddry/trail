@@ -68,6 +68,9 @@ git worktree remove /tmp/trail-pricing-link
 - API changes:
   - `pnpm --filter @trail/api typecheck`
 
+## Releases
+- Release checklist + commands: `docs/dev/release.md`
+
 ## Status updates (chat)
 - If Ivan ends a message with **"фон"**, run in background and post periodic updates:
   - “Found the file(s)” → “Implemented” → “Ran checks” → “Pushed PR”.
