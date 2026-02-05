@@ -395,7 +395,7 @@ import {
   Plug,
   Shield,
   Settings
-} from "lucide-react";
+} from "-ui/react-icons";
 
 const navGroups = [
   {

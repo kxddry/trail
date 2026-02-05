@@ -6,7 +6,7 @@
 
 **Architecture:** Add Tailwind (utilities only) to the extension UI, provide shadcn component structure under `components/ui`, and integrate the provided `Sidebar` component into `SettingsPopover` without changing the existing button markup/styles. Use a small helper in `sidebar-utils.ts` for testable animation sizing logic.
 
-**Tech Stack:** React 18, Vite, Tailwind CSS 4 (no preflight), @motion/react, lucide-react, TypeScript.
+**Tech Stack:** React 18, Vite, Tailwind CSS 4 (no preflight), @motion/react, -ui/react-icons, TypeScript.
 
 ---
 
