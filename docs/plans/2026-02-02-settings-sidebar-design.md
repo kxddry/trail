@@ -10,7 +10,7 @@ Replace the current narrow-width settings sidebar behavior (which collapses into
 
 ## Constraints
 - Extension UI is a Vite + React app with existing CSS-driven styling.
-- Use the provided component structure and `framer-motion` for animation.
+- Use the provided component structure and `@motion/react` for animation.
 - Avoid Tailwind preflight to prevent global style regressions in theme picker and graph.
 - No Next.js APIs; adapt `Link`/`Image` usage to standard anchor/image elements.
 
