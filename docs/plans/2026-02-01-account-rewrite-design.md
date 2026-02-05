@@ -4,10 +4,10 @@
 **Project:** `apps/account` (app.gettrail.net)
 
 ## Context
-The account app currently delivers core pages (dashboard, extension, settings, billing) with a lightweight shell. It already uses `@trail/ui` tokens, Auth0, and tRPC. The goal is a from-scratch UI rewrite that keeps routes and data contracts stable while making the product feel intentional, premium, and more legible. The rewrite also adds three product-facing pages to complete activation and access workflows: `/getting-started`, `/activity`, and `/sessions`.
+The account app currently delivers core pages (dashboard, extension, settings, billing) with a lightweight shell. It already uses `@trail/ui` tokens, Better Auth, and tRPC. The goal is a from-scratch UI rewrite that keeps routes and data contracts stable while making the product feel intentional, premium, and more legible. The rewrite also adds three product-facing pages to complete activation and access workflows: `/getting-started`, `/activity`, and `/sessions`.
 
 ## Assumptions (no questions requested)
-- Keep all existing routes and server actions working (Auth0, tRPC, v1 routes).
+- Keep all existing routes and server actions working (Better Auth, tRPC, v1 routes).
 - Focus on UI/UX and component architecture, not adding new backend features.
 - Preserve the Trail brand's warm neutral palette and lowercase typographic voice.
 - Avoid breaking extension or external clients that may still rely on `/v1` routes.
@@ -63,7 +63,7 @@ The app keeps `@trail/ui` components for shared primitives (`Button`, `Badge`, `
 - Client components only where required (`Sidebar`, `DashboardClient`).
 - tRPC queries remain in `DashboardClient`.
 - New pages use placeholder/empty states (no new backend data).
-- No changes to Auth0 or API contracts.
+- No changes to Better Auth or API contracts.
 
 ## Error Handling
 - Keep existing redirect patterns.

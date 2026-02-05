@@ -17,7 +17,7 @@ Date: 2026-02-02
 Clients (extension, account dashboard, marketing) talk only to `api.gettrail.net/v1`. The account site is responsible for user-facing confirmation UI, but the approval call goes to the API.
 
 Authentication modes:
-- User tokens (Auth0) for dashboard actions.
+- User tokens (Better Auth) for dashboard actions.
 - Extension token for sync and device operations.
 
 ## Data model (Prisma)

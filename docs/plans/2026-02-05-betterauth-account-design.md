@@ -3,10 +3,10 @@
 Дата: 2026-02-05
 
 ## Контекст
-В проекте уже есть `apps/auth`, использующий Better Auth. В `apps/account` ещё встречаются следы Auth0 (импорты `@/src/lib/auth0` и ссылки на Auth0-профиль). Нужен единый источник сессии: Better Auth в `apps/auth`, а `apps/account` должен читать пользователя через существующий bridge‑токен `trail_auth_session` и локальные helpers `src/lib/auth`.
+В проекте уже есть `apps/auth`, использующий Better Auth. В `apps/account` ещё встречаются следы Better Auth (импорты `@/src/lib/auth` и ссылки на Better Auth-профиль). Нужен единый источник сессии: Better Auth в `apps/auth`, а `apps/account` должен читать пользователя через существующий bridge‑токен `trail_auth_session` и локальные helpers `src/lib/auth`.
 
 ## Цели
-- Полностью убрать зависимости от Auth0 в `apps/account`.
+- Полностью убрать зависимости от Better Auth в `apps/account`.
 - Оставить `apps/auth` единственным auth‑сервисом (Better Auth).
 - Сохранить bridge‑флоу для SSO: `apps/auth` → code → `apps/account` → access token cookie.
 - Не ломать текущие страницы и тесты, минимальные изменения.
@@ -23,10 +23,10 @@
 4. Все защищённые страницы `apps/account` читают `trail_auth_session` через `src/lib/auth`, декодируют пользователя и вызывают `ensureUser`.
 
 ## Изменения в коде
-- Удалить использование `@/src/lib/auth0` в `apps/account`.
+- Удалить использование `@/src/lib/auth` в `apps/account`.
 - Страницы `settings` и `extension` переключить на `getAuthTokenFromCookies`, `getAuthUserFromToken`, `getDevUser`, `isAuthBypassed`.
-- Удалить/заменить `apps/account/src/lib/auth0.ts` (если есть).
-- Ссылки “manage profile / change password” направить в `apps/auth` (или через bridge) вместо Auth0.
+- Удалить/заменить `apps/account/src/lib/auth.ts` (если есть).
+- Ссылки “manage profile / change password” направить в `apps/auth` (или через bridge) вместо Better Auth.
 
 ## Обработка ошибок
 - Если токен отсутствует/невалиден → редирект на `/auth/login`.

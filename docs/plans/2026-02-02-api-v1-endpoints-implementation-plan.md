@@ -143,7 +143,7 @@ describe("v1 devices endpoints", () => {
   });
 
   it("lists devices with latest session", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     deviceMocks.listDevices.mockResolvedValue([
       {
@@ -188,7 +188,7 @@ describe("v1 devices endpoints", () => {
   });
 
   it("revokes a device and its active sessions", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.device.findUnique.mockResolvedValue({
       id: "device-1",
@@ -608,7 +608,7 @@ describe("v1 account settings", () => {
   });
 
   it("returns default TTL when settings are missing", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.accountSettings.findUnique.mockResolvedValue(null);
 
@@ -624,7 +624,7 @@ describe("v1 account settings", () => {
   });
 
   it("updates device session TTL", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.accountSettings.upsert.mockResolvedValue({
       userId: "user-1",
@@ -812,7 +812,7 @@ describe("v1 trails endpoints", () => {
   });
 
   it("lists trails with pagination", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.trail.findMany.mockResolvedValue([
       {
@@ -864,7 +864,7 @@ describe("v1 trails endpoints", () => {
   });
 
   it("updates trail metadata", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.trail.findFirst.mockResolvedValue({
       id: "trail-1",
@@ -904,7 +904,7 @@ describe("v1 trails endpoints", () => {
   });
 
   it("soft deletes a trail", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.trail.findFirst.mockResolvedValue({ id: "trail-1", userId: "user-1" });
     dbMocks.db.trail.update.mockResolvedValue({
@@ -938,7 +938,7 @@ describe("v1 trails endpoints", () => {
   });
 
   it("restores a trail", async () => {
-    authMocks.verifyUserToken.mockResolvedValue({ sub: "auth0|1" });
+    authMocks.verifyUserToken.mockResolvedValue({ sub: "user-1" });
     userMocks.ensureUser.mockResolvedValue({ id: "user-1" });
     dbMocks.db.trail.findFirst.mockResolvedValue({ id: "trail-1", userId: "user-1" });
     dbMocks.db.trail.update.mockResolvedValue({

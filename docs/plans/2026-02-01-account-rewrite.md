@@ -6,7 +6,7 @@
 
 **Architecture:** Rebuild the shell and page layouts using `@trail/ui` primitives and a shared `PageHeader` component. Keep pages as server components by default, isolate client logic in existing client components, and refresh global theming with new tokens and backgrounds.
 
-**Tech Stack:** Next.js 16, React 19, Tailwind CSS, @trail/ui, tRPC, Auth0.
+**Tech Stack:** Next.js 16, React 19, Tailwind CSS, @trail/ui, tRPC, Better Auth.
 
 ---
 
@@ -1575,7 +1575,7 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn()
 }));
 
-vi.mock("@/src/lib/auth0", () => ({
+vi.mock("@/src/lib/auth", () => ({
   getAuthSession: async () => ({ user: { name: "Alex Trail", email: "alex@trail.net" } }),
   isAuthBypassed: () => false
 }));
@@ -1622,7 +1622,7 @@ import {
 import { Button, EmptyState, StatCard } from "@trail/ui";
 import { accountCopy } from "@trail/content";
 import { PageHeader } from "@/app/components/PageHeader";
-import { getAuthSession, isAuthBypassed } from "@/src/lib/auth0";
+import { getAuthSession, isAuthBypassed } from "@/src/lib/auth";
 import { ensureUser } from "@/src/server/user";
 import { createExtensionLoginCode } from "@/src/server/extension-login";
 
@@ -1834,7 +1834,7 @@ vi.mock("next/navigation", () => ({
   redirect: vi.fn()
 }));
 
-vi.mock("@/src/lib/auth0", () => ({
+vi.mock("@/src/lib/auth", () => ({
   getAuthSession: async () => ({
     user: { name: "Alex Trail", email: "alex@trail.net", picture: null }
   })
@@ -1869,7 +1869,7 @@ import Image, { type ImageLoaderProps } from "next/image";
 import { accountCopy } from "@trail/content";
 import { Button } from "@trail/ui";
 import { PageHeader } from "@/app/components/PageHeader";
-import { getAuthSession } from "@/src/lib/auth0";
+import { getAuthSession } from "@/src/lib/auth";
 
 const avatarLoader = ({ src }: ImageLoaderProps) => src;
 
@@ -1890,10 +1890,10 @@ export default async function SettingsPage() {
     .map((chunk) => chunk[0]?.toLowerCase())
     .join("");
 
-  const auth0Domain = process.env.AUTH0_DOMAIN
-    ? `https://${process.env.AUTH0_DOMAIN}`
+  const betterAuthDomain = process.env.BETTER_AUTH_URL
+    ? `${process.env.BETTER_AUTH_URL}`
     : null;
-  const auth0ProfileUrl = auth0Domain ? `${auth0Domain}/u/me` : "https://auth0.com/";
+  const betterAuthProfileUrl = betterAuthDomain ? `${betterAuthDomain}/account` : "https://auth.gettrail.net/account";
 
   const sessions = [
     {
@@ -1912,7 +1912,7 @@ export default async function SettingsPage() {
         subtitle={settings.subtitle}
         actions={
           <Button.AsChild size="sm" variant="outline">
-            <a href={auth0ProfileUrl} target="_blank" rel="noreferrer">
+            <a href={betterAuthProfileUrl} target="_blank" rel="noreferrer">
               {settings.profile.manageCta}
             </a>
           </Button.AsChild>
@@ -1954,7 +1954,7 @@ export default async function SettingsPage() {
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button.AsChild size="sm" variant="outline">
-              <a href={auth0ProfileUrl} target="_blank" rel="noreferrer">
+              <a href={betterAuthProfileUrl} target="_blank" rel="noreferrer">
                 {settings.profile.manageCta}
               </a>
             </Button.AsChild>
@@ -1985,7 +1985,7 @@ export default async function SettingsPage() {
             ))}
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-ink-muted">
-            <a href={auth0ProfileUrl} target="_blank" rel="noreferrer" className="text-ink">
+            <a href={betterAuthProfileUrl} target="_blank" rel="noreferrer" className="text-ink">
               {settings.security.changePasswordCta}
             </a>
             <span>•</span>

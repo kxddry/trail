@@ -3,7 +3,7 @@
 Date: 2026-02-02
 
 ## Goals
-- Перейти с Auth0 на BetterAuth.
+- Перейти с Better Auth на BetterAuth.
 - Вынести авторизацию в отдельный сервис `apps/auth` на домене `auth.gettrail.net`.
 - Оставить единую доменную модель пользователя (`User`) в общей БД.
 - Валидация пользователя в API через JWT (Bearer), выдаваемый BetterAuth.
@@ -11,9 +11,9 @@ Date: 2026-02-02
 - Сохранить текущий extension JWT (HMAC) для расширения.
 
 ## Non-goals
-- Backward compatibility с Auth0.
+- Backward compatibility с Better Auth.
 - Passkeys, SSO, multi-tenant orgs на этом этапе.
-- Миграция старых Auth0‑сессий.
+- Миграция старых Better Auth‑сессий.
 
 ## Архитектура
 - `apps/auth` — отдельный микросервис:
@@ -48,7 +48,7 @@ Date: 2026-02-02
 - Redirect URI и callback живут в `auth.gettrail.net`.
 
 ## Data Model (Prisma)
-- Удалить `User.auth0Id`.
+- Удалить `User.legacyAuthId`.
 - Добавить модели BetterAuth (CLI `@better-auth/cli generate`):
   - `Account`, `Session`, `Verification` (могут включать `User` — мерджим с текущей моделью).
 - Добавить `AuthBridgeCode`:
@@ -65,9 +65,9 @@ Date: 2026-02-02
 ## Migration Plan (high-level)
 1. Ввести `apps/auth` и BetterAuth конфиг.
 2. Добавить нужные таблицы и миграции.
-3. Заменить Auth0 middleware в `apps/account` и `apps/api`.
+3. Заменить Better Auth middleware в `apps/account` и `apps/api`.
 4. Включить новые login flows.
-5. Удалить Auth0 переменные и старые internal routes.
+5. Удалить Better Auth переменные и старые internal routes.
 
 ## Risks
 - Несоответствие моделей BetterAuth и существующей схемы — решается аккуратным мержем.

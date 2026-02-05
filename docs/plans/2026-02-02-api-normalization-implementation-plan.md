@@ -4,9 +4,9 @@
 
 **Goal:** Replace legacy internal backend flows with a single /v1 API that powers wishlist, device sessions, trails sync, and extension connection workflows.
 
-**Architecture:** Move all backend logic into `apps/api` with public `/v1` routes, authenticated via Auth0 (dashboard) and extension JWT (extension). The account and marketing apps become clients of the API. Trails use a hybrid model with JSON payload + summary columns and tombstones for deletions.
+**Architecture:** Move all backend logic into `apps/api` with public `/v1` routes, authenticated via Better Auth (dashboard) and extension JWT (extension). The account and marketing apps become clients of the API. Trails use a hybrid model with JSON payload + summary columns and tombstones for deletions.
 
-**Tech Stack:** Next.js route handlers, Prisma/Postgres, Auth0 JWT verification (JWKS via `jose`), extension JWT (HMAC), TypeScript.
+**Tech Stack:** Next.js route handlers, Prisma/Postgres, Better Auth JWT verification (JWKS via `jose`), extension JWT (HMAC), TypeScript.
 
 ---
 
@@ -25,12 +25,11 @@
 
 **Step 1: Add required env vars**
 Add to `apps/api/.env.example`:
-- `AUTH0_DOMAIN=`
-- `AUTH0_AUDIENCE=`
+- `BETTER_AUTH_URL=`
 - `TRAIL_EXTENSION_JWT_SECRET=`
 
 Add to `apps/account/.env.example` (if missing):
-- `AUTH0_AUDIENCE=`
+- `TRAIL_AUTH_BASE_URL=`
 
 **Step 2: Add dependency**
 Add `jose` to `apps/api/package.json` dependencies.
@@ -65,7 +64,7 @@ Add `vitest` + config (if none exists) in `apps/api`.
 **Step 6: Implement auth helpers**
 - `headers.ts`: parse `Authorization: Bearer ...`.
 - `jwks.ts`: cache JWKS using `createRemoteJWKSet`.
-- `user-auth.ts`: verify Auth0 JWT with `AUTH0_DOMAIN` + `AUTH0_AUDIENCE`.
+- `user-auth.ts`: verify Better Auth JWT with JWKS from `BETTER_AUTH_URL`.
 - `extension-auth.ts`: port logic from `apps/account/src/server/extension-auth.ts`.
 
 **Step 7: Re-run tests**

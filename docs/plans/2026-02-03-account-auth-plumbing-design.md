@@ -3,7 +3,7 @@
 Date: 2026-02-03
 
 ## Goals
-- Убрать Auth0 из `apps/account` и перейти на BetterAuth bridge flow (code → exchange → JWT).
+- Убрать Better Auth из `apps/account` и перейти на BetterAuth bridge flow (code → exchange → JWT).
 - Хранить JWT в httpOnly cookie на `app.gettrail.net`.
 - Перенести проверку авторизации в middleware + обновить TRPC proxy headers.
 - Оставить API ключ `x-trail-internal-key` как есть.
@@ -19,7 +19,7 @@ Date: 2026-02-03
   - `getDevUser()` возвращает dev пользователя.
   - `getAuthTokenFromCookies()` читает токен из httpOnly cookie (server-only).
   - `getAuthUserFromToken()` декодирует JWT (jose `decodeJwt`) и маппит `sub`, `email`, `name`, `picture|image`.
-- Auth0 helper удаляется, все импорты заменяются на новый helper.
+- Better Auth helper удаляется, все импорты заменяются на новый helper.
 
 ## Login Flow
 1. Пользователь на защищенном маршруте без cookie → редирект на `/auth/login?next=<path+search>`.
@@ -47,7 +47,7 @@ Date: 2026-02-03
 - Опции: `httpOnly`, `path=/`, `sameSite=lax`, `secure` в production.
 
 ## Env
-- Удалить Auth0 переменные из `apps/account/.env.example`.
+- Удалить Better Auth переменные из `apps/account/.env.example`.
 - Добавить `TRAIL_AUTH_BASE_URL=https://auth.gettrail.net` (если нужно) и убедиться, что `TRAIL_API_BASE_URL` остается.
 
 ## Testing

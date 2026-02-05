@@ -23,14 +23,15 @@ pnpm install --frozen-lockfile
 export DATABASE_URL='postgresql://postgres:postgres@localhost:5432/trail_ci'
 export TRAIL_API_BASE_URL='http://localhost:3002'
 export TRAIL_INTERNAL_API_KEY='ci'
+export TRAIL_AUTH_BASE_URL='http://localhost:3003'
+export TRAIL_EXTENSION_JWT_SECRET='test-extension-secret'
+export WAITLIST_PROVIDER_ENDPOINT='http://localhost:3999/waitlist'
+export WAITLIST_PROVIDER_TOKEN='test-waitlist-token'
 
-# Auth0 env placeholders so the account app can import Auth0 client
-export AUTH0_BASE_URL='http://localhost:3001'
-export AUTH0_ISSUER_BASE_URL='https://example.auth0.com'
-export AUTH0_CLIENT_ID='ci'
-export AUTH0_CLIENT_SECRET='ci'
-export AUTH0_SECRET='0123456789abcdef0123456789abcdef'
-export AUTH0_DOMAIN='example.auth0.com'
+# API auth/billing placeholders required at build time
+export BETTER_AUTH_URL='http://localhost:3003'
+export BETTER_AUTH_SECRET='0123456789abcdef0123456789abcdef'
+export POLAR_WEBHOOK_SECRET='test-polar-secret'
 export APP_BASE_URL='http://localhost:3001'
 
 pnpm --filter @trail/marketing --filter @trail/account --filter @trail/api typecheck

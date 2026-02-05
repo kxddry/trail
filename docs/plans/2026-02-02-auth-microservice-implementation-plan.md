@@ -2,7 +2,7 @@
 
 > **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Replace Auth0 with BetterAuth, add `apps/auth` on `auth.gettrail.net`, and complete remaining API normalization tasks with JWT auth.
+**Goal:** Replace Better Auth with BetterAuth, add `apps/auth` on `auth.gettrail.net`, and complete remaining API normalization tasks with JWT auth.
 
 **Architecture:** Auth lives in `apps/auth` (BetterAuth). Web clients redirect to auth, then exchange a one-time code for a JWT via `apps/api`. API validates JWT via JWKS. Extension keeps its own HMAC token.
 
@@ -228,8 +228,8 @@ model AuthBridgeCode {
 }
 ```
 
-**Step 3: Remove Auth0 fields**
-Remove `User.auth0Id`.
+**Step 3: Remove Better Auth fields**
+Remove `User.legacyAuthId`.
 
 **Step 4: Run migration**
 ```bash
@@ -279,7 +279,7 @@ git commit -m "Add auth bridge exchange"
 
 ---
 
-### Task 5: Replace Auth0 verification in API with BetterAuth JWT
+### Task 5: Replace Better Auth verification in API with BetterAuth JWT
 
 **Files:**
 - Modify: `apps/api/src/server/auth/user-auth.ts`
@@ -288,7 +288,7 @@ git commit -m "Add auth bridge exchange"
 - Modify: `apps/api/app/v1/extension/connect/route.ts` (later in Task 6)
 
 **Step 1: Update env**
-Replace Auth0 vars with:
+Replace Better Auth vars with:
 ```
 BETTER_AUTH_URL=https://auth.gettrail.net
 ```
@@ -398,7 +398,7 @@ git commit -m "Add extension connect flow"
 ### Task 10: Update account app to BetterAuth
 
 **Files:**
-- Remove: `apps/account/src/lib/auth0.ts`
+- Remove: `apps/account/src/lib/auth.ts`
 - Modify: `apps/account/proxy.ts`
 - Modify: `apps/account/app/page.tsx`
 - Modify: `apps/account/app/(app)/extension/page.tsx`
@@ -412,8 +412,8 @@ git commit -m "Add extension connect flow"
 - `auth.ts` reads JWT from cookie and returns session.
 - `proxy.ts` checks JWT cookie and redirects to `auth.gettrail.net/login`.
 - `auth/callback` exchanges code via `/v1/auth/bridge/exchange`, sets cookie.
-- Remove Auth0 references.
-- Update settings page links (Auth0 profile link removal).
+- Remove Better Auth references.
+- Update settings page links (Better Auth profile link removal).
 - Run `pnpm --filter @trail/account typecheck`.
 - Commit.
 
@@ -432,13 +432,13 @@ git commit -m "Add extension connect flow"
 
 ---
 
-### Task 12: Remove legacy internal routes + Auth0 references
+### Task 12: Remove legacy internal routes + Better Auth references
 
 **Files:**
 - Remove: `apps/api/app/api/internal/extension/*` (login code, portal)
 - Remove: `apps/account/src/server/internal-api.ts` usage for auth.
 - Remove: `TRAIL_INTERNAL_API_KEY` usage where no longer needed.
-- Update `.env.example` files to drop Auth0 vars.
+- Update `.env.example` files to drop Better Auth vars.
 
 **Steps:**
 - Delete internal routes and dependent code.
