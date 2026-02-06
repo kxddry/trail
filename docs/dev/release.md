@@ -31,8 +31,8 @@ export WAITLIST_PROVIDER_TOKEN='test-waitlist-token'
 # API auth/billing placeholders required at build time
 export BETTER_AUTH_URL='http://localhost:3003'
 export BETTER_AUTH_SECRET='0123456789abcdef0123456789abcdef'
-export POLAR_WEBHOOK_SECRET='test-polar-secret'
 export APP_BASE_URL='http://localhost:3001'
+export BILLING_PROVIDER='stub' # switch to 'nowpayments' when integration is ready
 
 pnpm --filter @trail/marketing --filter @trail/account --filter @trail/api typecheck
 pnpm --filter @trail/marketing --filter @trail/account --filter @trail/api build
