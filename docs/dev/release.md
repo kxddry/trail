@@ -32,7 +32,7 @@ export WAITLIST_PROVIDER_TOKEN='test-waitlist-token'
 export BETTER_AUTH_URL='http://localhost:3003'
 export BETTER_AUTH_SECRET='0123456789abcdef0123456789abcdef'
 export APP_BASE_URL='http://localhost:3001'
-export BILLING_PROVIDER='stub' # switch to 'nowpayments' when integration is ready
+export BILLING_PROVIDER='manual' # switch to 'nowpayments' when integration is ready
 
 pnpm --filter @trail/marketing --filter @trail/account --filter @trail/api typecheck
 pnpm --filter @trail/marketing --filter @trail/account --filter @trail/api build
