@@ -15,7 +15,8 @@
 - [ ] (TBD) 
 
 ### Extension
-- [ ] (TBD)
+- [ ] URL normalization + merge duplicate nodes after delete (auth-branch cleanup case)
+- [ ] Prototype: NavigationGraph model + tree projection for UI (dedupe by canonical URL)
 
 ### Account/API
 - [ ] (TBD)
