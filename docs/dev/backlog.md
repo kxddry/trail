@@ -19,7 +19,7 @@
 - [ ] Prototype: NavigationGraph model + tree projection for UI (dedupe by canonical URL)
 
 ### Account/API
-- [ ] Minimal account app UI: no sidebar, shadcn-only primitives, trails-first home, Google-only auth
+- [ ] (TBD)
 
 ### Infra/DX
 - [ ] (TBD)
