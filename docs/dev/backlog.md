@@ -17,9 +17,12 @@
 ### Extension
 - [ ] URL normalization + merge duplicate nodes after delete (auth-branch cleanup case)
 - [ ] Prototype: NavigationGraph model + tree projection for UI (dedupe by canonical URL)
+- [ ] Editor mode nav/tab disablement with preserved selection behavior (plans:navtab.md)
+- [ ] Large-tree performance optimization with adaptive quality policy (plans:optimization.md)
 
 ### Account/API
 - [ ] (TBD)
+- [ ] Reliable Save/Cancel trail editor flow with explicit backend ACK (plans:savecancel.md)
 
 ### Infra/DX
 - [ ] (TBD)
