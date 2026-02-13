@@ -15,6 +15,7 @@
 - [ ] (TBD) 
 
 ### Extension
+- [ ] Deep migration: WXT-native build + RPC v2 transport + full legacy removal (plan: 2026-02-13-extension-deep-wxt-cutover.md)
 - [ ] URL normalization + merge duplicate nodes after delete (auth-branch cleanup case)
 - [ ] Prototype: NavigationGraph model + tree projection for UI (dedupe by canonical URL)
 - [ ] Editor mode nav/tab disablement with preserved selection behavior (plans:navtab.md)
