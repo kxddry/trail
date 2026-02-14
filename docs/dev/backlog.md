@@ -6,7 +6,7 @@
 ## Lanes
 - **Marketing** (apps/marketing)
 - **Extension** (extension/)
-- **Account/API** (apps/account, apps/api, packages/*)
+- **Account** (apps/account, packages/*)
 - **Infra/DX** (tooling, CI, lint/typecheck, migrations)
 
 ## Active batch (WIP)
@@ -21,7 +21,7 @@
 - [ ] Editor mode nav/tab disablement with preserved selection behavior (plans:navtab.md)
 - [ ] Large-tree performance optimization with adaptive quality policy (plans:optimization.md)
 
-### Account/API
+### Account
 - [ ] (TBD)
 - [ ] Reliable Save/Cancel trail editor flow with explicit backend ACK (plans:savecancel.md)
 
