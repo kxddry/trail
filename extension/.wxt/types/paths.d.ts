@@ -12,8 +12,6 @@ declare module "wxt/browser" {
     | "/icons/trail-16.png"
     | "/icons/trail-32.png"
     | "/icons/trail-48.png"
-    | "/icons/trail-light.svg"
-    | "/icons/trail-mono.svg"
     | "/icons/trail.svg"
     | "/runtime-debug.json"
     | "/sidepanel.html"
