@@ -18,11 +18,11 @@ This repo is often worked on by an orchestrator agent (G) that coordinates multi
 
 3. **Parallel execution**
    - Spawn one background agent per worktree.
-   - Typical lanes:
-     - Marketing (`apps/marketing`)
-     - Extension (`extension`)
-     - Account/API (`apps/account`, `apps/api`, `packages/*`)
-     - Infra/DX (tooling/CI/build)
+    - Typical lanes:
+      - Marketing (`apps/marketing`)
+      - Extension (`extension`)
+      - Account (`apps/account`, `packages/*`)
+      - Infra/DX (tooling/CI/build)
 
 4. **Integration**
    - Orchestrator reviews diffs, resolves conflicts, runs the relevant checks.
@@ -65,8 +65,6 @@ git worktree remove /tmp/trail-pricing-link
   - `pnpm --filter @trail/marketing lint` (if configured)
 - Account changes:
   - `pnpm --filter @trail/account typecheck`
-- API changes:
-  - `pnpm --filter @trail/api typecheck`
 
 ## Releases
 - Release checklist + commands: `docs/dev/release.md`
