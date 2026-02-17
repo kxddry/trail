@@ -62,9 +62,12 @@ git worktree remove /tmp/trail-pricing-link
 ## Checks (pick the smallest relevant one)
 - Marketing changes:
   - `pnpm --filter @trail/marketing typecheck`
-  - `pnpm --filter @trail/marketing lint` (if configured)
+  - `pnpm --filter @trail/marketing lint`
 - Account changes:
   - `pnpm --filter @trail/account typecheck`
+  - `pnpm --filter @trail/account lint`
+- Extension changes:
+  - `cd extension && pnpm typecheck`
 
 ## Releases
 - Release checklist + commands: `docs/dev/release.md`
