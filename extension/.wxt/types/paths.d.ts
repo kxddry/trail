@@ -8,6 +8,7 @@ declare module "wxt/browser" {
     | "/backend-preset.json"
     | "/background.js"
     | "/content-scripts/content.js"
+    | "/fullview.html"
     | "/icons/trail-128.png"
     | "/icons/trail-16.png"
     | "/icons/trail-32.png"
