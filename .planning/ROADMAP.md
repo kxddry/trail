@@ -60,7 +60,11 @@ Plans:
   5. The /trails and /settings pages show skeleton or spinner states while their data loads
   6. Extension context menu items expose correct ARIA roles so screen readers announce them properly
   7. Navigating between app routes plays a smooth transition animation
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+- [ ] 03-01-PLAN.md — Brand error pages with TrailLogo and polish loading states (UX-01, UX-02, UX-03, UX-05)
+- [ ] 03-02-PLAN.md — Add destructive action confirmations and ARIA roles to extension context menus (UX-04, UX-06)
+- [ ] 03-03-PLAN.md — Add route transition animations with Motion library (UX-07)
 
 ## Progress
 
@@ -70,4 +74,4 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
 | 2. CI/CD | v1.1 | 0/TBD | Not started | - |
-| 3. UX Polish | v1.1 | 0/TBD | Not started | - |
+| 3. UX Polish | v1.1 | 0/3 | Not started | - |
