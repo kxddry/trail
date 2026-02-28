@@ -17,12 +17,12 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 
 ### Data Integrity
 
-- [ ] **DATA-01**: Trail upsert operations are wrapped in a database transaction to prevent race conditions
-- [ ] **DATA-02**: Import endpoint correctly updates device userId on ownership collision instead of no-op
-- [ ] **DATA-03**: Device sync rejects conflicting device ownership across users instead of silently reassigning
-- [ ] **DATA-04**: Webhook handler uses database transaction for atomic processing
-- [ ] **DATA-05**: Sync engine has a retry limit to prevent infinite retry loops
-- [ ] **DATA-06**: Navigation handler logs errors instead of silently swallowing them
+- [x] **DATA-01**: Trail upsert operations are wrapped in a database transaction to prevent race conditions *(pre-existing, verified 2026-02-28)*
+- [x] **DATA-02**: Import endpoint correctly updates device userId on ownership collision instead of no-op *(pre-existing, verified 2026-02-28)*
+- [x] **DATA-03**: Device sync rejects conflicting device ownership across users instead of silently reassigning *(logging added 2026-02-28)*
+- [x] **DATA-04**: Webhook handler uses database transaction for atomic processing *(pre-existing, verified 2026-02-28)*
+- [x] **DATA-05**: Sync engine has a retry limit to prevent infinite retry loops *(pre-existing 6-step backoff, verified 2026-02-28)*
+- [x] **DATA-06**: Navigation handler logs errors instead of silently swallowing them *(logging added 2026-02-28)*
 
 ### CI/CD
 
@@ -80,12 +80,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-03 | — | Complete (pre-existing) |
 | AUTH-04 | — | Complete (pre-existing) |
 | AUTH-05 | Phase 1 | Complete |
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Complete |
+| DATA-02 | Phase 1 | Complete |
+| DATA-03 | Phase 1 | Complete |
+| DATA-04 | Phase 1 | Complete |
+| DATA-05 | Phase 1 | Complete |
+| DATA-06 | Phase 1 | Complete |
 | CICD-01 | Phase 2 | Pending |
 | CICD-02 | Phase 2 | Pending |
 | CICD-03 | Phase 2 | Pending |
@@ -109,4 +109,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 ---
 *Requirements defined: 2026-02-28*
-*Last updated: 2026-02-28 after Phase 1 dissolved — AUTH-01-04 marked complete, AUTH-05 merged into new Phase 1*
+*Last updated: 2026-02-28 after 01-02 executed — DATA-01 through DATA-06 all complete (verified or logging added)*

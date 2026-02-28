@@ -31,7 +31,7 @@ v1.1 Adultify hardens Trail from a working prototype to a production-grade produ
   7. Navigation errors are written to logs so developers can diagnose failures
 **Plans**: 2 plans
 Plans:
-- [ ] 01-01-PLAN.md — Remove ACCOUNT_AUTH_BYPASS mechanism entirely (AUTH-05)
+- [x] 01-01-PLAN.md — Remove ACCOUNT_AUTH_BYPASS mechanism entirely (AUTH-05)
 - [x] 01-02-PLAN.md — Add logging for device reassignment and nav errors; verify pre-existing data integrity (DATA-01–06)
 
 ### Phase 2: CI/CD
