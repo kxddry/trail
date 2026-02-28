@@ -9,11 +9,11 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 
 ### Security & Auth
 
-- [ ] **AUTH-01**: User session persists across browser sleep — extension uses chrome.alarms for proactive token refresh instead of setTimeout
-- [ ] **AUTH-02**: User sees "session expired" UI with re-login option instead of silent logout when token cannot be refreshed
-- [ ] **AUTH-03**: Production secrets (.env.prod, .env.e2e) are removed from git tracking and added to .gitignore
-- [ ] **AUTH-04**: Auth storage key is a single shared constant instead of 6 duplicate string literals
-- [ ] **AUTH-05**: ACCOUNT_AUTH_BYPASS environment variable is blocked in production builds
+- [x] **AUTH-01**: User session persists across browser sleep — extension uses chrome.alarms for proactive token refresh instead of setTimeout *(already implemented)*
+- [x] **AUTH-02**: User sees "session expired" UI with re-login option instead of silent logout when token cannot be refreshed *(already implemented)*
+- [x] **AUTH-03**: Production secrets (.env.prod, .env.e2e) are removed from git tracking and added to .gitignore *(already protected)*
+- [x] **AUTH-04**: Auth storage key is a single shared constant instead of 6 duplicate string literals *(already centralized in storage-keys.ts)*
+- [ ] **AUTH-05**: ACCOUNT_AUTH_BYPASS is completely removed from the codebase — env variable, function, middleware check, all references
 
 ### Data Integrity
 
@@ -75,37 +75,38 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | Phase 1 | Pending |
-| AUTH-02 | Phase 1 | Pending |
-| AUTH-03 | Phase 1 | Pending |
-| AUTH-04 | Phase 1 | Pending |
+| AUTH-01 | — | Complete (pre-existing) |
+| AUTH-02 | — | Complete (pre-existing) |
+| AUTH-03 | — | Complete (pre-existing) |
+| AUTH-04 | — | Complete (pre-existing) |
 | AUTH-05 | Phase 1 | Pending |
-| DATA-01 | Phase 2 | Pending |
-| DATA-02 | Phase 2 | Pending |
-| DATA-03 | Phase 2 | Pending |
-| DATA-04 | Phase 2 | Pending |
-| DATA-05 | Phase 2 | Pending |
-| DATA-06 | Phase 2 | Pending |
-| CICD-01 | Phase 3 | Pending |
-| CICD-02 | Phase 3 | Pending |
-| CICD-03 | Phase 3 | Pending |
-| CICD-04 | Phase 3 | Pending |
-| CICD-05 | Phase 3 | Pending |
-| CICD-06 | Phase 3 | Pending |
-| CICD-07 | Phase 3 | Pending |
-| UX-01 | Phase 4 | Pending |
-| UX-02 | Phase 4 | Pending |
-| UX-03 | Phase 4 | Pending |
-| UX-04 | Phase 4 | Pending |
-| UX-05 | Phase 4 | Pending |
-| UX-06 | Phase 4 | Pending |
-| UX-07 | Phase 4 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Pending |
+| DATA-06 | Phase 1 | Pending |
+| CICD-01 | Phase 2 | Pending |
+| CICD-02 | Phase 2 | Pending |
+| CICD-03 | Phase 2 | Pending |
+| CICD-04 | Phase 2 | Pending |
+| CICD-05 | Phase 2 | Pending |
+| CICD-06 | Phase 2 | Pending |
+| CICD-07 | Phase 2 | Pending |
+| UX-01 | Phase 3 | Pending |
+| UX-02 | Phase 3 | Pending |
+| UX-03 | Phase 3 | Pending |
+| UX-04 | Phase 3 | Pending |
+| UX-05 | Phase 3 | Pending |
+| UX-06 | Phase 3 | Pending |
+| UX-07 | Phase 3 | Pending |
 
 **Coverage:**
-- v1.1 requirements: 25 total
-- Mapped to phases: 25
+- v1.1 requirements: 25 total (4 pre-existing, 21 active)
+- Mapped to phases: 21
+- Complete (pre-existing): 4
 - Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-02-28*
-*Last updated: 2026-02-28 after roadmap creation — all 25 requirements mapped*
+*Last updated: 2026-02-28 after Phase 1 dissolved — AUTH-01-04 marked complete, AUTH-05 merged into new Phase 1*

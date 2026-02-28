@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 1 — Security & Auth
+**Current focus:** Phase 1 — Data Integrity & Auth Cleanup
 
 ## Current Position
 
-Phase: 1 of 4 (Security & Auth)
+Phase: 1 of 3 (Data Integrity & Auth Cleanup)
 Plan: 0 of TBD in current phase
-Status: Ready to plan
-Last activity: 2026-02-28 — Roadmap created for v1.1 Adultify
+Status: Ready to discuss/plan
+Last activity: 2026-02-28 — Phase 1 restructured (old Phase 1 dissolved, AUTH-05 merged into Phase 2 which became new Phase 1)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -42,8 +42,9 @@ Progress: [░░░░░░░░░░] 0%
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
+- [Phase 1 discuss]: AUTH-01 through AUTH-04 already implemented — no work needed
+- [Phase 1 discuss]: ACCOUNT_AUTH_BYPASS to be removed entirely (not guarded) — always use real auth in dev
 - [Pre-GSD]: chrome.alarms required for token refresh — service workers die after ~30s idle, setTimeout is unreliable
-- [Pre-GSD]: Better Auth access tokens expire every 5 minutes — proactive refresh is essential
 - [Pre-GSD]: Extension is a separate pnpm workspace — CI pipelines and changes must respect that boundary
 
 ### Pending Todos
@@ -52,11 +53,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- Phase 1: Production secrets (.env.prod, .env.e2e) are currently in git tracking — must be removed and user must rotate them externally
-- Phase 2: Race conditions in sync and device ownership collisions are active in production
+- Phase 1: Race conditions in sync and device ownership collisions are active in production
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Roadmap and state files created; no plans written yet
-Resume file: None
+Stopped at: Phase 1 context gathered, roadmap restructured
+Resume file: .planning/phases/01-security-auth/01-CONTEXT.md
