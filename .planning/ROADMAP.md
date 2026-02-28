@@ -46,7 +46,9 @@ Plans:
   5. A weekly scheduled job scans all dependencies and reports known vulnerabilities
   6. PRs are automatically labeled by area (extension, web, packages, CI) without manual tagging
   7. Merging an extension release commit triggers automated publishing to the Chrome Web Store
-**Plans**: TBD
+**Plans**: 1 plan
+Plans:
+- [ ] 02-01-PLAN.md — Verify pre-existing CI/CD (CICD-01–06) and create extension release workflow (CICD-07)
 
 ### Phase 3: UX Polish
 **Goal**: Users encounter branded, helpful UI for every error and loading state instead of raw Next.js defaults or blank screens
@@ -73,5 +75,5 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
-| 2. CI/CD | v1.1 | 0/TBD | Not started | - |
-| 3. UX Polish | 2/3 | In Progress | 2026-02-28 | - |
+| 2. CI/CD | v1.1 | 1/1 | Complete | 2026-02-28 |
+| 3. UX Polish | v1.1 | 3/3 | Complete | 2026-02-28 |

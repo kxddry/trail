@@ -26,13 +26,13 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 
 ### CI/CD
 
-- [ ] **CICD-01**: Web CI pipeline (ci-web.yml) runs lint and tests on pull requests
-- [ ] **CICD-02**: Extension CI pipeline (ci-extension.yml) runs typecheck on pull requests
-- [ ] **CICD-03**: Dependabot is configured for automated vulnerability scanning across all workspaces
-- [ ] **CICD-04**: PR template guides contributors through required information and checks
-- [ ] **CICD-05**: Scheduled security audit workflow scans dependencies for known vulnerabilities
-- [ ] **CICD-06**: PR auto-labeler categorizes changes by area (extension, web, packages, CI)
-- [ ] **CICD-07**: Extension release workflow automates Chrome Web Store publishing
+- [x] **CICD-01**: Web CI pipeline (ci-web.yml) runs lint and tests on pull requests
+- [x] **CICD-02**: Extension CI pipeline (ci-extension.yml) runs typecheck on pull requests
+- [x] **CICD-03**: Dependabot is configured for automated vulnerability scanning across all workspaces
+- [x] **CICD-04**: PR template guides contributors through required information and checks
+- [x] **CICD-05**: Scheduled security audit workflow scans dependencies for known vulnerabilities
+- [x] **CICD-06**: PR auto-labeler categorizes changes by area (extension, web, packages, CI)
+- [x] **CICD-07**: Extension release workflow automates Chrome Web Store publishing
 
 ### UX Polish
 
@@ -86,13 +86,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-04 | Phase 1 | Complete |
 | DATA-05 | Phase 1 | Complete |
 | DATA-06 | Phase 1 | Complete |
-| CICD-01 | Phase 2 | Pending |
-| CICD-02 | Phase 2 | Pending |
-| CICD-03 | Phase 2 | Pending |
-| CICD-04 | Phase 2 | Pending |
-| CICD-05 | Phase 2 | Pending |
-| CICD-06 | Phase 2 | Pending |
-| CICD-07 | Phase 2 | Pending |
+| CICD-01 | Phase 2 | Complete |
+| CICD-02 | Phase 2 | Complete |
+| CICD-03 | Phase 2 | Complete |
+| CICD-04 | Phase 2 | Complete |
+| CICD-05 | Phase 2 | Complete |
+| CICD-06 | Phase 2 | Complete |
+| CICD-07 | Phase 2 | Complete |
 | UX-01 | Phase 3 | Complete |
 | UX-02 | Phase 3 | Complete |
 | UX-03 | Phase 3 | Complete |

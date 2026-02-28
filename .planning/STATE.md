@@ -5,10 +5,10 @@ milestone_name: milestone
 status: unknown
 last_updated: "2026-02-28T16:20:02.484Z"
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  total_phases: 3
+  completed_phases: 3
+  total_plans: 6
+  completed_plans: 6
 ---
 
 # Project State
@@ -18,32 +18,33 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 1 — Data Integrity & Auth Cleanup
+**Current focus:** Phase 2 complete — CI/CD automation done. Phase 3 is next.
 
 ## Current Position
 
 Phase: 3 of 3 (UX Polish)
-Plan: 2 of 3 in current phase (03-01 and 03-02 complete)
-Status: In progress
-Last activity: 2026-02-28 — 03-02 executed: BulkContextMenu destructive confirmations, full ARIA roles, and keyboard focus-visible styles
+Plan: 3 of 3 in current phase (all complete — Phase 3 done)
+Status: All phases complete
+Last activity: 2026-02-28 — Phase 3 executed: branded error pages, context menu a11y, route transitions
 
 Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: ~3.5 min
-- Total execution time: 0.1 hours
+- Total plans completed: 3
+- Average duration: ~3 min
+- Total execution time: 0.2 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-security-auth | 1 | ~5 min | ~5 min |
+| 02-ci-cd | 1 | ~4 min | ~4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-02 (~5 min), 01-01 (~2 min)
+- Last 5 plans: 02-01 (~4 min), 01-02 (~5 min), 01-01 (~2 min)
 - Trend: Fast — small, surgical plans
 
 *Updated after each plan completion*
@@ -63,25 +64,27 @@ Recent decisions affecting current work:
 - [Phase 1 discuss]: ACCOUNT_AUTH_BYPASS to be removed entirely (not guarded) — always use real auth in dev
 - [Pre-GSD]: chrome.alarms required for token refresh — service workers die after ~30s idle, setTimeout is unreliable
 - [Pre-GSD]: Extension is a separate pnpm workspace — CI pipelines and changes must respect that boundary
+- [Phase 02-ci-cd]: Tag chrome-v* is the version source of truth — strip prefix to get semver, no separate version extraction needed
+- [Phase 02-ci-cd]: CWS upload uses publish=false (draft) — manual publish from Chrome Developer Dashboard gives release control
+- [Phase 02-ci-cd]: nicolo-ribaudo/chrom-webstore-upload@v1 selected as widely adopted, simple CWS upload action
 - [Phase 03-03]: No exit animation in template.tsx: instant-out + fade-in is snappier and avoids AnimatePresence at layout level
 - [Phase 03-03]: useReducedMotion() over CSS override: Motion handles its own reduced-motion detection natively
 - [03-01]: Root not-found.tsx gets secondary "go home" CTA — provides escape route to app root
 - [03-01]: settings/loading.tsx kept unchanged — existing structure accurately represents settings layout
-- [03-01]: animationDelay on card container div (not children) — Tailwind pulse animation cascades correctly
 - [03-02]: Inline confirm over AlertDialog — two-click inline confirm keeps user in flow for context menu UX
 - [03-02]: aria-checked="mixed" for partial tag selection in BulkContextMenu
 - [03-02]: Tab items get role=menuitem (not option) — they are actions, not selections
 
 ### Pending Todos
 
-None — Phase 1 complete. Phase 2 is next.
+None — Phase 2 complete. Phase 3 is next. (User must add CWS/GitHub secrets before first release tag.)
 
 ### Blockers/Concerns
 
-None — device ownership collision observability now in place (01-02 complete)
+None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN) before first use.
 
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 03-02-PLAN.md — BulkContextMenu confirmations, full ARIA roles, and keyboard focus-visible styles. Phase 3 plan 03-02 complete.
-Resume file: .planning/phases/03-ux-polish/03-02-SUMMARY.md
+Stopped at: All phases complete. Phase 3 UX Polish fully executed and verified.
+Resume file: .planning/phases/03-ux-polish/03-VERIFICATION.md
