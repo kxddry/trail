@@ -62,7 +62,7 @@ Plans:
   7. Navigating between app routes plays a smooth transition animation
 **Plans**: 3 plans
 Plans:
-- [ ] 03-01-PLAN.md — Brand error pages with TrailLogo and polish loading states (UX-01, UX-02, UX-03, UX-05)
+- [x] 03-01-PLAN.md — Brand error pages with TrailLogo and polish loading states (UX-01, UX-02, UX-03, UX-05)
 - [ ] 03-02-PLAN.md — Add destructive action confirmations and ARIA roles to extension context menus (UX-04, UX-06)
 - [ ] 03-03-PLAN.md — Add route transition animations with Motion library (UX-07)
 
