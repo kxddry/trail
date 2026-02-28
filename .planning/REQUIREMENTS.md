@@ -19,7 +19,7 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 
 - [x] **DATA-01**: Trail upsert operations are wrapped in a database transaction to prevent race conditions *(pre-existing, verified 2026-02-28)*
 - [x] **DATA-02**: Import endpoint correctly updates device userId on ownership collision instead of no-op *(pre-existing, verified 2026-02-28)*
-- [x] **DATA-03**: Device sync rejects conflicting device ownership across users instead of silently reassigning *(logging added 2026-02-28)*
+- [x] **DATA-03**: Device sync logs device ownership reassignment when a device appears under a different user *(logging added 2026-02-28)*
 - [x] **DATA-04**: Webhook handler uses database transaction for atomic processing *(pre-existing, verified 2026-02-28)*
 - [x] **DATA-05**: Sync engine has a retry limit to prevent infinite retry loops *(pre-existing 6-step backoff, verified 2026-02-28)*
 - [x] **DATA-06**: Navigation handler logs errors instead of silently swallowing them *(logging added 2026-02-28)*
