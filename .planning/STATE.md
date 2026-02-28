@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-02-28T14:23:30.809Z"
+last_updated: "2026-02-28T16:13:18.486Z"
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
-  total_plans: 2
-  completed_plans: 2
+  total_plans: 5
+  completed_plans: 4
 ---
 
 # Project State
@@ -22,12 +22,12 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 1 of 3 (Data Integrity & Auth Cleanup)
-Plan: 2 of 2 in current phase (01-01 and 01-02 both complete — Phase 1 done)
-Status: Phase 1 complete
-Last activity: 2026-02-28 — 01-01 executed: ACCOUNT_AUTH_BYPASS removed entirely from apps/account
+Phase: 3 of 3 (UX Polish)
+Plan: 3 of 3 in current phase (03-01, 03-02, 03-03 complete)
+Status: Phase 3 In Progress (03-03 complete)
+Last activity: 2026-02-28 — 03-03 executed: route transition animations with prefers-reduced-motion support
 
-Progress: [████░░░░░░] 40%
+Progress: [████████░░] 80%
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Progress: [████░░░░░░] 40%
 - Trend: Fast — small, surgical plans
 
 *Updated after each plan completion*
+| Phase 03-ux-polish P03 | 2 | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,8 @@ Recent decisions affecting current work:
 - [Phase 1 discuss]: ACCOUNT_AUTH_BYPASS to be removed entirely (not guarded) — always use real auth in dev
 - [Pre-GSD]: chrome.alarms required for token refresh — service workers die after ~30s idle, setTimeout is unreliable
 - [Pre-GSD]: Extension is a separate pnpm workspace — CI pipelines and changes must respect that boundary
+- [Phase 03-03]: No exit animation in template.tsx: instant-out + fade-in is snappier and avoids AnimatePresence at layout level
+- [Phase 03-03]: useReducedMotion() over CSS override: Motion handles its own reduced-motion detection natively
 
 ### Pending Todos
 
@@ -74,5 +77,5 @@ None — device ownership collision observability now in place (01-02 complete)
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 01-01-PLAN.md — ACCOUNT_AUTH_BYPASS removed from all auth paths. Phase 1 (01-security-auth) fully complete.
-Resume file: .planning/phases/01-security-auth/01-01-SUMMARY.md
+Stopped at: Completed 03-03-PLAN.md — route transition animations with Motion and prefers-reduced-motion support. Phase 3 plan 03-03 complete.
+Resume file: .planning/phases/03-ux-polish/03-03-SUMMARY.md

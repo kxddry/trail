@@ -42,7 +42,7 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 - [ ] **UX-04**: Destructive actions in extension context menu require user confirmation before executing
 - [ ] **UX-05**: /trails and /settings pages show loading states while data loads
 - [ ] **UX-06**: Extension context menus include proper ARIA roles for accessibility
-- [ ] **UX-07**: Web app has page transition animations between routes
+- [x] **UX-07**: Web app has page transition animations between routes
 
 ## Future Requirements
 
@@ -99,7 +99,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-04 | Phase 3 | Pending |
 | UX-05 | Phase 3 | Pending |
 | UX-06 | Phase 3 | Pending |
-| UX-07 | Phase 3 | Pending |
+| UX-07 | Phase 3 | Complete |
 
 **Coverage:**
 - v1.1 requirements: 25 total (4 pre-existing, 21 active)
