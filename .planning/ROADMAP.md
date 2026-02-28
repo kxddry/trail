@@ -11,7 +11,7 @@ v1.1 Adultify hardens Trail from a working prototype to a production-grade produ
 
 ## Phases
 
-- [ ] **Phase 1: Data Integrity & Auth Cleanup** - Remove auth bypass, wrap sync in transactions, fix ownership collisions, add retry limits
+- [x] **Phase 1: Data Integrity & Auth Cleanup** - Remove auth bypass, wrap sync in transactions, fix ownership collisions, add retry limits (completed 2026-02-28)
 - [ ] **Phase 2: CI/CD** - Add lint/test/typecheck to pipelines, configure Dependabot, automate extension releases
 - [ ] **Phase 3: UX Polish** - Add branded error pages, loading states, destructive action confirmations, accessibility
 
@@ -32,7 +32,7 @@ v1.1 Adultify hardens Trail from a working prototype to a production-grade produ
 **Plans**: 2 plans
 Plans:
 - [ ] 01-01-PLAN.md — Remove ACCOUNT_AUTH_BYPASS mechanism entirely (AUTH-05)
-- [ ] 01-02-PLAN.md — Add logging for device reassignment and nav errors; verify pre-existing data integrity (DATA-01–06)
+- [x] 01-02-PLAN.md — Add logging for device reassignment and nav errors; verify pre-existing data integrity (DATA-01–06)
 
 ### Phase 2: CI/CD
 **Goal**: Every pull request is automatically validated and dependency vulnerabilities are surfaced without manual effort
@@ -68,6 +68,6 @@ Plans:
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Data Integrity & Auth Cleanup | v1.1 | 0/2 | Not started | - |
+| 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
 | 2. CI/CD | v1.1 | 0/TBD | Not started | - |
 | 3. UX Polish | v1.1 | 0/TBD | Not started | - |

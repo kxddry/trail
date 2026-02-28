@@ -13,7 +13,7 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 - [x] **AUTH-02**: User sees "session expired" UI with re-login option instead of silent logout when token cannot be refreshed *(already implemented)*
 - [x] **AUTH-03**: Production secrets (.env.prod, .env.e2e) are removed from git tracking and added to .gitignore *(already protected)*
 - [x] **AUTH-04**: Auth storage key is a single shared constant instead of 6 duplicate string literals *(already centralized in storage-keys.ts)*
-- [ ] **AUTH-05**: ACCOUNT_AUTH_BYPASS is completely removed from the codebase — env variable, function, middleware check, all references
+- [x] **AUTH-05**: ACCOUNT_AUTH_BYPASS is completely removed from the codebase — env variable, function, middleware check, all references
 
 ### Data Integrity
 
@@ -79,7 +79,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | AUTH-02 | — | Complete (pre-existing) |
 | AUTH-03 | — | Complete (pre-existing) |
 | AUTH-04 | — | Complete (pre-existing) |
-| AUTH-05 | Phase 1 | Pending |
+| AUTH-05 | Phase 1 | Complete |
 | DATA-01 | Phase 1 | Pending |
 | DATA-02 | Phase 1 | Pending |
 | DATA-03 | Phase 1 | Pending |
