@@ -29,7 +29,10 @@ v1.1 Adultify hardens Trail from a working prototype to a production-grade produ
   5. Webhook processing is atomic — a failure mid-handler does not leave the database in a partial state
   6. A sync loop that keeps failing terminates after a bounded number of retries rather than running forever
   7. Navigation errors are written to logs so developers can diagnose failures
-**Plans**: TBD
+**Plans**: 2 plans
+Plans:
+- [ ] 01-01-PLAN.md — Remove ACCOUNT_AUTH_BYPASS mechanism entirely (AUTH-05)
+- [ ] 01-02-PLAN.md — Add logging for device reassignment and nav errors; verify pre-existing data integrity (DATA-01–06)
 
 ### Phase 2: CI/CD
 **Goal**: Every pull request is automatically validated and dependency vulnerabilities are surfaced without manual effort
@@ -65,6 +68,6 @@ v1.1 Adultify hardens Trail from a working prototype to a production-grade produ
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Data Integrity & Auth Cleanup | v1.1 | 0/TBD | Not started | - |
+| 1. Data Integrity & Auth Cleanup | v1.1 | 0/2 | Not started | - |
 | 2. CI/CD | v1.1 | 0/TBD | Not started | - |
 | 3. UX Polish | v1.1 | 0/TBD | Not started | - |
