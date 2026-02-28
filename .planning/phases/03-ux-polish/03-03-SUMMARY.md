@@ -92,6 +92,13 @@ None — no external service configuration required.
 - template.tsx is in place and will animate all future routes added under `apps/account/app/(app)/`
 - No blockers for remaining 03-ux-polish plans
 
+## Self-Check: PASSED
+
+- FOUND: apps/account/app/(app)/template.tsx
+- FOUND: .planning/phases/03-ux-polish/03-03-SUMMARY.md
+- FOUND: commit 9501d118 (Task 1: route transition template)
+- FOUND: commit e6e8673c (Task 2: reduced motion support)
+
 ---
 *Phase: 03-ux-polish*
 *Completed: 2026-02-28*

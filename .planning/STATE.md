@@ -23,11 +23,11 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 ## Current Position
 
 Phase: 3 of 3 (UX Polish)
-Plan: 3 of 3 in current phase (03-01, 03-02, 03-03 complete)
-Status: Phase 3 In Progress (03-03 complete)
-Last activity: 2026-02-28 — 03-03 executed: route transition animations with prefers-reduced-motion support
+Plan: 3 of 3 in current phase (03-01, 03-02, 03-03 all complete)
+Status: Phase 3 complete
+Last activity: 2026-02-28 — 03-03 executed: route transition animations with Motion and prefers-reduced-motion support
 
-Progress: [████████░░] 80%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
@@ -65,6 +65,9 @@ Recent decisions affecting current work:
 - [Pre-GSD]: Extension is a separate pnpm workspace — CI pipelines and changes must respect that boundary
 - [Phase 03-03]: No exit animation in template.tsx: instant-out + fade-in is snappier and avoids AnimatePresence at layout level
 - [Phase 03-03]: useReducedMotion() over CSS override: Motion handles its own reduced-motion detection natively
+- [03-01]: Root not-found.tsx gets secondary "go home" CTA — provides escape route to app root
+- [03-01]: settings/loading.tsx kept unchanged — existing structure accurately represents settings layout
+- [03-01]: animationDelay on card container div (not children) — Tailwind pulse animation cascades correctly
 
 ### Pending Todos
 
@@ -77,5 +80,5 @@ None — device ownership collision observability now in place (01-02 complete)
 ## Session Continuity
 
 Last session: 2026-02-28
-Stopped at: Completed 03-03-PLAN.md — route transition animations with Motion and prefers-reduced-motion support. Phase 3 plan 03-03 complete.
+Stopped at: Completed 03-03-PLAN.md — route transition animations with Motion and prefers-reduced-motion support. Phase 3 (03-ux-polish) fully complete.
 Resume file: .planning/phases/03-ux-polish/03-03-SUMMARY.md
