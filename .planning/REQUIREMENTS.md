@@ -39,9 +39,9 @@ Requirements for Adultify milestone. Each maps to roadmap phases.
 - [x] **UX-01**: App displays branded error page (error.tsx) instead of default Next.js error
 - [x] **UX-02**: App displays branded not-found page (not-found.tsx) instead of default
 - [x] **UX-03**: Root loading state shows proper loading component instead of plain "loading" text
-- [ ] **UX-04**: Destructive actions in extension context menu require user confirmation before executing
+- [x] **UX-04**: Destructive actions in extension context menu require user confirmation before executing
 - [x] **UX-05**: /trails and /settings pages show loading states while data loads
-- [ ] **UX-06**: Extension context menus include proper ARIA roles for accessibility
+- [x] **UX-06**: Extension context menus include proper ARIA roles for accessibility
 - [x] **UX-07**: Web app has page transition animations between routes
 
 ## Future Requirements
@@ -96,9 +96,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | UX-01 | Phase 3 | Complete |
 | UX-02 | Phase 3 | Complete |
 | UX-03 | Phase 3 | Complete |
-| UX-04 | Phase 3 | Pending |
+| UX-04 | Phase 3 | Complete |
 | UX-05 | Phase 3 | Complete |
-| UX-06 | Phase 3 | Pending |
+| UX-06 | Phase 3 | Complete |
 | UX-07 | Phase 3 | Complete |
 
 **Coverage:**

@@ -63,7 +63,7 @@ Plans:
 **Plans**: 3 plans
 Plans:
 - [x] 03-01-PLAN.md — Brand error pages with TrailLogo and polish loading states (UX-01, UX-02, UX-03, UX-05)
-- [ ] 03-02-PLAN.md — Add destructive action confirmations and ARIA roles to extension context menus (UX-04, UX-06)
+- [x] 03-02-PLAN.md — Add destructive action confirmations and ARIA roles to extension context menus (UX-04, UX-06)
 - [ ] 03-03-PLAN.md — Add route transition animations with Motion library (UX-07)
 
 ## Progress
@@ -74,4 +74,4 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
 | 2. CI/CD | v1.1 | 0/TBD | Not started | - |
-| 3. UX Polish | 2/3 | In Progress|  | - |
+| 3. UX Polish | 2/3 | In Progress | 2026-02-28 | - |
