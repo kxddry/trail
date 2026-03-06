@@ -9,3 +9,8 @@
 - **Mistake**: I kept `spotlight` naming and treated the flag as v1/v2 toggle, while the user required `recency` naming and `off = no feature`, `on = v2`.
 - **Rule**: When a user specifies naming and rollout semantics, apply them literally across file names, symbols, flags, and behavior gates.
 - **Why**: Naming and feature-gating semantics are part of product/API contracts; partial alignment causes confusing UX and stale persisted settings behavior.
+
+## 2026-03-06: Separate committed selection from transient hover in preview UIs
+- **Mistake**: Spotlight graph hover and result-list hover were sharing the same highlight/focus channel, so transient pointer movement triggered recentering and could clear the committed highlight on leave.
+- **Rule**: In any preview UI with keyboard focus plus pointer hover, model committed selection and transient hover as separate states and only let committed selection drive camera/view intents.
+- **Why**: Hover is ephemeral. If it shares state with committed focus, the UI jitters, loses restore semantics, and creates hard-to-reproduce interaction bugs.
