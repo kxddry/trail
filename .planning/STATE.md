@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-last_updated: "2026-02-28T16:20:02.484Z"
+last_updated: "2026-03-10T12:52:24Z"
 progress:
   total_phases: 3
   completed_phases: 3
@@ -49,6 +49,7 @@ Progress: [██████████] 100%
 
 *Updated after each plan completion*
 | Phase 03-ux-polish P03 | 2 | 2 tasks | 1 files |
+| Quick-1 spotlight-refactor | 11 min | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -74,6 +75,9 @@ Recent decisions affecting current work:
 - [03-02]: Inline confirm over AlertDialog — two-click inline confirm keeps user in flow for context menu UX
 - [03-02]: aria-checked="mixed" for partial tag selection in BulkContextMenu
 - [03-02]: Tab items get role=menuitem (not option) — they are actions, not selections
+- [quick-1-01]: Drilldown scope lifted to SpotlightRoot — shared across search/preview/actions hooks
+- [quick-1-01]: Direct safety check instead of isDestructiveAction type guard — avoids TypeScript never-narrowing
+- [quick-1-01]: Echo index keyed by treeId:nodeId for O(1) hover-to-item resolution
 
 ### Pending Todos
 
@@ -85,6 +89,6 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 
 ## Session Continuity
 
-Last session: 2026-02-28
-Stopped at: All phases complete. Phase 3 UX Polish fully executed and verified.
-Resume file: .planning/phases/03-ux-polish/03-VERIFICATION.md
+Last session: 2026-03-10
+Stopped at: Completed quick-1-01 spotlight refactoring plan.
+Resume file: .planning/quick/1-improve-spotlight-refactoring-performanc/1-SUMMARY.md
