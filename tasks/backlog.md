@@ -1,77 +1,72 @@
-# Trail Adultify - Prioritized Backlog
+# Trail - Prioritized Backlog
 
 ## P0 - Critical (Must Fix Now)
 
-### BUG-001: Auth session persistence - users logged out after sleep
-- **Root cause**: `AuthOrchestrator` uses `setTimeout` instead of `chrome.alarms` for token refresh. Service worker dies after ~30s idle, killing the timer. 5-min access token expires, no refresh happens.
-- **Fix 1**: Add `chrome.alarms`-based proactive refresh to AuthOrchestrator
-- **Fix 2**: Make `isAuthenticated()` in `sync/api.ts` check token expiry, not just existence
-- **Fix 3**: Add "session expired" UX to AuthGate instead of silent logout
-- **Files**: `extension/src/background/services/auth-orchestrator.ts`, `extension/src/background/services/sync/api.ts`, `extension/src/sidepanel/ui/App.tsx`
-- **Source**: Security Architect + UX Reviewer
-
-### SEC-001: Production secrets in repo (.env.prod, .env.e2e)
-- **Action**: Add to .gitignore, remove from tracking (NOT from git history - user must rotate secrets separately)
-- **Source**: DevOps Engineer
+(none - all P0 items resolved)
 
 ## P1 - High Priority
 
-### BUG-002: Race condition in upsertTrail - no transaction
-- **File**: `apps/account/src/server/backend/trails-sync.ts` (lines 283-352)
-- **Fix**: Wrap find + conditional create/update in `db.$transaction()`
-- **Source**: QA Engineer (C1)
+### ARCH-001: GraphCanvas.tsx — 2,728 lines, needs decomposition
+- **Fix**: Extract useGraphLayout, useGraphInteraction, useGraphAnimation hooks
+- **Status**: Planned for dedicated refactoring session
 
-### BUG-003: Import endpoint device-user ownership collision
-- **File**: `apps/account/app/api/v1/trails/import/route.ts` (lines 84-88)
-- **Fix**: Change `update: {}` to `update: { userId }`
-- **Source**: QA Engineer (C2)
+### ARCH-002: 5 files over 800 lines
+- GraphPixiRenderer.ts (1,682), spotlight.ts (1,193), ContextMenus.tsx (976), ThemePalette.tsx (885), contracts.ts (884)
+- **Fix**: Split by domain/concern
 
-### BUG-004: ensureSyncDevices silently reassigns devices across users
-- **File**: `apps/account/src/server/backend/trails-sync.ts` (lines 148-159)
-- **Fix**: Scope device ID per user or reject conflicting ownership
-- **Source**: QA Engineer (C3)
+### TEST-001: Extension test coverage critically low
+- 37K lines of code, 3 test files
+- **Fix**: TDD approach — write tests for RPC, auth, sync, navigation, spotlight
 
-### CI-001: Add lint + test to ci-web.yml
-- **Source**: DevOps Engineer
-
-### CI-002: Add typecheck to ci-extension.yml
-- **Source**: DevOps Engineer
-
-### CI-003: Create dependabot.yml for vulnerability scanning
-- **Source**: DevOps Engineer
-
-### UX-001: No error.tsx or not-found.tsx in web app
-- **Fix**: Create branded error and not-found pages
-- **Source**: UX Reviewer
-
-### UX-002: Root loading.tsx is bare "loading" text
-- **Fix**: Replace with proper loading component
-- **Source**: UX Reviewer
-
-### UX-003: Delete actions in extension have no confirmation
-- **Fix**: Add confirmation for destructive context menu actions
-- **Source**: UX Reviewer
+### TEST-002: Marketing app — zero tests
+- **Fix**: Add tests for API routes, SectionRenderer, components
 
 ## P2 - Medium Priority
 
-### CI-004: Create PR template
-### CI-005: Create security audit workflow
-### CI-006: Create PR auto-labeler
-### CI-007: Create extension release workflow
-### SEC-002: Consolidate AUTH_STORAGE_KEY into shared constant (6 duplicates)
-### SEC-003: Add production guard for ACCOUNT_AUTH_BYPASS
-### BUG-005: Webhook handler lacks database transaction
-### BUG-006: Sync engine has no retry limit
-### BUG-007: Silent error swallowing in navigation handler
-### UX-004: Missing loading states for /trails, /settings
-### UX-005: Context menus lack ARIA roles
-### UX-006: No page transitions in web app
+### LOG-001: ~159 console.* statements — no structured logging
+- **Fix**: Logging service wrapper
 
-## P3 - Nice to Have (defer to future PRs)
-- Rate limiting on API endpoints
+### RATE-001: In-memory rate limiting in marketing API
+- **Fix**: Migrate to Vercel KV or edge rate limiting
+
+### UI-001: LoginView uses inline styles instead of Tailwind
+- **Fix**: Migrate to Tailwind for consistency
+
+### UI-002: Tag deletion has no confirmation dialog
+- **Fix**: Add two-step confirmation (matches node delete pattern)
+
+### UI-003: Close tab in context menu has no confirmation
+- **Fix**: Add confirmation for destructive tab actions
+
+## P3 - Nice to Have
+
+- Rate limiting on all API endpoints
 - Refresh token replay detection
 - Focus trapping in modals
 - Button system unification
-- Icon system unification
+- Icon alias deduplication in @trail/ui
 - Empty state improvements
 - Toast system in web app
+- Page transitions in web app
+
+## Resolved (2026-03-13)
+
+- ~~BUG-001: Auth session persistence~~ — Fixed: uses browser.alarms + expiry check
+- ~~BUG-002: Race condition in upsertTrail~~ — Fixed: db.$transaction()
+- ~~BUG-003: Import device-user collision~~ — Fixed: wrapped in transaction
+- ~~BUG-004: ensureSyncDevices race condition~~ — Fixed: wrapped in transaction
+- ~~BUG-005: Webhook handler lacks transaction~~ — Fixed: already uses db.$transaction()
+- ~~BUG-006: Sync engine no retry limit~~ — Fixed: 6-attempt exponential backoff
+- ~~BUG-007: Silent error swallowing in nav handler~~ — Fixed: errors are logged
+- ~~SEC-001: .env.prod secrets~~ — Not in git, gitignored
+- ~~SEC-002: AUTH_STORAGE_KEY 6 duplicates~~ — Fixed: centralized in storage-items.ts
+- ~~SEC-003: ACCOUNT_AUTH_BYPASS~~ — Does not exist in codebase
+- ~~UX-001: No error.tsx / not-found.tsx~~ — Fixed: branded pages exist
+- ~~UX-002: Bare loading text~~ — Fixed: animated TrailLogo
+- ~~UX-003: Delete without confirmation~~ — Fixed: two-step confirmation on all node deletes
+- ~~CI-001: Add lint + test to ci-web.yml~~ — Present in workflow
+- ~~CI-002: Add typecheck to ci-extension.yml~~ — Present in workflow
+- ~~CI-003: Create dependabot.yml~~ — Present in .github/
+- ~~CI-004: Create PR template~~ — Present in .github/
+- ~~CI-005: Create security audit workflow~~ — Present in .github/workflows/security.yml
+- ~~CI-006: Create PR auto-labeler~~ — Present in .github/labeler.yml
