@@ -6,23 +6,23 @@
 
 ## P1 - High Priority
 
-### ARCH-001: GraphCanvas.tsx decomposition (in progress)
-- **Current: 2,173 lines (down from 2,728)**
-- Phase 1: Types extraction — DONE
-- Phase 2: useGraphSelection — DONE
-- Phase 3: useGraphAnimation — DONE
-- Phase 4: useGraphView — TODO (tightly coupled to renderer and layout)
-- Phase 5: useGraphLayout — TODO (tightly coupled to animation and drag)
-- Phase 6: useGraphDrag — TODO (tightly coupled to positions and view)
-- Phase 7: useGraphRenderer — TODO (depends on all other hooks)
-- **Note**: Phases 4-7 have circular dependencies; may need a different
-  decomposition approach (e.g. useGraphInteraction combining view+drag)
+### ARCH-001: GraphCanvas.tsx decomposition (mostly complete)
+- **Current: 1,797 lines (down from 2,728 — 34% reduction)**
+- Phase 1: graph-canvas-types.ts (153 lines) — DONE
+- Phase 2: useGraphSelection.ts (160 lines) — DONE
+- Phase 3: useGraphAnimation.ts (326 lines) — DONE
+- Phase 4: useGraphView.ts (411 lines) — DONE
+- Phases 5-7 (layout, drag, renderer): DEFERRED
+  - Remaining code is orchestration layer — tightly coupled by design
+  - Further extraction creates parameter-passing overhead > benefit
+  - 1,797 lines is manageable for a complex interactive component
 
-### TEST-001: Extension test coverage critically low
-- 37K lines of code, 3 test files
-- **Fix**: TDD approach — write tests for RPC, auth, sync, navigation, spotlight
+### TEST-001: Extension test coverage
+- 37K lines of code, now 5 test files (up from 3)
+- Added: RPC schema tests, extension token tests
+- TODO: sync engine, auth orchestrator, navigation handler, spotlight service
 
-### ARCH-002: 4 files over 800 lines (besides GraphCanvas)
+### ARCH-002: 4 files over 800 lines
 - GraphPixiRenderer.ts (1,682), spotlight.ts (1,193), ContextMenus.tsx (976), ThemePalette.tsx (885)
 - contracts.ts (884) — split plan available
 
@@ -41,9 +41,8 @@
 - Toast system in web app
 - Page transitions in web app
 
-## Resolved (2026-03-14)
+## Resolved
 
-- All 25+ items from previous audit
-- ~~UI-001: Close tab confirmation~~ — two-step confirmation added
-- ~~RATE-001: In-memory rate limiting~~ — extracted to reusable module with cleanup
-- ~~TEST-002: Marketing tests~~ — 18 tests (feedback API + SectionRenderer)
+25+ items from initial audit + 5 additional fixes in this session:
+- Close tab confirmation, SectionRenderer tests, rate limiter extraction,
+  structured logger, GraphCanvas Phases 1-4
