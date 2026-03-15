@@ -17,6 +17,7 @@ import {
   type SpotlightSearchSessionId,
   type SpotlightSearchResult,
   type SpotlightSection,
+  type SpotlightSourceBadge,
   type SpotlightSuggestionGroup,
   type SpotlightTreeRelation,
   type SpotlightTreeResult,
@@ -48,7 +49,7 @@ const SECTION_TITLES: Record<SpotlightSection['id'], string> = {
   'archived-trees': 'Trees',
   'trees': 'Trees',
   'external': 'External',
-  'matches': 'Matches',
+  'matches': 'Best Matches',
   'scoped-pages': 'Pages',
   'frequent': 'Frequently Used',
   'recent-searches': 'Recent Searches',
@@ -274,15 +275,17 @@ export class SpotlightService {
     const ranked = await this.rankEntities(snapshot, query, Math.max(searchLimit * 4, 40));
     const sections: SpotlightSection[] = [];
 
-    const currentTreeMatches = ranked
-      .filter((item): item is SpotlightNodeResult => item.kind === 'node' && item.treeId === snapshot.activeTreeId)
-      .slice(0, Math.min(searchLimit, 12));
-    appendSectionIfAny(sections, 'current-tree', currentTreeMatches);
+    const allNodeMatches = ranked
+      .filter((item): item is SpotlightNodeResult => item.kind === 'node')
+      .slice(0, Math.min(searchLimit, 20));
+    appendSectionIfAny(sections, 'matches', allNodeMatches);
 
-    const otherTreeMatches = ranked
-      .filter((item): item is SpotlightNodeResult => item.kind === 'node' && item.treeId !== snapshot.activeTreeId)
-      .slice(0, Math.min(searchLimit, 12));
-    appendSectionIfAny(sections, 'other-trees', otherTreeMatches);
+    const shownKeys = new Set(allNodeMatches.map(item => item.key));
+    const remainingOtherTree = ranked
+      .filter((item): item is SpotlightNodeResult =>
+        item.kind === 'node' && item.treeId !== snapshot.activeTreeId && !shownKeys.has(item.key))
+      .slice(0, Math.min(searchLimit, 8));
+    appendSectionIfAny(sections, 'other-trees', remainingOtherTree);
 
     const treeMatches = ranked
       .filter((item): item is SpotlightTreeResult => item.kind === 'tree')
@@ -492,6 +495,7 @@ export class SpotlightService {
       treeName: doc.treeName,
       score: breakdown.finalScore,
       groupBadge: toGroupBadge(doc.group),
+      sourceBadge: toSourceBadge(doc),
       highlights: {
         title: findRanges(doc.title, needles),
         url: findRanges(doc.url, needles),
@@ -575,6 +579,7 @@ export class SpotlightService {
       treeName: doc.treeName,
       score: rawTextScore,
       groupBadge: toGroupBadge(doc.group),
+      sourceBadge: toSourceBadge(doc),
       highlights: {
         title: findRanges(doc.title, needles),
         url: findRanges(doc.url, needles),
@@ -1154,6 +1159,12 @@ function toGroupBadge(group: SpotlightSuggestionGroup): 'Open' | 'Recent' | 'Tre
     default:
       return 'Archived';
   }
+}
+
+function toSourceBadge(doc: SpotlightLiveNodeDoc): SpotlightSourceBadge {
+  if (doc.tabCount > 0) return 'tab';
+  if (doc.pinned) return 'pin';
+  return 'tree';
 }
 
 function buildWhyChips(

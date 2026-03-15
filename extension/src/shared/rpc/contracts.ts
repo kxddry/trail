@@ -331,6 +331,8 @@ export type SpotlightGraphPreviewData = {
   nodeRecency: Record<NodeId, number>;
 };
 
+export type SpotlightSourceBadge = 'tab' | 'pin' | 'tree' | 'frequent';
+
 export type SpotlightNodeResult = {
   kind: 'node';
   key: string;
@@ -348,6 +350,7 @@ export type SpotlightNodeResult = {
   treeName: string;
   score: number;
   groupBadge: 'Open' | 'Recent' | 'Tree' | 'Archived';
+  sourceBadge: SpotlightSourceBadge;
   highlights: SpotlightHighlightMap;
   why: string[];
 };
