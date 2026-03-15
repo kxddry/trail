@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { lazy, Suspense, useCallback, useRef } from 'react';
 import FloatingControls from './components/FloatingControls.js';
 import GraphArea from './components/graph/GraphArea.js';
 import ThemePanel from './components/theme/ThemePanel.js';
@@ -15,8 +15,19 @@ import TooltipLayer from './components/TooltipLayer.js';
 import { listenSystemTheme } from './hooks/listenSystemTheme.js';
 import { useStore } from './state/store.js';
 
+const IS_FULLVIEW = window.location.pathname.endsWith('fullview.html');
+
+const FullviewDashboard = IS_FULLVIEW
+  ? lazy(() =>
+      import('../../fullview/ui/FullviewDashboard.js').then((m) => ({
+        default: m.FullviewDashboard,
+      })),
+    )
+  : null;
+
 export default function App() {
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const spotlightToggleRef = useRef<(() => void) | null>(null);
   const account = useStore((state) => state.account);
   const editorActive = useStore((state) => state.editorMode.active);
 
@@ -29,6 +40,10 @@ export default function App() {
   const isAuthenticated = true; // temp
     // account.session.status === 'authenticated' && Boolean(account.user);
 
+  const handleOpenSpotlight = useCallback(() => {
+    spotlightToggleRef.current?.();
+  }, []);
+
   const containerClass = `container${editorActive ? ' container--editor' : ''}`;
 
   return (
@@ -40,6 +55,11 @@ export default function App() {
         <>
           <FloatingControls searchInputRef={searchInputRef} />
           <GraphArea />
+          {IS_FULLVIEW && FullviewDashboard && (
+            <Suspense fallback={null}>
+              <FullviewDashboard onOpenSpotlight={handleOpenSpotlight} />
+            </Suspense>
+          )}
           <ThemePanel />
           <DeleteTreeConfirmModal />
           <ContextMenus />
