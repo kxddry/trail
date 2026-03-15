@@ -85,7 +85,16 @@ export function SpotlightResults({
                 {item.key === selectedKey && item.kind !== 'action' ? (
                   <SpotlightRowActions item={item} activeTreeId={activeTreeId} onAction={onInlineAction} />
                 ) : (
-                  <div className="spotlight-row-meta">{getItemMeta(item)}</div>
+                  <>
+                    {item.kind !== 'action' && item.groupBadge && (
+                      <span className={`spotlight-source-badge spotlight-source-badge--${badgeVariant(item)}`}>
+                        {item.groupBadge}
+                      </span>
+                    )}
+                    {item.kind === 'action' && (
+                      <div className="spotlight-row-meta">{item.shortcutHint}</div>
+                    )}
+                  </>
                 )}
               </Command.Item>
             ))}
@@ -116,7 +125,11 @@ function renderItemSubtitle(item: SpotlightSearchResult): ReactNode {
   return item.subtitle;
 }
 
-function getItemMeta(item: SpotlightSearchResult): string {
-  if (item.kind === 'node') return item.group === 'other-trees' ? item.treeName : item.pinned ? 'Pinned' : item.groupBadge;
-  return item.kind === 'tree' ? item.groupBadge : item.shortcutHint;
+function badgeVariant(item: SpotlightSearchResult): string {
+  if (item.kind === 'action') return '';
+  if (item.kind === 'node') {
+    if (item.groupBadge === 'Open') return 'tab';
+    if (item.pinned) return 'pin';
+  }
+  return '';
 }

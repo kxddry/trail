@@ -15,7 +15,9 @@ import { useSelectionIndicator } from './useSelectionIndicator.js';
 import { SpotlightBatchBar } from './SpotlightBatchBar.js';
 import { useSpotlightResize } from './useSpotlightResize.js';
 import { executeBatchAction } from './rpc.js';
-import type { SpotlightActionId, SpotlightBatchActionId, SpotlightSearchResult } from './types.js';
+import { SpotlightFooter } from './SpotlightFooter.js';
+import { resolveSpotlightQueryMode } from '@shared/lib/spotlight/query-dsl.js';
+import type { SpotlightActionId, SpotlightBatchActionId, SpotlightMode, SpotlightSearchResult } from './types.js';
 import type { SpotlightNodeTarget } from './useSpotlightPreview.js';
 
 type SpotlightRootProps = { onRegisterToggle: (toggle: () => void) => void };
@@ -62,6 +64,8 @@ export function SpotlightRoot({ onRegisterToggle }: SpotlightRootProps) {
     [selectedKeys, itemByKey],
   );
   const isMultiSelect = selectedKeys.size > 1;
+
+  const spotlightMode = resolveSpotlightQueryMode(search.query).mode as SpotlightMode;
 
   // Clear multi-select when query or sections change
   useEffect(() => { setSelectedKeys(new Set()); }, [search.query, search.sections]);
@@ -188,7 +192,7 @@ export function SpotlightRoot({ onRegisterToggle }: SpotlightRootProps) {
     flatItems, selectedKeys, setSelectedKeys, showPreview: true,
   });
 
-  const resize = useSpotlightResize(panelsRef);
+  const resize = useSpotlightResize(panelsRef, spotlightMode);
 
   if (!hasBeenOpened) return null;
 
@@ -211,6 +215,22 @@ export function SpotlightRoot({ onRegisterToggle }: SpotlightRootProps) {
         >
           <div className="spotlight-search spotlight-search--v3">
             <div className="spotlight-input-wrap">
+              <div className="spotlight-scope-icon" aria-hidden="true">
+                {spotlightMode === 'commands' ? (
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <polyline points="6 4 10 8 6 12" />
+                  </svg>
+                ) : drilldownScope ? (
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M3 4h3l2 2h5v7H3V4z" />
+                  </svg>
+                ) : (
+                  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <circle cx="7" cy="7" r="4" />
+                    <line x1="10" y1="10" x2="13" y2="13" />
+                  </svg>
+                )}
+              </div>
               <Command.Input
                 ref={inputRef} className="spotlight-search-input" autoComplete="off" spellCheck={false}
                 placeholder={drilldownScope ? `Search in ${drilldownScope.treeName}...` : 'Search pages or type > / for commands'}
@@ -313,6 +333,11 @@ export function SpotlightRoot({ onRegisterToggle }: SpotlightRootProps) {
             />
           )}
           {act.statusText && <div className="spotlight-status-bar"><span className="spotlight-status">{act.statusText}</span></div>}
+          <SpotlightFooter
+            mode={spotlightMode}
+            isMultiSelect={isMultiSelect}
+            focusPane={selectedFocusPane}
+          />
           {act.actionMenuActions && <SpotlightActionMenu actions={act.actionMenuActions} onSelect={act.handleActionMenuSelect} onClose={() => act.setActionMenuActions(null)} />}
           {act.quickLookItem && (act.quickLookItem.kind === 'node' || act.quickLookItem.kind === 'tree') && (
             <SpotlightQuickLook item={act.quickLookItem} onClose={() => act.setQuickLookItem(null)} onAction={(actionId, target, status) => { act.setQuickLookItem(null); void act.handleExecuteAction(actionId, target, status); }} />
