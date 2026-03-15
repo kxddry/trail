@@ -224,6 +224,22 @@ export class SpotlightService {
     }
     appendSectionIfAny(sections, 'continue', continueDocs.slice(0, 4));
 
+    const openTabs = await this.mapNodes(
+      snapshot,
+      [...activeNodeDocs].filter((doc) => doc.tabCount > 0).sort(compareNodeDocsByPriority),
+      Math.min(Math.max(limit, 1), 8),
+      seen,
+    );
+    appendSectionIfAny(sections, 'open-tabs', openTabs);
+
+    const pins = await this.mapNodes(
+      snapshot,
+      [...activeNodeDocs].filter((doc) => doc.pinned).sort(compareNodeDocsByPriority),
+      Math.min(Math.max(limit, 1), 8),
+      seen,
+    );
+    appendSectionIfAny(sections, 'pins', pins);
+
     const frequentKeys = await spotlightUsageStats.getTopTargetKeys(5);
     const frequentItems: SpotlightSearchResult[] = [];
     for (const key of frequentKeys) {
@@ -234,14 +250,6 @@ export class SpotlightService {
       }
     }
     appendSectionIfAny(sections, 'frequent', frequentItems);
-
-    const pins = await this.mapNodes(
-      snapshot,
-      [...activeNodeDocs].filter((doc) => doc.pinned).sort(compareNodeDocsByPriority),
-      Math.min(Math.max(limit, 1), 8),
-      seen,
-    );
-    appendSectionIfAny(sections, 'pins', pins);
 
     const currentTree = await this.mapNodes(
       snapshot,
@@ -257,7 +265,7 @@ export class SpotlightService {
       Math.min(Math.max(limit, 1), 8),
       seen,
     );
-    appendSectionIfAny(sections, 'archived-trees', archivedTrees);
+    appendSectionIfAny(sections, 'trees', archivedTrees);
 
     const actionRows = buildGlobalActions().map((action) => toActionResult(action));
     appendSectionIfAny(sections, 'actions', actionRows);
