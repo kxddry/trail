@@ -70,9 +70,29 @@ export function NewTabApp() {
   // Clear multi-select when query or results change
   useEffect(() => { setSelectedKeys(new Set()); }, [search.query, search.sections]);
 
-  // Auto-focus search on mount
+  // Auto-focus search on mount — aggressive strategy to beat Chrome's address bar
   useEffect(() => {
-    requestAnimationFrame(() => inputRef.current?.focus());
+    const input = inputRef.current;
+    if (!input) return;
+
+    const attemptFocus = () => {
+      window.focus();
+      input.focus();
+    };
+
+    // Immediate attempt
+    attemptFocus();
+
+    // Retry at multiple timings to beat Chrome's address bar focus steal
+    const timers = [0, 50, 150, 300].map((delay) =>
+      setTimeout(() => {
+        if (document.activeElement !== input) {
+          attemptFocus();
+        }
+      }, delay),
+    );
+
+    return () => timers.forEach(clearTimeout);
   }, []);
 
   // Listen for TOGGLE_SPOTLIGHT to focus input (Cmd+Shift+K on this tab)
@@ -229,7 +249,7 @@ export function NewTabApp() {
           </div>
           <div className="spotlight-input-wrap">
             <Command.Input
-              ref={inputRef} className="spotlight-search-input" autoComplete="off" spellCheck={false}
+              ref={inputRef} className="spotlight-search-input" autoComplete="off" autoFocus spellCheck={false}
               placeholder={drilldownScope ? `Search in ${drilldownScope.treeName}...` : 'Search pages or type > for commands'}
               value={search.query} onValueChange={(v: string) => { search.setQuery(v); act.setStatusText(null); }}
             />
