@@ -269,6 +269,7 @@ export type SpotlightSectionId =
   | 'archived-trees'
   | 'trees'
   | 'external'
+  | 'suggestions'
   | 'matches'
   | 'scoped-pages'
   | 'frequent'
