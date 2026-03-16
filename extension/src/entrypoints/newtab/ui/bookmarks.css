@@ -1,0 +1,204 @@
+/* ── Bookmarks: card-style grid layout ── */
+
+.newtab-bookmarks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 8px;
+  padding: 12px 18px;
+  max-height: 200px;
+  overflow-y: auto;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  scrollbar-width: thin;
+}
+
+.newtab-bookmarks::-webkit-scrollbar {
+  width: 4px;
+}
+
+.newtab-bookmarks::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 2px;
+}
+
+/* ── Bookmark card (link or folder trigger) ── */
+
+.newtab-bookmark-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 13px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.62);
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  font: inherit;
+  transition: background 120ms ease;
+}
+
+.newtab-bookmark-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* ── Favicon ── */
+
+.newtab-bookmark-favicon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 3px;
+}
+
+.newtab-bookmark-icon {
+  flex-shrink: 0;
+  color: inherit;
+  opacity: 0.6;
+}
+
+/* ── Title ── */
+
+.newtab-bookmark-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+/* ── Folder ── */
+
+.newtab-bookmark-folder {
+  position: relative;
+}
+
+/* ── Dropdown ── */
+
+.newtab-bookmark-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  z-index: 100;
+  min-width: 180px;
+  max-width: 280px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px;
+  border-radius: 8px;
+  background: rgba(28, 28, 32, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.newtab-bookmark-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.72);
+  text-decoration: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font: inherit;
+  width: 100%;
+  text-align: left;
+}
+
+.newtab-bookmark-dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.newtab-bookmark-dropdown-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+
+.newtab-bookmark-dropdown-empty {
+  padding: 8px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.32);
+  text-align: center;
+}
+
+/* ── Nested folder group ── */
+
+.newtab-bookmark-dropdown-folder-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px 2px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.36);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ── Responsive ── */
+
+@media (max-width: 800px) {
+  .newtab-bookmarks {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 6px;
+    padding: 10px 14px;
+  }
+
+  .newtab-bookmark-item {
+    padding: 8px 10px;
+    gap: 8px;
+    font-size: 12px;
+  }
+}
+
+/* ── Light theme ── */
+
+[data-theme="light"] .newtab-bookmarks {
+  border-bottom-color: rgba(0, 0, 0, 0.07);
+}
+
+[data-theme="light"] .newtab-bookmarks::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .newtab-bookmark-item {
+  color: rgba(0, 0, 0, 0.55);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .newtab-bookmark-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  color: rgba(0, 0, 0, 0.88);
+}
+
+[data-theme="light"] .newtab-bookmark-dropdown {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+[data-theme="light"] .newtab-bookmark-dropdown-item {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+[data-theme="light"] .newtab-bookmark-dropdown-item:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.88);
+}
+
+[data-theme="light"] .newtab-bookmark-dropdown-empty {
+  color: rgba(0, 0, 0, 0.32);
+}
+
+[data-theme="light"] .newtab-bookmark-dropdown-folder-label {
+  color: rgba(0, 0, 0, 0.36);
+}

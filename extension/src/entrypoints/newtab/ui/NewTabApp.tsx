@@ -18,6 +18,8 @@ import { executeBatchAction } from '../../../spotlight/rpc.js';
 import { SpotlightFooter } from '../../../spotlight/SpotlightFooter.js';
 import { resolveSpotlightQueryMode } from '@shared/lib/spotlight/query-dsl.js';
 import { browser } from '@shared/platform/webext.js';
+import { BookmarksBar } from './BookmarksBar.js';
+import { useBookmarks } from './useBookmarks.js';
 import type { SpotlightActionId, SpotlightBatchActionId, SpotlightMode, SpotlightSearchResult } from '../../../spotlight/types.js';
 import type { SpotlightNodeTarget } from '../../../spotlight/useSpotlightPreview.js';
 import type { NodeId } from '@shared/types/ids.js';
@@ -47,6 +49,8 @@ export function NewTabApp() {
   const [drilldownScope, setDrilldownScope] = useState<{ treeId: string; treeName: string } | null>(null);
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set());
   const [graphHidden, setGraphHidden] = useState(false);
+
+  const { bookmarks } = useBookmarks();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLElement>(null);
@@ -241,6 +245,9 @@ export function NewTabApp() {
             )}
           </div>
         </div>
+
+        {/* ── Bookmarks bar ── */}
+        {bookmarks.length > 0 && <BookmarksBar bookmarks={bookmarks} />}
 
         {/* ── Breadcrumb (drilldown) ── */}
         {drilldownScope && (
