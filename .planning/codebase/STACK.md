@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Analysis Date:** 2026-03-17
+**Analysis Date:** 2026-03-18
 
 ## Languages
 
@@ -16,7 +16,7 @@
 
 **Environment:**
 - Node.js (specified via packageManager pnpm@10.29.3)
-- Chrome/Chromium (browser extension target)
+- Chrome/Chromium (browser extension target with Manifest V3 support)
 
 **Package Manager:**
 - pnpm 10.29.3 - Monorepo package manager
@@ -30,7 +30,9 @@
 - React 19.2.4 - UI library with React DOM
 
 **Extension:**
-- WXT 0.20.18 - Extension framework (`extension/`)
+- WXT 0.20.18 - Extension development framework (`extension/`)
+  - Handles Chrome Manifest V3 bundling, content script injection, background worker management
+  - Configured in `extension/wxt.config.ts`
 - Vite 7.3.1 - Build tool (dev dependency across extension and apps)
 
 **Testing:**
@@ -85,7 +87,7 @@
 
 **Graphics/3D:**
 - three 0.183.1 - 3D graphics library (used in marketing app)
-- pixi.js 8.16.0 - 2D WebGL renderer (used in extension)
+- pixi.js 8.16.0 - 2D WebGL renderer (used in extension for tree visualization)
 
 **Data & Search:**
 - minisearch 7.2.0 - Lightweight full-text search (extension local search)
@@ -93,6 +95,11 @@
 
 **Type Safety:**
 - server-only 0.0.1 - Runtime check to ensure code runs server-side
+- @types/chrome 0.1.37 - Chrome extension API type definitions
+
+**Extension Storage & State:**
+- wxt/utils/storage - WXT storage management wrapper for chrome.storage
+- zustand 5.0.11 - Lightweight state management (extension)
 
 ## Configuration
 
@@ -106,6 +113,7 @@
 - Prettier ignore: `.prettierignore`
 - Next.js config: Per-app (implicit, standard Next.js patterns)
 - Cypress config: `cypress.config.ts` - E2E test configuration
+- WXT config: `extension/wxt.config.ts` - Extension build, manifest, and dev server settings
 - TypeScript: `tsconfig.json` in root (inherited/extended per workspace)
 
 ## Platform Requirements
@@ -114,7 +122,7 @@
 - Node.js with pnpm 10.29.3
 - TypeScript 5.9.3 compatible environment
 - PostgreSQL database for local development (DATABASE_URL env var)
-- Chrome/Chromium for extension testing
+- Chrome/Chromium for extension testing (profile stored in `.wxt/chrome-data`)
 
 **Production:**
 - **Web:** Vercel (implied by @vercel/* packages and VERCEL_URL in env resolution)
@@ -122,7 +130,8 @@
 - **CMS:** Sanity (for marketing content)
 - **Auth:** Google OAuth provider integration
 - **Hosting:** Supports deployment to Vercel (analytics and speed-insights packages)
+- **Extension:** Distributed via Chrome Web Store (published as Manifest V3)
 
 ---
 
-*Stack analysis: 2026-03-17*
+*Stack analysis: 2026-03-18*

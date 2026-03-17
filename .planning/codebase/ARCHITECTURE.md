@@ -1,185 +1,228 @@
 # Architecture
 
-**Analysis Date:** 2026-03-17
+**Analysis Date:** 2025-03-18
 
 ## Pattern Overview
 
-**Overall:** Multi-tier distributed system with three primary layers: Browser Extension (desktop client), Web Applications (account/marketing), and Backend Services (database, API).
+**Overall:** Monorepo with event-driven RPC messaging between browser extension and web applications, unified through tRPC API layer and PostgreSQL database.
 
 **Key Characteristics:**
-- Message-based IPC between extension components
-- RPC protocol for extension-to-web communication
-- Monorepo with shared packages (ui, db, trpc, content)
-- Headless Postgres database accessed through Prisma ORM
-- Next.js full-stack applications for account and marketing sites
+- Extension owns local state (navigation tree, tabs, session history) with bidirectional sync to backend
+- Web apps (account, marketing) serve user accounts and content management
+- Message passing via versioned RPC envelopes with Zod validation
+- Single source of truth in extension background state, synced to cloud via sync engine
+- Security-first content script bridge between web app (account.gettrail.net) and extension
+- Immutable state updates throughout (no mutation patterns)
 
 ## Layers
 
-**Browser Extension (Client):**
-- Purpose: Captures and visualizes user navigation history as an interactive graph/tree
-- Location: `extension/src/`
-- Contains: Service worker, UI components, state management, RPC client
-- Depends on: None externally, communicates via Chrome extension APIs
-- Used by: Direct browser interaction, user-facing UI
+**Extension Background Service Worker:**
+- Purpose: Central orchestrator for all extension operations, lifecycle management, event handling
+- Location: `extension/src/entrypoints/background.ts`, `extension/src/background/service-worker.ts`, `extension/src/background/messaging/`
+- Contains: Message routing, tab tracking, tree state management (nav-tree.ts), sync engine, auth orchestration, event listeners
+- Depends on: Chrome APIs (tabs, storage, runtime, webNavigation), local state modules, sync API client
+- Used by: All UI layers (sidepanel, newtab, spotlight), content scripts, web apps (via postMessage bridge)
 
-**Backend Services Layer:**
-- Purpose: Handles authentication, data persistence, billing, and API endpoints
-- Location: `packages/trpc/src/`, `apps/account/src/server/`
-- Contains: tRPC router, Prisma models, auth logic, sync engines
-- Depends on: `@trail/db` (Prisma client), PostgreSQL database
-- Used by: Extension (via RPC), Web applications (via Next.js)
+**Extension UI Layers (Presentational):**
+- Purpose: Render and interact with browsing history visualization and features
+- Location: `extension/src/entrypoints/sidepanel/`, `extension/src/entrypoints/newtab/`, `extension/src/entrypoints/spotlight-graph/`, `extension/src/entrypoints/fullview/`
+- Contains: React components, TanStack React Query for server state, Zustand for local UI state, Pixi.js rendering (graph visualization)
+- Depends on: Background RPC client, React Query hooks, UI component library (@trail/ui)
+- Used by: End users via browser UI
 
-**Web Applications Layer:**
-- Purpose: Account dashboard, marketing site, user settings/billing
-- Location: `apps/account/`, `apps/marketing/`
-- Contains: React components, Next.js server routes, tRPC client
-- Depends on: `@trail/ui`, `@trail/trpc`, `@trail/content`, `@trail/db`
-- Used by: Browser users via HTTP/HTTPS
+**Content Script Bridge:**
+- Purpose: Security layer between web app (account.gettrail.net) and extension via postMessage
+- Location: `extension/src/entrypoints/content.ts`, `extension/src/content/bridge/runtime.ts`
+- Contains: postMessage validation, nonce anti-replay tracking, TTL enforcement (30s), request/response relay, origin allowlist enforcement
+- Depends on: RPC schema, site-origins.ts allowlist
+- Used by: Account app running on trusted origin, communicates with background via browser.runtime.sendMessage
+
+**Web Apps (Next.js):**
+- Purpose: User account management, subscription, authentication, content management
+- Location: `apps/account/`, `apps/marketing/`, `apps/video/` (excluded from builds)
+- Contains: Server components, tRPC client integration, auth middleware (Better Auth), Next.js routes
+- Depends on: @trail/trpc, @trail/db, @trail/ui components, @trail/content
+- Used by: Browser users, extension via postMessage bridge for authenticated features
 
 **Shared Packages:**
-- Purpose: Reusable components, styling, database schema, RPC definitions
-- Location: `packages/`
-- Contains: UI components (`@trail/ui`), database client (`@trail/db`), tRPC server setup (`@trail/trpc`), content primitives (`@trail/content`)
-- Depends on: Framework libraries (React, Prisma, Radix UI)
-- Used by: Extension, account app, marketing app
+- `packages/trpc/`: tRPC router definitions, type-safe API contracts, JWT extension token handling
+- `packages/db/`: Prisma client, PostgreSQL schema, migrations (users, sessions, trails, devices)
+- `packages/ui/`: React component library (Radix UI, Tailwind, custom components)
+- `packages/content/`: Copywriting and constants for all apps
 
 ## Data Flow
 
-**User Navigation Capture:**
+**Navigation Event (User clicks link):**
 
-1. Service worker monitors `chrome.webNavigation` events
-2. Navigation events create/update nodes in the navigation tree (in-memory state)
-3. Changes trigger persistence to local storage via `tree-storage.ts`
-4. UI components subscribed to tree state updates re-render
-5. Sync engine debounces and batches updates to backend
+1. Browser triggers `browser.webNavigation.onCommitted` (detected in `extension/src/background/navigation/webnavigation.ts`)
+2. Background extracts URL, title, favicon, tab metadata via `navigation-handler.ts`
+3. Tree state updates via `nav-tree.ts` (creates new node, updates current, maintains parent/child edges)
+4. Node recency tracked in `node-recency.ts` (LRU scoring)
+5. Tab manager updates bidirectional mapping in `tab-manager.ts`
+6. All UI layers subscribed to tree changes receive `TREE_UPDATED` notification via RPC
+7. If sync enabled, dirty tracker marks tree as modified in `sync/dirty-tracker.ts`, sync engine batches to backend on next tick
+8. Account app receives update via postMessage if open on allowed origin (RELAY_TO_SITE from background)
 
-**Search & Spotlight:**
+**Spotlight Search (User triggers Cmd+Shift+K):**
 
-1. User opens spotlight (CMD+K in extension)
-2. `useSpotlightSearch` hook calls `searchSpotlight()` RPC to background
-3. Background worker queries in-memory tree with `minisearch` index
-4. Results streamed back to UI components
-5. User interactions (click, keyboard) routed through `executeSpotlightAction()` RPC
+1. `extension/src/entrypoints/spotlight-command.ts` detects keyboard shortcut via `browser.commands.onCommand`
+2. Launches spotlight modal (`extension/src/entrypoints/spotlight-graph/`)
+3. Spotlight requests bootstrap data via `SPOTLIGHT_BOOTSTRAP` RPC call to background
+4. Background aggregates:
+   - Current tree with all nodes from `nav-tree.ts`
+   - Open tab counts per node from `tab-manager.ts`
+   - Node recency scores from `node-recency.ts`
+   - Pinned status from `pinned.ts`
+   - All wrapped in `SpotlightBootstrapData` type
+5. Spotlight creates in-memory search index via `minisearch` on bootstrap
+6. User types → incremental search in UI (no background calls, runs in UI thread)
+7. User selects result → `SPOTLIGHT_EXECUTE_ACTION` triggers navigation, pin, close, delete, etc.
+8. Action handler in background updates state, broadcasts `TREE_UPDATED` to all listeners
 
-**Sync Engine (Bidirectional):**
+**Authentication Flow (User logs in):**
 
-1. Local changes debounced in `sync/engine.ts`
-2. Dirty tracker identifies changed nodes
-3. Sync payload sent to account server via RPC
-4. Server applies to Prisma database
-5. Server broadcasts updates back via message passing
-6. Extension receives `TREES_UPDATED` notification
-7. Local state merged with server state (with conflict resolution)
+1. User initiates login on account app (account.gettrail.net via postMessage OPEN_TRAIL_PANEL)
+2. Account app uses Better Auth for OAuth session management
+3. Account app posts auth message to extension via `window.postMessage` (source "trail-site")
+4. Content script (`extension/src/content/bridge/runtime.ts`) validates:
+   - Origin (must be allowed via site-origins.ts)
+   - TTL (30s window, must be recent)
+   - Nonce (anti-replay, max 100 in flight)
+   - Known message type (PING, OPEN_TRAIL_PANEL, ENTER_EDITOR_MODE, AUTH_REVOKED, etc.)
+5. Forwards to background via `browser.runtime.sendMessage`
+6. Background auth-orchestrator (`extension/src/background/services/auth-orchestrator.ts`) processes
+7. auth-policy-keeper stores auth tokens/policy in extension storage
+8. Sync engine activates: cloud trees load via API, merge with local state
+9. All UI layers notified of auth state change via `SYNC_TREES` or `OAUTH_SILENT_SYNC`
 
-**Authentication Flow:**
+**Sync Engine Tick (Periodic or triggered):**
 
-1. User opens account page → handled by Next.js
-2. `better-auth` library manages OAuth/credentials
-3. JWT tokens issued and stored in secure cookies
-4. Extension calls RPC with signed extension tokens (JWT-based)
-5. Backend validates token signature and checks auth policy
-6. Request processed with user context from JWT payload
+1. Dirty tracker identifies modified nodes (set when tree updated)
+2. Constructs minimal delta payload (changed nodes only, not full tree)
+3. Sends to backend via API call in `extension/src/background/services/sync/api.ts`
+4. Server applies mutations via Prisma, stores sync metadata
+5. Server broadcasts `TREES_UPDATED` back to all connections (if available)
+6. Extension receives update via `TREES_UPDATED` RPC, merges with local state
+7. Conflict resolution: server always wins on timestamp collision (server is authority)
 
 **State Management:**
 
-- **In-Memory State (Background Worker):**
-  - `nav-tree.ts`: Current navigation tree structure
-  - `tab-manager.ts`: Open browser tabs and their relationships
-  - `pinned.ts`: User-pinned nodes
-  - `node-recency.ts`: LRU tracking for "recent" nodes
-  - All state persisted to browser storage on change
-
-- **Server State (PostgreSQL):**
-  - User data, authentication tokens, subscriptions (Prisma models)
-  - Trails (complete navigation trees)
-  - Sync status, billing info, feature flags
-
-- **UI State (React Hooks):**
-  - Component-level state (search query, selected nodes, modals)
-  - Cached data via React Query (account/marketing apps)
+- **Extension Local State:** Immutable tree structure in `nav-tree.ts`, updates create new tree objects (structural sharing via tree-node.ts operations)
+- **Sync State:** Dirty tracking in `extension/src/background/services/sync/dirty-tracker.ts`, batched sends on 5s debounce or explicit trigger
+- **UI State:** React Query cache for server state, Zustand stores for UI ephemeral state (modals, selections)
+- **Auth State:** Better Auth session on web app (HttpOnly cookies), extension storage for auth policy on background
 
 ## Key Abstractions
 
-**Navigation Tree:**
-- Purpose: Hierarchical model of user's browsing session
-- Examples: `extension/src/background/state/tree-node.ts`, `extension/src/shared/types/tree.ts`
-- Pattern: Immutable updates, structural sharing for diffing
-
-**RPC Schema:**
-- Purpose: Type-safe contract between extension and background worker
+**RPC Message System:**
+- Purpose: Type-safe, versioned request/response communication across extension boundaries
 - Examples: `extension/src/shared/rpc/contracts.ts`, `extension/src/shared/rpc/schema.ts`
-- Pattern: Zod schemas for runtime validation, TypeScript inference for compile-time safety
+- Pattern: Message envelopes with version (RPC_VERSION=2), ID (UUID), method (string), input (record), success flag, data/error
+- Zod validation on all RPC boundaries, request handlers return typed responses
+- All internal communication uses this (background ↔ UI layers, content ↔ background)
 
-**Message Routing:**
-- Purpose: Centralized handler registry for all inter-worker messages
-- Examples: `extension/src/background/messaging/router.ts`, `extension/src/background/messaging/handlers/*.ts`
-- Pattern: Factory function creates router, handlers registered via `.merge()`, dispatch validates and executes
-
-**Spotlight Search:**
-- Purpose: Fast in-memory full-text search over navigation tree
-- Examples: `extension/src/spotlight/useSpotlightSearch.ts`, `extension/src/shared/vendor/minisearch.ts`
-- Pattern: LRU cache for preview data, session-based state, connection error recovery with backoff
-
-**Sync Engine:**
-- Purpose: Bidirectional tree synchronization with conflict resolution
-- Examples: `extension/src/background/services/sync/engine.ts`, `extension/src/background/services/sync/dirty-tracker.ts`
-- Pattern: Debounced local changes, dirty tracking, transaction-aware server syncing
+**Navigation Tree:**
+- Purpose: In-memory hierarchical representation of user's browsing session
+- Examples: `extension/src/background/state/nav-tree.ts`, `extension/src/background/state/tree-node.ts`
+- Pattern: Immutable tree operations (always return new instances), parent/child relationships preserved via edge pointers
+- Node ID branded type (NodeId) prevents accidental ID mixing
+- Used by: All visualization, search, layout calculation, sync engine
 
 **Tab Manager:**
-- Purpose: Unified view of open browser tabs and their lifecycle
-- Examples: `extension/src/background/state/tab-manager.ts`, `extension/src/background/tabs/lifecycle.ts`
-- Pattern: Tab ID-based indexing, state normalized (no duplication)
+- Purpose: Tracks relationship between browser tabs and tree nodes
+- Examples: `extension/src/background/state/tab-manager.ts`, `extension/src/background/state/tab-index.ts`, `extension/src/background/state/tab-lru.ts`
+- Pattern: LRU tracking for tab recency, bidirectional tab↔node mapping, deduplication of tab states
+- Used by: Node preview, tab close operations, visualization, spotlight search ranking
+
+**Sync Engine:**
+- Purpose: Bidirectional sync between local state and cloud backend
+- Examples: `extension/src/background/services/sync/engine.ts`, `extension/src/background/services/sync/api.ts`, `extension/src/background/services/sync/dirty-tracker.ts`
+- Pattern: Dirty tracking + polling, exponential backoff on conflict (200ms, 800ms, 2000ms), mutation-only (no full replaces), server authority on collision
+- Used by: Background on auth success, periodic tick (5s debounce), manual sync trigger
+
+**Message Handler Router:**
+- Purpose: Dispatch RPC requests to appropriate handlers based on method
+- Examples: `extension/src/background/messaging/router.ts`, `extension/src/background/messaging/handlers/`
+- Pattern: Handler registry by RPC method name, async/sync support, error wrapping in response envelope
+- 15+ handler files organized by domain (tab-handlers, tree-handlers, spotlight-handlers, etc.)
+- Used by: Background service worker main event loop
+
+**Content UI Mount System:**
+- Purpose: Inject UI overlay into content pages (account app)
+- Examples: `extension/src/entrypoints/content-ui/mount.ts`
+- Pattern: Shadow DOM isolation, style injection, React portal mounting
+- Used by: Content script to add Trail features/UI to gettrail.net
 
 ## Entry Points
 
 **Background Service Worker:**
-- Location: `extension/src/entrypoints/background.ts`
-- Triggers: Extension loads, persists until unload
-- Responsibilities: Initializes all background modules, listens for messages, manages tabs/navigation lifecycle
+- Location: `extension/src/entrypoints/background.ts` (delegates to `extension/src/background/service-worker.ts`)
+- Triggers: Browser startup, extension enabled
+- Responsibilities: Initialize all subsystems (messaging, sync, auth, tabs, navigation), listen for all RPC requests, manage lifecycle events
 
-**Side Panel UI:**
+**Content Script:**
+- Location: `extension/src/entrypoints/content.ts`
+- Triggers: Page load on allowed origins (ALLOWED_SITE_MATCH_PATTERNS from site-origins.ts)
+- Responsibilities: Bridge between page and extension, validate postMessage, relay RPC calls, handle site messages, establish runtime connection
+
+**Sidepanel:**
 - Location: `extension/src/entrypoints/sidepanel/main.tsx`
-- Triggers: User clicks extension icon or manually opens side panel
-- Responsibilities: Renders tree graph, handles search, manages tags
+- Triggers: User clicks extension icon or toggles panel (configured in manifest)
+- Responsibilities: Display tree visualization (Pixi.js), handle user edits, subscribe to tree updates, show settings/tags
 
-**New Tab Page:**
+**New Tab:**
 - Location: `extension/src/entrypoints/newtab/main.tsx`
-- Triggers: User opens new tab
-- Responsibilities: Shows dashboard, recent/bookmarked pages, search defaults
+- Triggers: User opens new tab (replaces Chrome default via chrome_url_overrides in manifest)
+- Responsibilities: Show tree overview, recent nodes, open tabs, quick actions
 
-**Spotlight Command:**
-- Location: `extension/src/entrypoints/spotlight.content/index.tsx`
-- Triggers: User presses CMD+K or configured hotkey
-- Responsibilities: Renders modal search interface with live results
+**Spotlight Graph:**
+- Location: `extension/src/entrypoints/spotlight-graph/main.tsx`
+- Triggers: User presses Cmd+Shift+K (registered in manifest.commands)
+- Responsibilities: Search interface, results ranking via minisearch, action execution, tree preview on hover
 
-**Account Web App:**
-- Location: `apps/account/src/` (Next.js with file-based routing under `app/` directory)
-- Triggers: User navigates to account.gettrail.com
-- Responsibilities: User dashboard, settings, billing, trail management, authentication
+**Fullview Editor:**
+- Location: `extension/src/entrypoints/fullview/main.tsx`
+- Triggers: User enters edit mode from sidepanel
+- Responsibilities: Full-screen tree editor, drag-drop reorganization, node creation/deletion
 
-**Marketing Site:**
-- Location: `apps/marketing/src/` (Next.js)
-- Triggers: User navigates to gettrail.com
-- Responsibilities: Public landing page, feature showcase, documentation links
+**Account App (Web):**
+- Location: `apps/account/app/layout.tsx` (Next.js)
+- Triggers: User navigates to account.gettrail.net
+- Responsibilities: Auth via Better Auth, subscription management, settings, trail imports, communicate with extension via postMessage bridge
+
+**Marketing App:**
+- Location: `apps/marketing/app/layout.tsx`
+- Triggers: User navigates to gettrail.net
+- Responsibilities: Landing page, blog, documentation (read-only, no extension interaction)
 
 ## Error Handling
 
-**Strategy:** Defensive with user-friendly messaging in UI, detailed logging on server side.
+**Strategy:** Errors caught at every boundary, wrapped in RPC response envelope with success flag and error string. User-friendly messages in UI, detailed logging on server.
 
 **Patterns:**
-- **Network errors:** Retry with exponential backoff (200ms, 800ms, 2000ms) for recoverable errors; session expiry triggers re-auth flow
-- **RPC errors:** Validation errors from Zod reject malformed payloads; handler exceptions caught, logged, and returned as error envelopes
-- **Sync conflicts:** Server-side transaction logic merges changes; dirty tracker prevents re-sending failed updates
-- **Missing state:** UI gates display on auth status, shows loading states during data fetch, renders fallback UI if data unavailable
+
+- Extension RPC calls use `try/catch` and return `err(message)` or `ok(data)` helpers
+- Content script validates every postMessage, silently drops invalid messages (no error response needed)
+- Auth failures trigger logout, clear session, redirect to login, notify UI
+- Sync errors with exponential backoff (max retry limit before marking error)
+- UI layers show toast notifications for user-facing errors (sonner toast)
+- Service worker catches unhandled promise rejections globally via addEventListener('unhandledrejection')
+- Malformed RPC envelopes rejected by Zod, returns error to caller
 
 ## Cross-Cutting Concerns
 
-**Logging:** Console-based in extension (prefixed with module name for grepping), server-side request logging in Next.js
+**Logging:** Console-based, includes context (sender, method, timing). Module-prefixed for grepping. No log aggregation in local builds.
 
-**Validation:** Zod schemas at all RPC boundaries; Prisma enforces database constraints; input validation in handlers before state mutations
+**Validation:** Zod schemas on all RPC boundaries (rpcRequestEnvelopeSchema, rpcResponseEnvelopeSchema), lightweight validation in content script (no external deps), type-safe handlers ensure proper inputs
 
-**Authentication:** JWT tokens with expiry, extension tokens signed server-side, auth policy evaluated per request, refresh flow via better-auth
+**Authentication:** Better Auth on web app (OAuth + password), extension session storage for auth tokens, policy keeper enforces auth state, silent sync on boot, interactive login flow for expired sessions
+
+**Security:**
+- Content script: origin validation (ALLOWED_SITE_MATCH_PATTERNS), nonce anti-replay (100-message LRU), TTL (30s), lightweight schema check
+- Extension storage: No secrets, only session metadata and public user data
+- postMessage: Strict source checking (event.source === window), origin must match, nonce prevents replay
+- CORS: Account app restricted to allowed origins only via content script
 
 ---
 
-*Architecture analysis: 2026-03-17*
+*Architecture analysis: 2025-03-18*
