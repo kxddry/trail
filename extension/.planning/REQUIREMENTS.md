@@ -32,8 +32,8 @@
 
 ### Object Lifecycle
 
-- [ ] **POOL-01**: Particle Graphics objects pooled instead of created/destroyed per frame
-- [ ] **POOL-02**: Tag dot Graphics objects pooled in NodeVisual instead of removeChildren+new per update
+- [x] **POOL-01**: Particle Graphics objects pooled instead of created/destroyed per frame
+- [x] **POOL-02**: Tag dot Graphics objects pooled in NodeVisual instead of removeChildren+new per update
 
 ## v2 Requirements
 
@@ -72,8 +72,8 @@
 | INTR-01 | Phase 5 | Complete |
 | INTR-02 | Phase 5 | Complete |
 | INTR-03 | Phase 5 | Complete |
-| POOL-01 | Phase 6 | Pending |
-| POOL-02 | Phase 6 | Pending |
+| POOL-01 | Phase 6 | Complete |
+| POOL-02 | Phase 6 | Complete |
 | ARCH-01 | Phase 7 | Pending |
 | ARCH-02 | Phase 7 | Pending |
 | ARCH-03 | Phase 7 | Pending |

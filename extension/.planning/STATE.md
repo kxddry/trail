@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-last_updated: "2026-03-18T18:05:32.272Z"
-last_activity: 2026-03-18 — Completed 05-02-PLAN.md (Hover optimization, Phase 5 complete)
+last_updated: "2026-03-18T18:15:52.962Z"
+last_activity: 2026-03-18 — Completed 06-01-PLAN.md (Object pooling, Phase 6 complete)
 progress:
   total_phases: 7
-  completed_phases: 5
-  total_plans: 8
-  completed_plans: 8
+  completed_phases: 6
+  total_plans: 9
+  completed_plans: 9
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 5 complete (interaction optimization), ready for Phases 6-7
+**Current focus:** Phase 6 complete (object pooling), ready for Phase 7
 
 ## Current Position
 
-Phase: 5 (complete)
-Plan: 2 of 2 complete
+Phase: 6 (complete)
+Plan: 1 of 1 complete
 Status: Phase complete
-Last activity: 2026-03-18 — Completed 05-02-PLAN.md (Hover optimization, Phase 5 complete)
+Last activity: 2026-03-18 — Completed 06-01-PLAN.md (Object pooling, Phase 6 complete)
 
 ## Accumulated Context
 
@@ -145,6 +145,14 @@ During drag, `computeDragOffsetPositions` recomputes only affected nodes (dragge
 ### Hover Optimization (2026-03-18)
 
 Hover state removed from React render pipeline. `hoverNodeId` no longer appears in the `renderNodes` useMemo dependency array -- `isHoverFocused` is hardcoded to `false` in both the useMemo and the imperative tick render path. Instead, a dedicated `useEffect([hoverNodeId])` calls `renderer.setHoverNodeId()`, which triggers `patchHoverVisual()` -- a targeted 2-node patch (previous hover + next hover) following the same pattern as `patchSelectionVisuals`. `setDynamicState` reconciles the hover flag via `adjustedNode` so React-produced models (which always have `isHoverFocused: false`) get corrected to match the renderer's hover state.
+
+### Object Pooling (2026-03-18)
+
+GraphicsPool class provides acquire/releaseAll/destroyAll for zero-allocation PIXI.Graphics reuse. Takes a parent Container in constructor and auto-adds children, avoiding addChild/removeChild churn.
+
+Particle pool: 32 pre-allocated Graphics in `particlePool` field on GraphPixiRenderer. `releaseAll()` clears and hides each frame, `acquire()` returns visible Graphics for drawing. Overflow creates new Graphics automatically.
+
+Tag dot pool: 4 pre-allocated Graphics per NodeVisual in `tagDotPool` array. `updateTags()` reuses via `clear()`/redraw with `visible` toggle instead of removeChildren+new. Cleaned up by existing `container.destroy({ children: true })`.
 
 ## Blockers/Concerns
 
