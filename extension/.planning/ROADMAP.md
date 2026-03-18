@@ -10,6 +10,11 @@
 
 **Requirements:** RCYC-04
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 01-01-PLAN.md — GraphProfiler utility + instrument 7 pipeline measurement points
+
 **Success Criteria:**
 1. Timing instrumentation added for: layout, renderNodes, buildConnections, computeOffsetPositions, setData, updateVisible, updateConnections
 2. p50/p95 statistics tracked over sliding window (last 60 frames)
@@ -102,7 +107,7 @@
 
 | Phase | Status | Requirements | Coverage |
 |-------|--------|-------------|----------|
-| 1 | Not Started | RCYC-04 | 1/1 |
+| 1 | Planning Complete | RCYC-04 | 1/1 |
 | 2 | Not Started | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Not Started | RCYC-01 | 1/1 |
 | 4 | Not Started | CONN-01..03 | 3/3 |
@@ -110,7 +115,7 @@
 | 6 | Not Started | POOL-01..02 | 2/2 |
 | 7 | Not Started | ARCH-01..03 | 3/3 |
 
-**Total:** 15 requirements across 7 phases — 100% coverage ✓
+**Total:** 15 requirements across 7 phases — 100% coverage
 
 **Parallelization:** Phases 4, 5, 6 are independent and can execute in parallel after Phase 3.
 
