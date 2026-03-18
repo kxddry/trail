@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-last_updated: "2026-03-18T18:15:52.962Z"
-last_activity: 2026-03-18 — Completed 06-01-PLAN.md (Object pooling, Phase 6 complete)
+last_updated: "2026-03-18T19:18:04.042Z"
+last_activity: 2026-03-18 — Completed 07-02-PLAN.md (Layout cache enrichment with collapse/recency keys)
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 9
-  completed_plans: 9
+  completed_phases: 7
+  total_plans: 11
+  completed_plans: 11
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 6 complete (object pooling), ready for Phase 7
+**Current focus:** Phase 7 in progress (state architecture), plan 02 complete
 
 ## Current Position
 
-Phase: 6 (complete)
-Plan: 1 of 1 complete
-Status: Phase complete
-Last activity: 2026-03-18 — Completed 06-01-PLAN.md (Object pooling, Phase 6 complete)
+Phase: 7 (in progress)
+Plan: 2 of 2 complete
+Status: Plan 07-02 complete
+Last activity: 2026-03-18 — Completed 07-02-PLAN.md (Layout cache enrichment with collapse/recency keys)
 
 ## Accumulated Context
 
@@ -153,6 +153,16 @@ GraphicsPool class provides acquire/releaseAll/destroyAll for zero-allocation PI
 Particle pool: 32 pre-allocated Graphics in `particlePool` field on GraphPixiRenderer. `releaseAll()` clears and hides each frame, `acquire()` returns visible Graphics for drawing. Overflow creates new Graphics automatically.
 
 Tag dot pool: 4 pre-allocated Graphics per NodeVisual in `tagDotPool` array. `updateTags()` reuses via `clear()`/redraw with `visible` toggle instead of removeChildren+new. Cleaned up by existing `container.destroy({ children: true })`.
+
+### Layout Cache Enrichment (2026-03-18)
+
+CachedLayoutResult now includes `collapseSignature` (sorted comma-joined collapsed node IDs) and `recencyOrdering` (boolean flag). Storage key format: `graph-layout:active:tree:_:0` (treeId:layoutMode:collapseSignature:recencyFlag).
+
+Dual-write strategy: `writeLayoutCache` writes to both the enriched key (exact match) and the base key (`graph-layout:active`) for backward compatibility. `readLayoutCache` tries enriched key first when state params provided, falls back to base key.
+
+Offscreen document accepts optional `collapsedNodeIds` from TREE_UPDATED messages, passes them to `computeLayoutFromTree` which filters via `getVisibleChildren` wrapper. `recencyOrdering` always `false` in offscreen doc (no access to live tab recency data).
+
+GraphCanvas validates `collapseSignature` + `recencyOrdering` match before cache hydration. Uses `??` defaults for backward compat with old cached results. State mismatch discards stale cache and forces fresh layout computation.
 
 ## Blockers/Concerns
 

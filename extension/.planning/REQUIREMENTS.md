@@ -28,7 +28,7 @@
 
 - [ ] **ARCH-01**: Static graph snapshot (topology, basePositions, base connections) separated from ephemeral UI state (view, selection, hover, search, positionOverrides/animatedTransforms)
 - [ ] **ARCH-02**: GraphSnapshot type introduced: nodes/base rects, connections/base geometry, layoutMode, version
-- [ ] **ARCH-03**: Offscreen layout cache key includes collapse state and recency ordering signature
+- [x] **ARCH-03**: Offscreen layout cache key includes collapse state and recency ordering signature
 
 ### Object Lifecycle
 
@@ -76,7 +76,7 @@
 | POOL-02 | Phase 6 | Complete |
 | ARCH-01 | Phase 7 | Pending |
 | ARCH-02 | Phase 7 | Pending |
-| ARCH-03 | Phase 7 | Pending |
+| ARCH-03 | Phase 7 | Complete |
 
 **Coverage:**
 - v1 requirements: 15 total
