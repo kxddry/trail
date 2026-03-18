@@ -84,6 +84,12 @@ Plans:
 
 **Requirements:** INTR-01, INTR-02, INTR-03
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — SpatialIndex queryNearest + spatial drag snap + partial offset computation
+- [ ] 05-02-PLAN.md — Imperative hover patch bypassing renderNodes rebuild
+
 **Success Criteria:**
 1. Drag nearest-parent detection uses `SpatialIndex.queryNearest(worldX, worldY, radius)` — O(nearby) instead of O(n)
 2. `queryNearest()` method added to SpatialIndex class
@@ -128,7 +134,7 @@ Plans:
 | 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Complete | RCYC-01 | 1/1 |
 | 4 | Complete | CONN-01..03 | 3/3 |
-| 5 | Not Started | INTR-01..03 | 3/3 |
+| 5 | In Progress | INTR-01..03 | 3/3 |
 | 6 | Not Started | POOL-01..02 | 2/2 |
 | 7 | Not Started | ARCH-01..03 | 3/3 |
 
