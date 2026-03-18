@@ -121,11 +121,12 @@ Plans:
 
 **Requirements:** ARCH-01, ARCH-02, ARCH-03
 
-**Plans:** 2 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — GraphSnapshot type + renderer/GraphCanvas integration (ARCH-01, ARCH-02)
-- [ ] 07-02-PLAN.md — Offscreen layout cache key enrichment with collapse state + recency signature (ARCH-03)
+- [x] 07-01-PLAN.md — GraphSnapshot type + renderer/GraphCanvas integration (ARCH-01, ARCH-02)
+- [x] 07-02-PLAN.md — Offscreen layout cache key enrichment with collapse state + recency signature (ARCH-03)
+- [ ] 07-03-PLAN.md — Incremental snapshot patching for collapse/expand (gap closure)
 
 **Success Criteria:**
 1. `GraphSnapshot` type defined: node rects + basePositions, connection geometry, layoutMode, version number
@@ -147,7 +148,7 @@ Plans:
 | 4 | Complete | CONN-01..03 | 3/3 |
 | 5 | Complete | INTR-01..03 | 3/3 |
 | 6 | Complete | POOL-01..02 | 2/2 |
-| 7 | Not Started | ARCH-01..03 | 3/3 |
+| 7 | In Progress | ARCH-01..03 | 3/3 |
 
 **Total:** 15 requirements across 7 phases — 100% coverage
 
