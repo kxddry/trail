@@ -62,21 +62,21 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| RCYC-01 | Phase 1 | Pending |
-| RCYC-02 | Phase 1 | Pending |
-| RCYC-03 | Phase 1 | Pending |
 | RCYC-04 | Phase 1 | Pending |
-| CONN-01 | Phase 2 | Pending |
-| CONN-02 | Phase 2 | Pending |
-| CONN-03 | Phase 2 | Pending |
-| INTR-01 | Phase 2 | Pending |
-| INTR-02 | Phase 2 | Pending |
-| INTR-03 | Phase 2 | Pending |
-| ARCH-01 | Phase 3 | Pending |
-| ARCH-02 | Phase 3 | Pending |
-| ARCH-03 | Phase 3 | Pending |
-| POOL-01 | Phase 2 | Pending |
-| POOL-02 | Phase 2 | Pending |
+| RCYC-02 | Phase 2 | Pending |
+| RCYC-03 | Phase 2 | Pending |
+| RCYC-01 | Phase 3 | Pending |
+| CONN-01 | Phase 4 | Pending |
+| CONN-02 | Phase 4 | Pending |
+| CONN-03 | Phase 4 | Pending |
+| INTR-01 | Phase 5 | Pending |
+| INTR-02 | Phase 5 | Pending |
+| INTR-03 | Phase 5 | Pending |
+| POOL-01 | Phase 6 | Pending |
+| POOL-02 | Phase 6 | Pending |
+| ARCH-01 | Phase 7 | Pending |
+| ARCH-02 | Phase 7 | Pending |
+| ARCH-03 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 15 total
@@ -85,4 +85,4 @@
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 after roadmap expansion to 7 phases*
