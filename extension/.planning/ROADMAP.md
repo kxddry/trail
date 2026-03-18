@@ -103,6 +103,11 @@ Plans:
 
 **Requirements:** POOL-01, POOL-02
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 06-01-PLAN.md — GraphicsPool for particles (32) + per-NodeVisual tag dot pooling (4)
+
 **Success Criteria:**
 1. Particle Graphics objects drawn from a pre-allocated pool (size 32), returned on animation end
 2. `updateParticles()` no longer calls `removeChildren()` + `child.destroy()` per frame
