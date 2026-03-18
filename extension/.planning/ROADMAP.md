@@ -87,8 +87,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — SpatialIndex queryNearest + spatial drag snap + partial offset computation
-- [ ] 05-02-PLAN.md — Imperative hover patch bypassing renderNodes rebuild
+- [x] 05-01-PLAN.md — SpatialIndex queryNearest + spatial drag snap + partial offset computation
+- [x] 05-02-PLAN.md — Imperative hover patch bypassing renderNodes rebuild
 
 **Success Criteria:**
 1. Drag nearest-parent detection uses `SpatialIndex.queryNearest(worldX, worldY, radius)` — O(nearby) instead of O(n)
@@ -106,7 +106,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 06-01-PLAN.md — GraphicsPool for particles (32) + per-NodeVisual tag dot pooling (4)
+- [x] 06-01-PLAN.md — GraphicsPool for particles (32) + per-NodeVisual tag dot pooling (4)
 
 **Success Criteria:**
 1. Particle Graphics objects drawn from a pre-allocated pool (size 32), returned on animation end
@@ -120,6 +120,12 @@ Plans:
 **Goal:** Formalize static/ephemeral separation with GraphSnapshot type. Improve offscreen layout cache hit rate with richer cache keys.
 
 **Requirements:** ARCH-01, ARCH-02, ARCH-03
+
+**Plans:** 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — GraphSnapshot type + renderer/GraphCanvas integration (ARCH-01, ARCH-02)
+- [ ] 07-02-PLAN.md — Offscreen layout cache key enrichment with collapse state + recency signature (ARCH-03)
 
 **Success Criteria:**
 1. `GraphSnapshot` type defined: node rects + basePositions, connection geometry, layoutMode, version number
@@ -139,8 +145,8 @@ Plans:
 | 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Complete | RCYC-01 | 1/1 |
 | 4 | Complete | CONN-01..03 | 3/3 |
-| 5 | In Progress | INTR-01..03 | 3/3 |
-| 6 | Not Started | POOL-01..02 | 2/2 |
+| 5 | Complete | INTR-01..03 | 3/3 |
+| 6 | Complete | POOL-01..02 | 2/2 |
 | 7 | Not Started | ARCH-01..03 | 3/3 |
 
 **Total:** 15 requirements across 7 phases — 100% coverage
