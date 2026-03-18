@@ -13,7 +13,7 @@
 **Plans:** 1 plan
 
 Plans:
-- [ ] 01-01-PLAN.md — GraphProfiler utility + instrument 7 pipeline measurement points
+- [x] 01-01-PLAN.md — GraphProfiler utility + instrument 7 pipeline measurement points
 
 **Success Criteria:**
 1. Timing instrumentation added for: layout, renderNodes, buildConnections, computeOffsetPositions, setData, updateVisible, updateConnections
@@ -26,6 +26,12 @@ Plans:
 **Goal:** Replace monolithic `setData()` with granular API: `setStaticGraph()` for topology + basePositions, `setDynamicState()` for ephemeral updates (positionOverrides, openProgress, hover, search), `setParticles()` for animations. SpatialIndex only rebuilt on topology change.
 
 **Requirements:** RCYC-02, RCYC-03
+
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Implement setStaticGraph / setDynamicState / setParticles on GraphPixiRenderer
+- [ ] 02-02-PLAN.md — Migrate GraphCanvas to granular API, remove setData, visual verification
 
 **Success Criteria:**
 1. `setData()` replaced with `setStaticGraph(snapshot)` / `setDynamicState(state)` / `setParticles(particles)`
@@ -107,8 +113,8 @@ Plans:
 
 | Phase | Status | Requirements | Coverage |
 |-------|--------|-------------|----------|
-| 1 | Planning Complete | RCYC-04 | 1/1 |
-| 2 | Not Started | RCYC-02, RCYC-03 | 2/2 |
+| 1 | Complete | RCYC-04 | 1/1 |
+| 2 | Planning Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Not Started | RCYC-01 | 1/1 |
 | 4 | Not Started | CONN-01..03 | 3/3 |
 | 5 | Not Started | INTR-01..03 | 3/3 |
