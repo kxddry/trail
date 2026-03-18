@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: in-progress
-last_updated: "2026-03-18T17:02:45.000Z"
-last_activity: 2026-03-18 — Completed 04-01-PLAN.md (Connection caching by staticVersion)
+last_updated: "2026-03-18T17:40:02.556Z"
+last_activity: 2026-03-18 — Completed 04-02-PLAN.md (Connection dirty flag, Phase 4 complete)
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 6
-  completed_plans: 5
+  completed_plans: 6
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 4 in progress, Plan 01 complete (connection caching by staticVersion)
+**Current focus:** Phase 4 complete (connection caching + dirty flag), ready for Phases 5-7
 
 ## Current Position
 
-Phase: 4 (in-progress)
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-18 — Completed 04-01-PLAN.md (Connection caching by staticVersion)
+Phase: 4 (complete)
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-03-18 — Completed 04-02-PLAN.md (Connection dirty flag, Phase 4 complete)
 
 ## Accumulated Context
 
@@ -80,6 +80,7 @@ GraphProfiler uses Float64Array circular buffers (window size 60) for zero-alloc
 ### Granular Renderer API (2026-03-18)
 
 GraphPixiRenderer now has three entry points replacing the monolithic setData():
+
 - `setStaticGraph(StaticGraphData)` — rebuilds SpatialIndex, used on topology/layout changes only
 - `setDynamicState(DynamicGraphState)` — patches nodeData map and invalidates visible nodes without index rebuild, used for animation/hover/search
 - `setParticles(ParticleRenderModel[])` — updates particle layer independently
@@ -89,11 +90,13 @@ Old `setData()` and `RenderData` type removed — GraphCanvas fully migrated to 
 ### GraphCanvas API Migration (2026-03-18)
 
 GraphCanvas now uses three separate useEffects instead of the old monolithic setData call:
+
 - Static useEffect: depends on `staticVersion` counter (tracks basePositions/layoutMode/dimensions changes), calls `setStaticGraph()`
 - Dynamic useEffect: depends on renderNodes/connections/showConnections, calls `setDynamicState()`
 - Particle useEffect: depends on particleRenderModels, calls `setParticles()`
 
 setDynamicState was hardened post-migration to handle:
+
 - Spatial index position updates during drag (without full rebuild)
 - Exit animation node insertion into spatial index
 - nodeData map reconciliation to clean up stale exit nodes
@@ -101,6 +104,7 @@ setDynamicState was hardened post-migration to handle:
 ### Imperative Animation Path (2026-03-18)
 
 animateTick now bypasses React entirely during animation via `onTickRender` callback pattern:
+
 - `useGraphAnimation` accepts `onTickRender?: () => void` param, stored in `onTickRenderRef`
 - During active animation ticks, `animateTick` calls `onTickRenderRef.current()` instead of `invalidateAnimation()`
 - `handleTickRender` in GraphCanvas builds NodeRenderModel[] and ConnectionSegment[] imperatively from `latestRenderStateRef` snapshot, pushes directly to renderer via `setDynamicState()` / `setParticles()`
@@ -116,12 +120,19 @@ Drag reparent preview is skipped in the imperative path — drag and animation a
 Base connections are now cached by `staticVersion` via `cachedBaseConnectionsRef`. `buildConnections()` no longer accepts `pathNodeIds` -- all segments are produced with `onPath: false`, making the output purely topology-dependent and cacheable.
 
 Two overlay operations are applied on top of cached base connections:
+
 1. `applyPathHighlight(baseConnections, pathNodeIds)` — toggles `onPath` flag for segments on the root-to-current path. Reuses segment objects when `onPath` is already correct (no allocation).
 2. Preview edge (drag reparent) — filters out old parent connection, appends preview segment using `connectionPositions` for geometry.
 
 The imperative tick render path (`handleTickRenderRef.current`) reads `cachedBaseConnectionsRef.current` + `applyPathHighlight` instead of calling `buildConnections` per frame. The `connPositions` Map construction was also removed from the imperative path since drag and animation are mutually exclusive.
 
 Static useEffect passes `baseConnections` (without path overlay) to `setStaticGraph`. Path highlight is ephemeral and handled by the dynamic useEffect via `connections`.
+
+### Connection Dirty Flag (2026-03-18)
+
+`updateConnections()` in GraphPixiRenderer now uses a dirty flag (`connectionsDirty`) and viewport snapshot (`lastConnectionViewRect`) to skip redundant clear+redraw cycles. During animation, when the connections array reference is stable (via Plan 01 caching) and the viewport hasn't changed, the entire connection drawing loop is skipped.
+
+Dirty triggers: `setStaticGraph` (topology change), `setDynamicState` (reference change via `!==`), `refreshTheme`, `setConnectionQuality`, `invalidateAll`. Particles are decoupled from the dirty check and always update every frame (moved to top of `updateConnections`).
 
 ## Blockers/Concerns
 

@@ -16,7 +16,7 @@
 
 - [x] **CONN-01**: ConnectionSegment[] cached by topology/layout signature, not rebuilt per frame
 - [x] **CONN-02**: Path highlight and preview edge updated separately from base connections
-- [ ] **CONN-03**: Connection layer uses dirty flags instead of full clear+redraw on every updateVisible
+- [x] **CONN-03**: Connection layer uses dirty flags instead of full clear+redraw on every updateVisible
 
 ### Interaction Performance
 
@@ -68,7 +68,7 @@
 | RCYC-01 | Phase 3 | Complete |
 | CONN-01 | Phase 4 | Complete |
 | CONN-02 | Phase 4 | Complete |
-| CONN-03 | Phase 4 | Pending |
+| CONN-03 | Phase 4 | Complete |
 | INTR-01 | Phase 5 | Pending |
 | INTR-02 | Phase 5 | Pending |
 | INTR-03 | Phase 5 | Pending |

@@ -64,11 +64,11 @@ Plans:
 
 **Requirements:** CONN-01, CONN-02, CONN-03
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 04-01-PLAN.md — Cache base connections by staticVersion, separate path highlight and preview edge overlays
-- [ ] 04-02-PLAN.md — Add dirty flag to updateConnections, visual verification
+- [x] 04-01-PLAN.md — Cache base connections by staticVersion, separate path highlight and preview edge overlays
+- [x] 04-02-PLAN.md — Add dirty flag to updateConnections, visual verification
 
 **Success Criteria:**
 1. `ConnectionSegment[]` cached with signature derived from: layout positions hash + layout mode + hide-root flag
@@ -127,7 +127,7 @@ Plans:
 | 1 | Complete | RCYC-04 | 1/1 |
 | 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Complete | RCYC-01 | 1/1 |
-| 4 | In Progress | CONN-01..03 | 3/3 |
+| 4 | Complete | CONN-01..03 | 3/3 |
 | 5 | Not Started | INTR-01..03 | 3/3 |
 | 6 | Not Started | POOL-01..02 | 2/2 |
 | 7 | Not Started | ARCH-01..03 | 3/3 |
