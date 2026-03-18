@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 Phase: 3 of 3 (UX Polish)
 Plan: 3 of 3 in current phase (all complete — Phase 3 done)
 Status: All phases complete
-Last activity: 2026-03-10 - Completed quick task 1: Improve spotlight: refactoring, performance, UX, reliability
+Last activity: 2026-03-18 - Completed quick task 260318-iio: Fix UI bugs in Spotlight and New Tab (5 tasks)
 
 Progress: [██████████] 100%
 
@@ -92,9 +92,10 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 | # | Description | Date | Commit | Status | Directory |
 |---|-------------|------|--------|--------|-----------|
 | 1 | Improve spotlight: refactoring, performance, UX, reliability | 2026-03-10 | 9461d65e | Verified | [1-improve-spotlight-refactoring-performanc](./quick/1-improve-spotlight-refactoring-performanc/) |
+| 260318-iio | Fix UI bugs in Spotlight and New Tab (5 tasks) | 2026-03-18 | 21785d27 | | [260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t](./quick/260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t/) |
 
 ## Session Continuity
 
-Last session: 2026-03-10
-Stopped at: Completed quick task 1 — spotlight refactoring, performance, UX/a11y, reliability.
-Resume file: .planning/quick/1-improve-spotlight-refactoring-performanc/1-SUMMARY.md
+Last session: 2026-03-18
+Stopped at: Completed quick task 260318-iio — Fix UI bugs in Spotlight and New Tab (5 tasks).
+Resume file: .planning/quick/260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t/260318-iio-SUMMARY.md
