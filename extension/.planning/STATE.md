@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-last_updated: "2026-03-18T17:44:03.823Z"
-last_activity: 2026-03-18 — Completed 04-02-PLAN.md (Connection dirty flag, Phase 4 complete)
+last_updated: "2026-03-18T18:00:04Z"
+last_activity: 2026-03-18 — Completed 05-02-PLAN.md (Hover optimization, Phase 5 complete)
 progress:
   total_phases: 7
-  completed_phases: 4
-  total_plans: 6
-  completed_plans: 6
+  completed_phases: 5
+  total_plans: 8
+  completed_plans: 8
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 4 complete (connection caching + dirty flag), ready for Phases 5-7
+**Current focus:** Phase 5 complete (interaction optimization), ready for Phases 6-7
 
 ## Current Position
 
-Phase: 4 (complete)
+Phase: 5 (complete)
 Plan: 2 of 2 complete
 Status: Phase complete
-Last activity: 2026-03-18 — Completed 04-02-PLAN.md (Connection dirty flag, Phase 4 complete)
+Last activity: 2026-03-18 — Completed 05-02-PLAN.md (Hover optimization, Phase 5 complete)
 
 ## Accumulated Context
 
@@ -133,6 +133,14 @@ Static useEffect passes `baseConnections` (without path overlay) to `setStaticGr
 `updateConnections()` in GraphPixiRenderer now uses a dirty flag (`connectionsDirty`) and viewport snapshot (`lastConnectionViewRect`) to skip redundant clear+redraw cycles. During animation, when the connections array reference is stable (via Plan 01 caching) and the viewport hasn't changed, the entire connection drawing loop is skipped.
 
 Dirty triggers: `setStaticGraph` (topology change), `setDynamicState` (reference change via `!==`), `refreshTheme`, `setConnectionQuality`, `invalidateAll`. Particles are decoupled from the dirty check and always update every frame (moved to top of `updateConnections`).
+
+### Spatial Drag Optimization (2026-03-18)
+
+SpatialIndex now has `queryNearest(cx, cy, radius, excludeIds?)` returning `{ id, dist } | null` — uses the same grid-cell approach as `query()` with center-distance comparison and a `seen` Set for dedup across cells.
+
+Drag snap detection in GraphCanvas now uses `renderer.queryNearestNode()` (spatial query) instead of `positionsRef.current.forEach()` (linear scan). This is O(nearby) instead of O(n).
+
+During drag, `computeDragOffsetPositions` recomputes only affected nodes (dragged subtree + ancestors to root). `affectedIds` is pre-computed once at drag start via `dragAffectedIdsRef`. `prevDragPositionsRef` stores the previous frame's positions to enable incremental Map updates (shallow copy + selective overwrite).
 
 ## Blockers/Concerns
 
