@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-last_updated: "2026-03-18T19:18:04.042Z"
-last_activity: 2026-03-18 — Completed 07-02-PLAN.md (Layout cache enrichment with collapse/recency keys)
+last_updated: "2026-03-18T19:39:09.695Z"
+last_activity: 2026-03-18 — Completed 07-03-PLAN.md (Incremental snapshot patching for collapse/expand)
 progress:
   total_phases: 7
   completed_phases: 7
-  total_plans: 11
-  completed_plans: 11
+  total_plans: 12
+  completed_plans: 12
 ---
 
 # State
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 7 (complete)
-Plan: 2 of 2 complete
+Plan: 3 of 3 complete
 Status: Phase complete
-Last activity: 2026-03-18 — Completed 07-01-PLAN.md (GraphSnapshot type formalization)
+Last activity: 2026-03-18 — Completed 07-03-PLAN.md (Incremental snapshot patching for collapse/expand)
 
 ## Accumulated Context
 
@@ -171,6 +171,14 @@ GraphSnapshot formalizes the static/ephemeral state separation. Defined in `grap
 `createGraphSnapshot()` factory returns `Object.freeze`'d objects for runtime immutability. GraphCanvas constructs snapshot in useMemo (gated by staticVersion), passes to renderer via static useEffect. `snapshotRef` stores current snapshot for imperative animation path access.
 
 `setStaticGraph` now accepts `GraphSnapshot` instead of ad-hoc `StaticGraphData`. `DynamicGraphState` remains a local type in GraphPixiRenderer -- ephemeral state is transient and does not need formalization.
+
+### Incremental Snapshot Patching (2026-03-18)
+
+Collapse/expand now routes through `patchStaticGraph` instead of `setStaticGraph`, avoiding full SpatialIndex rebuild. `diffSnapshots(prev, next)` computes `{ added, removed, moved }` node sets. `patchStaticGraph` applies the diff incrementally: `index.remove` for removed nodes, `index.insert` for added, `index.update` for moved. No `nodeData.clear()`, no `new SpatialIndex()`, no `invalidateAll()`.
+
+GraphCanvas static useEffect uses `prevSnapshotVersionRef` to detect first render (must use `setStaticGraph`) vs subsequent changes. Layout mode and dimension changes also force `setStaticGraph` (SpatialIndex cell size depends on dimensions). All other static changes (collapse/expand, minor topology updates) use the incremental path.
+
+`currentSnapshot` getter on GraphPixiRenderer exposes the current snapshot for comparison without making `data` public.
 
 ## Blockers/Concerns
 
