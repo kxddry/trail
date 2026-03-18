@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-last_updated: "2026-03-18T16:48:11.094Z"
-last_activity: 2026-03-18 — Completed 03-01-PLAN.md (Bypass React for animation via imperative onTickRender)
+status: in-progress
+last_updated: "2026-03-18T17:02:45.000Z"
+last_activity: 2026-03-18 — Completed 04-01-PLAN.md (Connection caching by staticVersion)
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 6
+  completed_plans: 5
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 3 complete, ready for Phase 4/5/6 (parallelizable)
+**Current focus:** Phase 4 in progress, Plan 01 complete (connection caching by staticVersion)
 
 ## Current Position
 
-Phase: 3 (complete)
-Plan: 1 of 1 complete
-Status: Phase complete
-Last activity: 2026-03-18 — Completed 03-01-PLAN.md (Bypass React for animation via imperative onTickRender)
+Phase: 4 (in-progress)
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-03-18 — Completed 04-01-PLAN.md (Connection caching by staticVersion)
 
 ## Accumulated Context
 
@@ -110,6 +110,18 @@ animateTick now bypasses React entirely during animation via `onTickRender` call
 Key pattern: `latestRenderStateRef` is assigned after all useMemos in GraphCanvas, so the RAF callback always reads the latest computed state (visibleDisplayNodes, positions, search state, etc.).
 
 Drag reparent preview is skipped in the imperative path — drag and animation are mutually exclusive interactions.
+
+### Connection Caching (2026-03-18)
+
+Base connections are now cached by `staticVersion` via `cachedBaseConnectionsRef`. `buildConnections()` no longer accepts `pathNodeIds` -- all segments are produced with `onPath: false`, making the output purely topology-dependent and cacheable.
+
+Two overlay operations are applied on top of cached base connections:
+1. `applyPathHighlight(baseConnections, pathNodeIds)` — toggles `onPath` flag for segments on the root-to-current path. Reuses segment objects when `onPath` is already correct (no allocation).
+2. Preview edge (drag reparent) — filters out old parent connection, appends preview segment using `connectionPositions` for geometry.
+
+The imperative tick render path (`handleTickRenderRef.current`) reads `cachedBaseConnectionsRef.current` + `applyPathHighlight` instead of calling `buildConnections` per frame. The `connPositions` Map construction was also removed from the imperative path since drag and animation are mutually exclusive.
+
+Static useEffect passes `baseConnections` (without path overlay) to `setStaticGraph`. Path highlight is ephemeral and handled by the dynamic useEffect via `connections`.
 
 ## Blockers/Concerns
 
