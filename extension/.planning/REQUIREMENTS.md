@@ -26,8 +26,8 @@
 
 ### State Architecture
 
-- [ ] **ARCH-01**: Static graph snapshot (topology, basePositions, base connections) separated from ephemeral UI state (view, selection, hover, search, positionOverrides/animatedTransforms)
-- [ ] **ARCH-02**: GraphSnapshot type introduced: nodes/base rects, connections/base geometry, layoutMode, version
+- [x] **ARCH-01**: Static graph snapshot (topology, basePositions, base connections) separated from ephemeral UI state (view, selection, hover, search, positionOverrides/animatedTransforms)
+- [x] **ARCH-02**: GraphSnapshot type introduced: nodes/base rects, connections/base geometry, layoutMode, version
 - [x] **ARCH-03**: Offscreen layout cache key includes collapse state and recency ordering signature
 
 ### Object Lifecycle
@@ -74,8 +74,8 @@
 | INTR-03 | Phase 5 | Complete |
 | POOL-01 | Phase 6 | Complete |
 | POOL-02 | Phase 6 | Complete |
-| ARCH-01 | Phase 7 | Pending |
-| ARCH-02 | Phase 7 | Pending |
+| ARCH-01 | Phase 7 | Complete |
+| ARCH-02 | Phase 7 | Complete |
 | ARCH-03 | Phase 7 | Complete |
 
 **Coverage:**

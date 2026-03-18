@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 7 in progress (state architecture), plan 02 complete
+**Current focus:** Phase 7 complete (state architecture) -- all 7 phases done
 
 ## Current Position
 
-Phase: 7 (in progress)
+Phase: 7 (complete)
 Plan: 2 of 2 complete
-Status: Plan 07-02 complete
-Last activity: 2026-03-18 — Completed 07-02-PLAN.md (Layout cache enrichment with collapse/recency keys)
+Status: Phase complete
+Last activity: 2026-03-18 — Completed 07-01-PLAN.md (GraphSnapshot type formalization)
 
 ## Accumulated Context
 
@@ -81,7 +81,7 @@ GraphProfiler uses Float64Array circular buffers (window size 60) for zero-alloc
 
 GraphPixiRenderer now has three entry points replacing the monolithic setData():
 
-- `setStaticGraph(StaticGraphData)` — rebuilds SpatialIndex, used on topology/layout changes only
+- `setStaticGraph(GraphSnapshot)` — rebuilds SpatialIndex, used on topology/layout changes only
 - `setDynamicState(DynamicGraphState)` — patches nodeData map and invalidates visible nodes without index rebuild, used for animation/hover/search
 - `setParticles(ParticleRenderModel[])` — updates particle layer independently
 
@@ -163,6 +163,14 @@ Dual-write strategy: `writeLayoutCache` writes to both the enriched key (exact m
 Offscreen document accepts optional `collapsedNodeIds` from TREE_UPDATED messages, passes them to `computeLayoutFromTree` which filters via `getVisibleChildren` wrapper. `recencyOrdering` always `false` in offscreen doc (no access to live tab recency data).
 
 GraphCanvas validates `collapseSignature` + `recencyOrdering` match before cache hydration. Uses `??` defaults for backward compat with old cached results. State mismatch discards stale cache and forces fresh layout computation.
+
+### GraphSnapshot Type (2026-03-18)
+
+GraphSnapshot formalizes the static/ephemeral state separation. Defined in `graph-snapshot.ts` with readonly fields: version, nodes, basePositions (ReadonlyMap), connections, layoutMode, nodeWidth, nodeHeight, showConnections.
+
+`createGraphSnapshot()` factory returns `Object.freeze`'d objects for runtime immutability. GraphCanvas constructs snapshot in useMemo (gated by staticVersion), passes to renderer via static useEffect. `snapshotRef` stores current snapshot for imperative animation path access.
+
+`setStaticGraph` now accepts `GraphSnapshot` instead of ad-hoc `StaticGraphData`. `DynamicGraphState` remains a local type in GraphPixiRenderer -- ephemeral state is transient and does not need formalization.
 
 ## Blockers/Concerns
 
