@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: completed
-last_updated: "2026-03-18T16:20:08.144Z"
-last_activity: 2026-03-18 — Completed 02-02-PLAN.md (GraphCanvas granular API migration)
+last_updated: "2026-03-18T16:43:16.870Z"
+last_activity: 2026-03-18 — Completed 03-01-PLAN.md (Bypass React for animation via imperative onTickRender)
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 3
-  completed_plans: 3
+  completed_phases: 3
+  total_plans: 4
+  completed_plans: 4
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 2 complete, ready for Phase 3 — Bypass React for Animation
+**Current focus:** Phase 3 complete, ready for Phase 4/5/6 (parallelizable)
 
 ## Current Position
 
-Phase: 2 (complete)
-Plan: 2 of 2 complete
+Phase: 3 (complete)
+Plan: 1 of 1 complete
 Status: Phase complete
-Last activity: 2026-03-18 — Completed 02-02-PLAN.md (GraphCanvas granular API migration)
+Last activity: 2026-03-18 — Completed 03-01-PLAN.md (Bypass React for animation via imperative onTickRender)
 
 ## Accumulated Context
 
@@ -97,6 +97,19 @@ setDynamicState was hardened post-migration to handle:
 - Spatial index position updates during drag (without full rebuild)
 - Exit animation node insertion into spatial index
 - nodeData map reconciliation to clean up stale exit nodes
+
+### Imperative Animation Path (2026-03-18)
+
+animateTick now bypasses React entirely during animation via `onTickRender` callback pattern:
+- `useGraphAnimation` accepts `onTickRender?: () => void` param, stored in `onTickRenderRef`
+- During active animation ticks, `animateTick` calls `onTickRenderRef.current()` instead of `invalidateAnimation()`
+- `handleTickRender` in GraphCanvas builds NodeRenderModel[] and ConnectionSegment[] imperatively from `latestRenderStateRef` snapshot, pushes directly to renderer via `setDynamicState()` / `setParticles()`
+- React reconciliation deferred to animation end: `invalidateAnimation()` + `invalidateParticles()` called only in `!needsLoop` branch
+- Result: ~9 React re-renders per 150ms expand/collapse animation reduced to 1 final reconciliation render
+
+Key pattern: `latestRenderStateRef` is assigned after all useMemos in GraphCanvas, so the RAF callback always reads the latest computed state (visibleDisplayNodes, positions, search state, etc.).
+
+Drag reparent preview is skipped in the imperative path — drag and animation are mutually exclusive interactions.
 
 ## Blockers/Concerns
 
