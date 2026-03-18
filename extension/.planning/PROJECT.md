@@ -8,16 +8,6 @@ Trail is a browser extension that visualizes navigation history as an interactiv
 
 The graph must feel instant and responsive at any tree size — pan, zoom, drag, expand/collapse should never drop below 60fps.
 
-## Current Milestone: v1.0 Graph Performance Optimization
-
-**Goal:** Eliminate per-frame full rebuild cascade during animations and interactions, enabling smooth 60fps on trees with 500-5000+ nodes.
-
-**Target improvements:**
-- Break the animateTick → React state → setData() rebuild cycle
-- Cache connections by topology signature
-- Replace linear drag hit-testing with spatial queries
-- Separate static graph topology from ephemeral UI state
-
 ## Requirements
 
 ### Validated
@@ -29,16 +19,18 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 - ✓ Offscreen layout pre-computation via Chrome offscreen document
 - ✓ Key-based NodeVisual dirty checking
 - ✓ View invalidation caching
+- ✓ Decouple animation from React render cycle — v1.0
+- ✓ Split setData() into static/dynamic/particle APIs — v1.0
+- ✓ Cache connection geometry by topology signature — v1.0
+- ✓ Spatial hit-test for drag/reparent — v1.0
+- ✓ Pool particles and tag dot Graphics objects — v1.0
+- ✓ Static/ephemeral graph state separation (GraphSnapshot) — v1.0
+- ✓ Offscreen cache signature with collapse + recency state — v1.0
+- ✓ Profiling instrumentation with p50/p95 per phase — v1.0
 
 ### Active
 
-- [ ] Decouple animation from React render cycle
-- [ ] Split setData() into static/dynamic/particle APIs
-- [ ] Cache connection geometry by topology signature
-- [ ] Spatial hit-test for drag/reparent
-- [ ] Pool particles and connection dirty flags
-- [ ] Static/ephemeral graph state separation
-- [ ] Offscreen cache signature with collapse + recency state
+(None — next milestone requirements TBD)
 
 ### Out of Scope
 
@@ -49,18 +41,15 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 
 ## Context
 
-**Renderer**: `GraphPixiRenderer` (1688 lines) — Pixi.js stage with manual render calls (ticker stopped), per-node `NodeVisual` containers with ~12 display objects each.
-
-**Root cause identified**: `useGraphAnimation.ts:41` calls `setAnimationVersion(v+1)` on every RAF tick during animations. This triggers React re-render of `GraphCanvas.tsx`, which recomputes `renderNodes`, `connectionPositions`, `baseConnections` via useMemo chain, then calls `renderer.setData()` which fully rebuilds SpatialIndex and visible set.
+**v1.0 shipped (2026-03-18):** Eliminated per-frame full rebuild cascade during animations. Animation ticks now bypass React entirely via imperative onTickRender callback. SpatialIndex only rebuilds on topology change. Connections cached by staticVersion with dirty flag skipping redundant redraws. Drag uses spatial queryNearest instead of O(n) scan. Hover patches 2 nodes instead of rebuilding all N. Graphics objects pooled (particles: 32, tag dots: 4/node). GraphSnapshot type formalizes static/ephemeral separation with incremental patching on collapse/expand. Offscreen cache keys enriched with collapse signature + recency ordering.
 
 **Key files**:
-- `src/entrypoints/sidepanel/ui/components/graph/GraphCanvas.tsx` (~1700 lines)
-- `src/entrypoints/sidepanel/ui/graph/render/GraphPixiRenderer.ts` (1688 lines)
-- `src/entrypoints/sidepanel/ui/components/graph/useGraphAnimation.ts`
+- `src/entrypoints/sidepanel/ui/components/graph/GraphCanvas.tsx`
+- `src/entrypoints/sidepanel/ui/graph/render/GraphPixiRenderer.ts`
+- `src/entrypoints/sidepanel/ui/graph/render/graph-snapshot.ts`
+- `src/entrypoints/sidepanel/ui/graph/render/graph-profiler.ts`
 - `src/entrypoints/sidepanel/ui/graph/render/spatial-index.ts`
-- `src/entrypoints/sidepanel/ui/graph/render/quality-policy.ts`
-- `src/entrypoints/sidepanel/ui/graph/render/view-invalidation.ts`
-- `src/entrypoints/sidepanel/ui/components/graph/graph-layout-compute.ts`
+- `src/entrypoints/sidepanel/ui/components/graph/useGraphAnimation.ts`
 
 ## Constraints
 
@@ -73,9 +62,12 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Break rebuild cycle before micro-optimizations | Per-frame setData() dominates profile; tuning inside the loop is wasted effort | — Pending |
-| Imperative Pixi updates via ref, bypass React for animation | Canvas animations should not go through React reconciliation | — Pending |
-| Keep layout in main thread (not Worker) | Hypothesis: serialization overhead may exceed benefit for <5k nodes — deferred to v2, needs profiling data | — Pending |
+| Break rebuild cycle before micro-optimizations | Per-frame setData() dominates profile; tuning inside the loop is wasted effort | ✓ Good — setData split + React bypass eliminated the cascade |
+| Imperative Pixi updates via ref, bypass React for animation | Canvas animations should not go through React reconciliation | ✓ Good — onTickRender callback reduces re-renders from ~9 to 1 per animation |
+| Keep layout in main thread (not Worker) | Hypothesis: serialization overhead may exceed benefit for <5k nodes — deferred to v2, needs profiling data | — Pending (deferred) |
+| Connection caching by staticVersion ref counter | Reuse existing version counter instead of computing topology hash | ✓ Good — zero hash overhead, dirty flag skips >80% of redraws |
+| Incremental snapshot patching via diffSnapshots | Avoid full SpatialIndex rebuild on collapse/expand | ✓ Good — patchStaticGraph only touches affected nodes |
+| Object pooling over object destruction | Eliminate GC pressure from Graphics churn during animation | ✓ Good — healthy GC profile confirmed via Chrome trace |
 
 ---
-*Last updated: 2026-03-18 after Graph optimization analysis*
+*Last updated: 2026-03-18 after v1.0 Graph Performance Optimization milestone*
