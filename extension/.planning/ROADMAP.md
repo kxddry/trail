@@ -64,10 +64,16 @@ Plans:
 
 **Requirements:** CONN-01, CONN-02, CONN-03
 
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Cache base connections by staticVersion, separate path highlight and preview edge overlays
+- [ ] 04-02-PLAN.md — Add dirty flag to updateConnections, visual verification
+
 **Success Criteria:**
 1. `ConnectionSegment[]` cached with signature derived from: layout positions hash + layout mode + hide-root flag
 2. Cache invalidated only on layout change, not on animation/hover/selection
-3. Path highlight (root→current) updated by toggling `onPath` flag on existing segments, not rebuilding all
+3. Path highlight (root->current) updated by toggling `onPath` flag on existing segments, not rebuilding all
 4. Preview edge (drag reparent) added/removed without regenerating base connections
 5. `updateConnections()` uses dirty flag — skips clear+redraw when connections unchanged
 6. Connection rendering time drops by >80% during animation (measured via Phase 1 profiling)
@@ -121,7 +127,7 @@ Plans:
 | 1 | Complete | RCYC-04 | 1/1 |
 | 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Complete | RCYC-01 | 1/1 |
-| 4 | Not Started | CONN-01..03 | 3/3 |
+| 4 | In Progress | CONN-01..03 | 3/3 |
 | 5 | Not Started | INTR-01..03 | 3/3 |
 | 6 | Not Started | POOL-01..02 | 2/2 |
 | 7 | Not Started | ARCH-01..03 | 3/3 |
