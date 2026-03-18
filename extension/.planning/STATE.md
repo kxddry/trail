@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: in-progress
-last_updated: "2026-03-18T15:36:28Z"
-last_activity: 2026-03-18 — Completed 02-01-PLAN.md (granular renderer API)
+status: executing
+last_updated: "2026-03-18T16:35:00Z"
+last_activity: 2026-03-18 — Completed 02-02-PLAN.md (GraphCanvas granular API migration)
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 3
-  completed_plans: 2
+  completed_plans: 3
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 2 — Split Renderer API
+**Current focus:** Phase 2 complete, ready for Phase 3 — Bypass React for Animation
 
 ## Current Position
 
-Phase: 2
-Plan: 1 of 2 complete
-Status: In progress
-Last activity: 2026-03-18 — Completed 02-01-PLAN.md (granular renderer API)
+Phase: 2 (complete)
+Plan: 2 of 2 complete
+Status: Phase complete
+Last activity: 2026-03-18 — Completed 02-02-PLAN.md (GraphCanvas granular API migration)
 
 ## Accumulated Context
 
@@ -84,7 +84,19 @@ GraphPixiRenderer now has three entry points replacing the monolithic setData():
 - `setDynamicState(DynamicGraphState)` — patches nodeData map and invalidates visible nodes without index rebuild, used for animation/hover/search
 - `setParticles(ParticleRenderModel[])` — updates particle layer independently
 
-Old `setData()` kept deprecated but functional until GraphCanvas consumer is updated in Plan 02-02.
+Old `setData()` and `RenderData` type removed — GraphCanvas fully migrated to granular API in Plan 02-02.
+
+### GraphCanvas API Migration (2026-03-18)
+
+GraphCanvas now uses three separate useEffects instead of the old monolithic setData call:
+- Static useEffect: depends on `staticVersion` counter (tracks basePositions/layoutMode/dimensions changes), calls `setStaticGraph()`
+- Dynamic useEffect: depends on renderNodes/connections/showConnections, calls `setDynamicState()`
+- Particle useEffect: depends on particleRenderModels, calls `setParticles()`
+
+setDynamicState was hardened post-migration to handle:
+- Spatial index position updates during drag (without full rebuild)
+- Exit animation node insertion into spatial index
+- nodeData map reconciliation to clean up stale exit nodes
 
 ## Blockers/Concerns
 

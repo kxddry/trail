@@ -27,11 +27,11 @@ Plans:
 
 **Requirements:** RCYC-02, RCYC-03
 
-**Plans:** 2 plans
+**Plans:** 2/2 plans complete
 
 Plans:
-- [ ] 02-01-PLAN.md — Implement setStaticGraph / setDynamicState / setParticles on GraphPixiRenderer
-- [ ] 02-02-PLAN.md — Migrate GraphCanvas to granular API, remove setData, visual verification
+- [x] 02-01-PLAN.md — Implement setStaticGraph / setDynamicState / setParticles on GraphPixiRenderer
+- [x] 02-02-PLAN.md — Migrate GraphCanvas to granular API, remove setData, visual verification
 
 **Success Criteria:**
 1. `setData()` replaced with `setStaticGraph(snapshot)` / `setDynamicState(state)` / `setParticles(particles)`
@@ -114,7 +114,7 @@ Plans:
 | Phase | Status | Requirements | Coverage |
 |-------|--------|-------------|----------|
 | 1 | Complete | RCYC-04 | 1/1 |
-| 2 | Planning Complete | RCYC-02, RCYC-03 | 2/2 |
+| 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
 | 3 | Not Started | RCYC-01 | 1/1 |
 | 4 | Not Started | CONN-01..03 | 3/3 |
 | 5 | Not Started | INTR-01..03 | 3/3 |
