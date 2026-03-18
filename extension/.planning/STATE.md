@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-last_updated: "2026-03-18T15:18:53.006Z"
-last_activity: 2026-03-18 — Completed 01-01-PLAN.md (profiling infrastructure)
+status: in-progress
+last_updated: "2026-03-18T15:36:28Z"
+last_activity: 2026-03-18 — Completed 02-01-PLAN.md (granular renderer API)
 progress:
   total_phases: 7
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
 ---
 
 # State
@@ -19,14 +19,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 1 — Profiling Infrastructure
+**Current focus:** Phase 2 — Split Renderer API
 
 ## Current Position
 
-Phase: 1
-Plan: 1 of 1 complete
-Status: Phase 1 complete
-Last activity: 2026-03-18 — Completed 01-01-PLAN.md (profiling infrastructure)
+Phase: 2
+Plan: 1 of 2 complete
+Status: In progress
+Last activity: 2026-03-18 — Completed 02-01-PLAN.md (granular renderer API)
 
 ## Accumulated Context
 
@@ -76,6 +76,15 @@ Micro-optimizations (bitmask keys, numeric SpatialIndex keys) become relevant AF
 ### Profiling Infrastructure (2026-03-18)
 
 GraphProfiler uses Float64Array circular buffers (window size 60) for zero-allocation recording at hot paths. The `profileSync(phase, fn)` wrapper is used for React useMemo callbacks; `graphProfiler.record(phase, duration)` is used for imperative methods in GraphPixiRenderer. Prefetched layout cache-hit path is kept outside profiling to avoid skewing baselines. Console API: `window.__graphMetrics()`.
+
+### Granular Renderer API (2026-03-18)
+
+GraphPixiRenderer now has three entry points replacing the monolithic setData():
+- `setStaticGraph(StaticGraphData)` — rebuilds SpatialIndex, used on topology/layout changes only
+- `setDynamicState(DynamicGraphState)` — patches nodeData map and invalidates visible nodes without index rebuild, used for animation/hover/search
+- `setParticles(ParticleRenderModel[])` — updates particle layer independently
+
+Old `setData()` kept deprecated but functional until GraphCanvas consumer is updated in Plan 02-02.
 
 ## Blockers/Concerns
 

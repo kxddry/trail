@@ -8,8 +8,8 @@
 ### Render Cycle
 
 - [ ] **RCYC-01**: Animation ticks update renderer imperatively without triggering React re-render
-- [ ] **RCYC-02**: `setData()` split into `setStaticGraph()` (topology + basePositions), `setDynamicState()` (positionOverrides/openProgress/hover/search), `setParticles()`
-- [ ] **RCYC-03**: SpatialIndex is only rebuilt on topology change, not on every animation frame
+- [x] **RCYC-02**: `setData()` split into `setStaticGraph()` (topology + basePositions), `setDynamicState()` (positionOverrides/openProgress/hover/search), `setParticles()`
+- [x] **RCYC-03**: SpatialIndex is only rebuilt on topology change, not on every animation frame
 - [x] **RCYC-04**: Profiling instrumentation reports p50/p95 per phase: layout, renderNodes, buildConnections, computeOffsetPositions, setData, updateVisible
 
 ### Connection Caching
@@ -63,8 +63,8 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | RCYC-04 | Phase 1 | Complete |
-| RCYC-02 | Phase 2 | Pending |
-| RCYC-03 | Phase 2 | Pending |
+| RCYC-02 | Phase 2 | Complete |
+| RCYC-03 | Phase 2 | Complete |
 | RCYC-01 | Phase 3 | Pending |
 | CONN-01 | Phase 4 | Pending |
 | CONN-02 | Phase 4 | Pending |
