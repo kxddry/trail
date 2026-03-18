@@ -46,6 +46,11 @@ Plans:
 
 **Requirements:** RCYC-01
 
+**Plans:** 1 plan
+
+Plans:
+- [ ] 03-01-PLAN.md — Wire imperative renderer updates from animateTick via onTickRender callback
+
 **Success Criteria:**
 1. `animateTick` calls `renderer.setDynamicState()` directly through ref — no `setAnimationVersion()` during animation
 2. React re-render of GraphCanvas does NOT occur on animation RAF ticks
@@ -115,7 +120,7 @@ Plans:
 |-------|--------|-------------|----------|
 | 1 | Complete | RCYC-04 | 1/1 |
 | 2 | Complete | RCYC-02, RCYC-03 | 2/2 |
-| 3 | Not Started | RCYC-01 | 1/1 |
+| 3 | Planned | RCYC-01 | 1/1 |
 | 4 | Not Started | CONN-01..03 | 3/3 |
 | 5 | Not Started | INTR-01..03 | 3/3 |
 | 6 | Not Started | POOL-01..02 | 2/2 |
