@@ -1,0 +1,54 @@
+# State
+
+## Project Reference
+
+See: .planning/PROJECT.md (updated 2026-03-18)
+
+**Core value:** Graph must feel instant and responsive at any tree size
+**Current focus:** Phase 1 — Break the Rebuild Cycle
+
+## Current Position
+
+Phase: 1
+Plan: —
+Status: Not started
+Last activity: 2026-03-18 — Milestone v1.0 started
+
+## Accumulated Context
+
+### Root Cause Analysis (2026-03-18)
+
+The primary performance bottleneck is the `animateTick` → `setAnimationVersion(v+1)` → React re-render → full rebuild cascade:
+
+```
+animateTick (RAF, ~60fps during animation)
+  → setAnimationVersion(v+1)         [useGraphAnimation.ts:41]
+    → React re-render GraphCanvas
+      → displayNodes useMemo         [GraphCanvas.tsx:593]
+        → visibleDisplayNodes         [GraphCanvas.tsx:605]
+          → renderNodes .map()        [GraphCanvas.tsx:1076]
+      → connectionPositions new Map() [GraphCanvas.tsx:1135]
+        → baseConnections build       [GraphCanvas.tsx:1150]
+      → useEffect fires              [GraphCanvas.tsx:1238]
+        → renderer.setData()          [full rebuild]
+          → new SpatialIndex          [GraphPixiRenderer.ts:1027]
+          → updateVisible all         [GraphPixiRenderer.ts:1201]
+          → updateConnections clear   [GraphPixiRenderer.ts:1263]
+```
+
+Every animation frame (9+ frames per 150ms animation) traverses this entire path. For 500 nodes, this means ~500 object spreads + ~500 Map entries + ~500 SpatialIndex inserts per frame.
+
+### Priority Order
+
+1. Break rebuild cycle (Phase 1) — eliminates 80% of per-frame waste
+2. Cache connections + optimize drag (Phase 2) — reduces remaining hot paths
+3. State architecture (Phase 3) — only if Phase 1-2 insufficient
+
+Micro-optimizations (bitmask keys, pool tags, numeric SpatialIndex keys) become relevant AFTER Phase 1 removes the rebuild loop.
+
+## Blockers/Concerns
+
+None.
+
+---
+*Last updated: 2026-03-18*
