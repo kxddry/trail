@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 1 — Break the Rebuild Cycle
+**Current focus:** Phase 1 — Profiling Infrastructure
 
 ## Current Position
 
@@ -38,13 +38,26 @@ animateTick (RAF, ~60fps during animation)
 
 Every animation frame (9+ frames per 150ms animation) traverses this entire path. For 500 nodes, this means ~500 object spreads + ~500 Map entries + ~500 SpatialIndex inserts per frame.
 
-### Priority Order
+### Positions Architecture Decision (2026-03-18)
 
-1. Break rebuild cycle (Phase 1) — eliminates 80% of per-frame waste
-2. Cache connections + optimize drag (Phase 2) — reduces remaining hot paths
-3. State architecture (Phase 3) — only if Phase 1-2 insufficient
+**basePositions** = output of layout algorithm, part of static snapshot. Changed only on topology/layout change.
+**positionOverrides** (animatedTransforms) = animation deltas applied on top of basePositions, part of ephemeral/dynamic state. Changed per-frame during animation.
 
-Micro-optimizations (bitmask keys, pool tags, numeric SpatialIndex keys) become relevant AFTER Phase 1 removes the rebuild loop.
+This distinction is critical for the `setStaticGraph()` / `setDynamicState()` API split in Phase 2.
+
+### Priority Order (7 phases)
+
+1. Profiling infrastructure (Phase 1) — baseline before any changes
+2. Split renderer API (Phase 2) — `setStaticGraph` / `setDynamicState` / `setParticles`
+3. Bypass React for animation (Phase 3) — imperative via ref
+4. Connection caching (Phase 4) — topology signature cache
+5. Interaction optimization (Phase 5) — spatial drag, partial offset
+6. Object pooling (Phase 6) — particles, tag dots
+7. State architecture (Phase 7) — GraphSnapshot type, cache keys
+
+Phases 4-6 are parallelizable after Phase 3.
+
+Micro-optimizations (bitmask keys, numeric SpatialIndex keys) become relevant AFTER Phase 3 removes the rebuild loop.
 
 ## Blockers/Concerns
 

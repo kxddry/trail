@@ -44,7 +44,7 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 
 - WebGPU compute shaders — Chrome extension compat unclear
 - ECS architecture — over-engineering for current scale
-- Worker-based layout — overhead exceeds benefit under 5k nodes
+- Worker-based layout — hypothesis: serialization overhead may exceed benefit under 5k nodes (deferred to v2, needs profiling to validate)
 - MSDF text rendering — separate effort, not in this milestone
 
 ## Context
@@ -75,7 +75,7 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 |----------|-----------|---------|
 | Break rebuild cycle before micro-optimizations | Per-frame setData() dominates profile; tuning inside the loop is wasted effort | — Pending |
 | Imperative Pixi updates via ref, bypass React for animation | Canvas animations should not go through React reconciliation | — Pending |
-| Keep layout in main thread (not Worker) | Serialization overhead exceeds benefit for <5k nodes | — Pending |
+| Keep layout in main thread (not Worker) | Hypothesis: serialization overhead may exceed benefit for <5k nodes — deferred to v2, needs profiling data | — Pending |
 
 ---
 *Last updated: 2026-03-18 after Graph optimization analysis*

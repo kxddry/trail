@@ -8,9 +8,9 @@
 ### Render Cycle
 
 - [ ] **RCYC-01**: Animation ticks update renderer imperatively without triggering React re-render
-- [ ] **RCYC-02**: `setData()` split into `setStaticGraph()` (topology), `setDynamicState()` (positions/hover/search), `setParticles()`
+- [ ] **RCYC-02**: `setData()` split into `setStaticGraph()` (topology + basePositions), `setDynamicState()` (positionOverrides/openProgress/hover/search), `setParticles()`
 - [ ] **RCYC-03**: SpatialIndex is only rebuilt on topology change, not on every animation frame
-- [ ] **RCYC-04**: Profiling instrumentation reports p50/p95 per phase: layout, renderNodes, buildConnections, setData, updateVisible
+- [ ] **RCYC-04**: Profiling instrumentation reports p50/p95 per phase: layout, renderNodes, buildConnections, computeOffsetPositions, setData, updateVisible
 
 ### Connection Caching
 
@@ -26,7 +26,7 @@
 
 ### State Architecture
 
-- [ ] **ARCH-01**: Static graph snapshot (topology, base positions, base connections) separated from ephemeral UI state (view, selection, hover, search, animations)
+- [ ] **ARCH-01**: Static graph snapshot (topology, basePositions, base connections) separated from ephemeral UI state (view, selection, hover, search, positionOverrides/animatedTransforms)
 - [ ] **ARCH-02**: GraphSnapshot type introduced: nodes/base rects, connections/base geometry, layoutMode, version
 - [ ] **ARCH-03**: Offscreen layout cache key includes collapse state and recency ordering signature
 
@@ -46,7 +46,7 @@
 ### Architecture
 
 - **SCEN-01**: GraphSceneController — React sends commands, scene lives imperatively on PIXI
-- **SCEN-02**: Worker pipeline for layout, edge generation, nearest-node queries
+- **SCEN-02**: Worker pipeline for layout, edge generation, nearest-node queries (hypothesis — serialization overhead may exceed benefit under 5k nodes; needs profiling to validate)
 - **SCEN-03**: Semantic LOD with cluster/supernode mode on far zoom
 
 ## Out of Scope

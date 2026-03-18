@@ -11,21 +11,21 @@
 **Requirements:** RCYC-04
 
 **Success Criteria:**
-1. Timing instrumentation added for: layout, renderNodes, buildConnections, setData, updateVisible, updateConnections
+1. Timing instrumentation added for: layout, renderNodes, buildConnections, computeOffsetPositions, setData, updateVisible, updateConnections
 2. p50/p95 statistics tracked over sliding window (last 60 frames)
 3. Baseline measurements captured on 500-node tree: idle, pan/zoom, expand/collapse, drag
 4. Console-accessible API to dump current metrics (e.g. `window.__graphMetrics()`)
 
 ## Phase 2: Split Renderer API
 
-**Goal:** Replace monolithic `setData()` with granular API: `setStaticGraph()` for topology, `setDynamicState()` for ephemeral updates, `setParticles()` for animations. SpatialIndex only rebuilt on topology change.
+**Goal:** Replace monolithic `setData()` with granular API: `setStaticGraph()` for topology + basePositions, `setDynamicState()` for ephemeral updates (positionOverrides, openProgress, hover, search), `setParticles()` for animations. SpatialIndex only rebuilt on topology change.
 
 **Requirements:** RCYC-02, RCYC-03
 
 **Success Criteria:**
 1. `setData()` replaced with `setStaticGraph(snapshot)` / `setDynamicState(state)` / `setParticles(particles)`
-2. `setStaticGraph()` rebuilds SpatialIndex; `setDynamicState()` patches visible nodes without index rebuild
-3. `setDynamicState()` accepts: animated positions, open progress, hover ID, search state
+2. `setStaticGraph()` receives topology + basePositions, rebuilds SpatialIndex; `setDynamicState()` patches visible nodes without index rebuild
+3. `setDynamicState()` accepts: positionOverrides (animation deltas, not base positions), openProgress, hover ID, search state
 4. GraphCanvas calls `setStaticGraph()` only on layout/topology change, `setDynamicState()` on animation/interaction
 5. No visual regressions: all existing interactions work identically
 
@@ -89,7 +89,7 @@
 **Requirements:** ARCH-01, ARCH-02, ARCH-03
 
 **Success Criteria:**
-1. `GraphSnapshot` type defined: node rects, connection geometry, layoutMode, version number
+1. `GraphSnapshot` type defined: node rects + basePositions, connection geometry, layoutMode, version number
 2. Static snapshot created on layout change, immutable until next layout change
 3. Ephemeral state (view, selection, hover, search, animation offsets) updates without touching snapshot
 4. Offscreen layout cache key includes: layout mode + collapse state hash + recency ordering signature
