@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-03-18)
 ## Current Position
 
 Phase: 1
-Plan: —
-Status: Not started
-Last activity: 2026-03-18 — Milestone v1.0 started
+Plan: 1 of 1 complete
+Status: Phase 1 complete
+Last activity: 2026-03-18 — Completed 01-01-PLAN.md (profiling infrastructure)
 
 ## Accumulated Context
 
@@ -58,6 +58,10 @@ This distinction is critical for the `setStaticGraph()` / `setDynamicState()` AP
 Phases 4-6 are parallelizable after Phase 3.
 
 Micro-optimizations (bitmask keys, numeric SpatialIndex keys) become relevant AFTER Phase 3 removes the rebuild loop.
+
+### Profiling Infrastructure (2026-03-18)
+
+GraphProfiler uses Float64Array circular buffers (window size 60) for zero-allocation recording at hot paths. The `profileSync(phase, fn)` wrapper is used for React useMemo callbacks; `graphProfiler.record(phase, duration)` is used for imperative methods in GraphPixiRenderer. Prefetched layout cache-hit path is kept outside profiling to avoid skewing baselines. Console API: `window.__graphMetrics()`.
 
 ## Blockers/Concerns
 
