@@ -22,7 +22,7 @@
 
 - [x] **INTR-01**: Drag/reparent nearest-parent lookup uses SpatialIndex query instead of linear positionsRef scan
 - [x] **INTR-02**: `computeOffsetPositions()` only recalculates dragged subtree and affected ancestors during drag
-- [ ] **INTR-03**: Selection preview and hover updates bypass full renderNodes rebuild
+- [x] **INTR-03**: Selection preview and hover updates bypass full renderNodes rebuild
 
 ### State Architecture
 
@@ -71,7 +71,7 @@
 | CONN-03 | Phase 4 | Complete |
 | INTR-01 | Phase 5 | Complete |
 | INTR-02 | Phase 5 | Complete |
-| INTR-03 | Phase 5 | Pending |
+| INTR-03 | Phase 5 | Complete |
 | POOL-01 | Phase 6 | Pending |
 | POOL-02 | Phase 6 | Pending |
 | ARCH-01 | Phase 7 | Pending |

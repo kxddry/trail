@@ -142,6 +142,10 @@ Drag snap detection in GraphCanvas now uses `renderer.queryNearestNode()` (spati
 
 During drag, `computeDragOffsetPositions` recomputes only affected nodes (dragged subtree + ancestors to root). `affectedIds` is pre-computed once at drag start via `dragAffectedIdsRef`. `prevDragPositionsRef` stores the previous frame's positions to enable incremental Map updates (shallow copy + selective overwrite).
 
+### Hover Optimization (2026-03-18)
+
+Hover state removed from React render pipeline. `hoverNodeId` no longer appears in the `renderNodes` useMemo dependency array -- `isHoverFocused` is hardcoded to `false` in both the useMemo and the imperative tick render path. Instead, a dedicated `useEffect([hoverNodeId])` calls `renderer.setHoverNodeId()`, which triggers `patchHoverVisual()` -- a targeted 2-node patch (previous hover + next hover) following the same pattern as `patchSelectionVisuals`. `setDynamicState` reconciles the hover flag via `adjustedNode` so React-produced models (which always have `isHoverFocused: false`) get corrected to match the renderer's hover state.
+
 ## Blockers/Concerns
 
 None.
