@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Adultify
 status: unknown
-stopped_at: Completed 04-02-PLAN.md
-last_updated: "2026-03-19T07:20:00.365Z"
+stopped_at: Completed 04-01-PLAN.md
+last_updated: "2026-03-19T07:22:45.104Z"
 progress:
   total_phases: 4
   completed_phases: 3
   total_plans: 9
-  completed_plans: 7
+  completed_plans: 8
 ---
 
 # Project State
@@ -50,6 +50,7 @@ Plan: 2 of 3
 | Phase 03-ux-polish P03 | 2 | 2 tasks | 1 files |
 | Quick-1 spotlight-refactor | 11 min | 3 tasks | 8 files |
 | Phase 04 P02 | 3min | 2 tasks | 6 files |
+| Phase 04 P01 | 5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -81,6 +82,9 @@ Recent decisions affecting current work:
 - [Phase 04]: bootstrapGraph does NOT set metaKey or isMac -- deferred to setPlatformMeta
 - [Phase 04]: Each deferred fetch has independent .catch() -- one failure does not block others
 - [Phase 04]: Global __trailCachedLayout declaration centralized in bootstrap.tsx
+- [Phase 04]: Simplified storageKey to use layoutSignature string instead of individual mode/collapse/recency params
+- [Phase 04]: Base-key fallback validates layoutSignature match before returning stale entries
+- [Phase 04]: cachedTreeJSON in offscreen worker for SAVE_SETTINGS recomputation without re-fetching tree
 
 ### Roadmap Evolution
 
@@ -103,6 +107,6 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 
 ## Session Continuity
 
-Last session: 2026-03-19T07:20:00.362Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-19T07:22:45.102Z
+Stopped at: Completed 04-01-PLAN.md
 Resume file: None
