@@ -90,7 +90,9 @@ Plans:
   4. Tag dots appear after first paint once tag definitions load, without causing a layout recompute or view reset
   5. Startup instrumentation records critical bootstrap duration, cache hit/miss type, and time to first PIXI render
   6. If any critical pre-mount fetch fails, the surface falls back to mount-then-fetch behavior without blocking or crashing
-**Plans:** 0 plans
+**Plans:** 3 plans
 
 Plans:
-- [ ] TBD (run /gsd:plan-phase 4 to break down)
+- [ ] 04-01-PLAN.md — Layout signature + cache validation + offscreen settings-change recomputation (PERF-02, PERF-03)
+- [ ] 04-02-PLAN.md — Bootstrap split into critical/deferred + pre-mount cache fetch + fallback behavior (PERF-01, PERF-04, PERF-06)
+- [ ] 04-03-PLAN.md — Startup instrumentation + GraphCanvas signature-aware hydration (PERF-05)
