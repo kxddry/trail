@@ -10,5 +10,8 @@
   "verifier": true,
   "nyquist_validation": true,
   "parallelization": true,
-  "brave_search": false
+  "brave_search": false,
+  "workflow": {
+    "_auto_chain_active": false
+  }
 }

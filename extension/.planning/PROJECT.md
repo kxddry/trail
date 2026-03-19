@@ -30,7 +30,11 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 
 ### Active
 
-(None — next milestone requirements TBD)
+- [ ] BitmapText/MSDF text for node labels — reduce Text object cost
+- [ ] Instanced rendering for dot-LOD nodes — single draw call
+- [ ] Custom WebGL shader for node backgrounds — GPU instancing
+- [ ] GraphSceneController — React sends commands, scene lives imperatively
+- [ ] Semantic LOD with cluster/supernode mode on far zoom
 
 ### Out of Scope
 
@@ -41,7 +45,7 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 
 ## Context
 
-**v1.0 shipped (2026-03-18):** Eliminated per-frame full rebuild cascade during animations. Animation ticks now bypass React entirely via imperative onTickRender callback. SpatialIndex only rebuilds on topology change. Connections cached by staticVersion with dirty flag skipping redundant redraws. Drag uses spatial queryNearest instead of O(n) scan. Hover patches 2 nodes instead of rebuilding all N. Graphics objects pooled (particles: 32, tag dots: 4/node). GraphSnapshot type formalizes static/ephemeral separation with incremental patching on collapse/expand. Offscreen cache keys enriched with collapse signature + recency ordering.
+**v1.0 shipped (2026-03-19):** Eliminated per-frame full rebuild cascade during animations. Animation ticks bypass React entirely via imperative onTickRender callback. SpatialIndex only rebuilds on topology change. Connections cached by staticVersion with dirty flag skipping redundant redraws. Drag uses spatial queryNearest instead of O(n) scan. Hover patches 2 nodes instead of rebuilding all N. Graphics objects pooled (particles: 32, tag dots: 4/node). GraphSnapshot type formalizes static/ephemeral separation with incremental patching on collapse/expand. Offscreen cache keys enriched with collapse signature + recency ordering. Phase 8 added big-tree optimizations: flags on bootstrap critical path for exact cache hits, gesture-aware three-tier view invalidation (transform-only/translate-only/full) with 600px overscan, batched requestIdleCallback hydration for trees >=1500 nodes, and connection spatial index for visible-only drawing.
 
 **Key files**:
 - `src/entrypoints/sidepanel/ui/components/graph/GraphCanvas.tsx`
@@ -68,6 +72,9 @@ The graph must feel instant and responsive at any tree size — pan, zoom, drag,
 | Connection caching by staticVersion ref counter | Reuse existing version counter instead of computing topology hash | ✓ Good — zero hash overhead, dirty flag skips >80% of redraws |
 | Incremental snapshot patching via diffSnapshots | Avoid full SpatialIndex rebuild on collapse/expand | ✓ Good — patchStaticGraph only touches affected nodes |
 | Object pooling over object destruction | Eliminate GC pressure from Graphics churn during animation | ✓ Good — healthy GC profile confirmed via Chrome trace |
+| Gesture-aware view invalidation | Skip updateVisible during active pan/zoom to prevent per-tick reculling | ✓ Good — transform-only path with 600px overscan eliminates zoom jank |
+| Batched idle hydration | Large trees render shells first, hydrate text/favicon in idle batches | ✓ Good — first paint instant, detail fills in progressively |
+| Connection spatial index | Query only visible connections instead of scanning entire list | ✓ Good — O(visible) vs O(n) for connection drawing |
 
 ---
-*Last updated: 2026-03-18 after v1.0 Graph Performance Optimization milestone*
+*Last updated: 2026-03-19 after v1.0 Graph Performance Optimization milestone (complete)*
