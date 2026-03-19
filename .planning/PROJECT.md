@@ -2,22 +2,11 @@
 
 ## What This Is
 
-A browser extension + SaaS platform that visualizes browsing history as an interactive navigation tree. Users install the Chrome/Brave extension which records their browsing as a tree structure, viewable in the extension sidepanel (rendered with Pixi.js). A web dashboard at app.gettrail.net provides account management, settings, and cross-device sync. Marketing site at gettrail.net handles acquisition.
+A browser extension + SaaS platform that visualizes browsing history as an interactive navigation tree. Users install the Chrome/Brave extension which records their browsing as a tree structure, viewable in the extension sidepanel, fullview, and Spotlight overlay (rendered with Pixi.js). A web dashboard at app.gettrail.net provides account management, settings, and cross-device sync. Marketing site at gettrail.net handles acquisition.
 
 ## Core Value
 
 Users can see and understand their browsing patterns through a visual tree — making navigation history intuitive and useful instead of a flat, unsearchable list.
-
-## Current Milestone: v1.1 Adultify
-
-**Goal:** Harden Trail to production-grade quality — fix critical bugs, add CI/CD, polish UX error states.
-
-**Target features:**
-- Fix auth session persistence (critical user-reported bug)
-- Fix sync race conditions and data integrity issues
-- Add CI/CD pipelines (lint, test, typecheck)
-- Add error pages, loading states, destructive action confirmations
-- Remove production secrets from repo
 
 ## Requirements
 
@@ -34,14 +23,17 @@ Users can see and understand their browsing patterns through a visual tree — m
 - ✓ **MKTG**: Marketing site with landing, pricing, legal pages — v1.0
 - ✓ **CMS**: Sanity-powered content management — v1.0
 - ✓ **VIDEO**: Remotion-based promotional video generation — v1.0
+- ✓ **AUTH-05**: Auth bypass completely removed — v1.1
+- ✓ **DATA-01–06**: Data integrity (transactions, device ownership logging, retry limits, nav error logging) — v1.1
+- ✓ **CICD-01–07**: CI/CD pipeline (lint, test, typecheck, Dependabot, security audit, labeler, CWS release) — v1.1
+- ✓ **UX-01–07**: UX polish (branded error/404/loading pages, destructive confirmations, ARIA roles, route transitions) — v1.1
+- ✓ **PERF-01–06**: Graph startup optimization (bootstrap split, layout signature cache, settings-change recompute, startup instrumentation) — v1.1
 
 ### Active
 
 <!-- Current scope. Building toward these. -->
 
-- [ ] Production hardening (auth, sync, error handling)
-- [ ] CI/CD pipeline improvements
-- [ ] UX polish (error states, loading states, confirmations)
+(No active milestone — run `/gsd:new-milestone` to start next)
 
 ### Out of Scope
 
@@ -58,9 +50,8 @@ Users can see and understand their browsing patterns through a visual tree — m
 - Tech: Next.js 16, React 19, TypeScript, Tailwind CSS 4, WXT, Pixi.js, Better Auth, tRPC, Prisma, PostgreSQL
 - Package manager: pnpm 10
 - Production domains: gettrail.net (marketing), app.gettrail.net (account/API)
-- Known critical bug: auth session persistence — service worker dies, token refresh timer lost
-- Known data integrity issues: race conditions in sync, device ownership collisions
-- CI/CD gaps: no lint/test in web CI, no typecheck in extension CI
+- v1.1 shipped: auth bypass removed, CI/CD automated, UX branded, graph startup optimized
+- All known critical bugs from v1.0 resolved (auth persistence, sync race conditions, device ownership)
 
 ## Constraints
 
@@ -78,6 +69,11 @@ Users can see and understand their browsing patterns through a visual tree — m
 | Pixi.js for tree visualization | WebGL performance for large trees, interactive canvas | ✓ Good |
 | Monorepo with pnpm workspaces | Shared code across apps, single version control | ✓ Good |
 | Separate extension workspace | Different build tooling, isolated dependencies | ✓ Good |
+| Remove auth bypass entirely | Always use real auth in dev — no guard, no env var | ✓ Good (v1.1) |
+| chrome.alarms for token refresh | Service workers die after 30s — setTimeout unreliable | ✓ Good (v1.1) |
+| console.warn for device reassignment | Valid expected behavior, not error — needs audit visibility | ✓ Good (v1.1) |
+| Bootstrap split critical/deferred | Graph surfaces render first frame without waiting on tags/trees/commands | ✓ Good (v1.1) |
+| Layout signature in cache | Exact-match cache prevents stale positions after settings change | ✓ Good (v1.1) |
 
 ---
-*Last updated: 2026-02-28 after milestone v1.1 Adultify started*
+*Last updated: 2026-03-19 after v1.1 Adultify milestone*
