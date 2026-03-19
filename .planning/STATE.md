@@ -1,14 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
+milestone: v1.1
+milestone_name: Adultify
 status: unknown
-last_updated: "2026-03-10T12:52:24Z"
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-19T07:20:00.365Z"
 progress:
-  total_phases: 3
+  total_phases: 4
   completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_plans: 9
+  completed_plans: 7
 ---
 
 # Project State
@@ -18,20 +19,17 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 2 complete — CI/CD automation done. Phase 3 is next.
+**Current focus:** Phase 04 — Graph Startup Optimization Without Blocking First Paint
 
 ## Current Position
 
-Phase: 3 of 3 (UX Polish)
-Plan: 3 of 3 in current phase (all complete — Phase 3 done)
-Status: All phases complete
-Last activity: 2026-03-18 - Completed quick task 260318-iio: Fix UI bugs in Spotlight and New Tab (5 tasks)
-
-Progress: [██████████] 100%
+Phase: 04 (Graph Startup Optimization Without Blocking First Paint) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 3
 - Average duration: ~3 min
 - Total execution time: 0.2 hours
@@ -44,12 +42,14 @@ Progress: [██████████] 100%
 | 02-ci-cd | 1 | ~4 min | ~4 min |
 
 **Recent Trend:**
+
 - Last 5 plans: 02-01 (~4 min), 01-02 (~5 min), 01-01 (~2 min)
 - Trend: Fast — small, surgical plans
 
 *Updated after each plan completion*
 | Phase 03-ux-polish P03 | 2 | 2 tasks | 1 files |
 | Quick-1 spotlight-refactor | 11 min | 3 tasks | 8 files |
+| Phase 04 P02 | 3min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -78,6 +78,13 @@ Recent decisions affecting current work:
 - [quick-1-01]: Drilldown scope lifted to SpotlightRoot — shared across search/preview/actions hooks
 - [quick-1-01]: Direct safety check instead of isDestructiveAction type guard — avoids TypeScript never-narrowing
 - [quick-1-01]: Echo index keyed by treeId:nodeId for O(1) hover-to-item resolution
+- [Phase 04]: bootstrapGraph does NOT set metaKey or isMac -- deferred to setPlatformMeta
+- [Phase 04]: Each deferred fetch has independent .catch() -- one failure does not block others
+- [Phase 04]: Global __trailCachedLayout declaration centralized in bootstrap.tsx
+
+### Roadmap Evolution
+
+- Phase 4 added: Graph Startup Optimization Without Blocking First Paint
 
 ### Pending Todos
 
@@ -96,6 +103,6 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 
 ## Session Continuity
 
-Last session: 2026-03-18
-Stopped at: Completed quick task 260318-iio — Fix UI bugs in Spotlight and New Tab (5 tasks).
-Resume file: .planning/quick/260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t/260318-iio-SUMMARY.md
+Last session: 2026-03-19T07:20:00.362Z
+Stopped at: Completed 04-02-PLAN.md
+Resume file: None
