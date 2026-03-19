@@ -144,7 +144,7 @@ Plans:
 
 **Depends on:** Phase 7
 
-**Plans:** 3 plans
+**Plans:** 1/3 plans executed
 
 Plans:
 - [ ] 08-01-PLAN.md — Bootstrap cache accuracy: flags on critical path + offscreen recencyOrdering fix
@@ -173,7 +173,7 @@ Plans:
 | 5 | Complete | INTR-01..03 | 3/3 |
 | 6 | Complete | POOL-01..02 | 2/2 |
 | 7 | In Progress | ARCH-01..03 | 3/3 |
-| 8 | Planned | BOOT-01..02, GSTR-01..02, HYDR-01, CIDX-01, METR-01 | 7/7 |
+| 8 | 1/3 | In Progress|  |
 
 **Total:** 22 requirements across 8 phases — 100% coverage
 

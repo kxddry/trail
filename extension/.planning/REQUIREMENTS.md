@@ -37,8 +37,8 @@
 
 ### Big-Tree Performance (Phase 8)
 
-- [ ] **BOOT-01**: Flags fetched on bootstrap critical path so layout signature includes recencyOrdering before first render
-- [ ] **BOOT-02**: Offscreen layout precomputer uses real recencyOrdering flag from flags, not hardcoded false
+- [x] **BOOT-01**: Flags fetched on bootstrap critical path so layout signature includes recencyOrdering before first render
+- [x] **BOOT-02**: Offscreen layout precomputer uses real recencyOrdering flag from flags, not hardcoded false
 - [ ] **GSTR-01**: Gesture-aware view invalidation: transform-only path during active wheel/pinch skips updateVisible entirely
 - [ ] **GSTR-02**: Overscan padding (600px) absorbs pan/zoom without triggering visibility reculling during gestures
 - [ ] **HYDR-01**: Large trees (>=1500 nodes) use batched requestIdleCallback hydration for text/favicon instead of single-frame defer

@@ -2,14 +2,13 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: completed
-last_updated: "2026-03-18T19:52:46.639Z"
-last_activity: 2026-03-18 - Completed quick task 260319-3vm: Graph Responsiveness and Open Performance - Quick Wins
+status: unknown
+last_updated: "2026-03-19T14:56:42Z"
 progress:
-  total_phases: 7
+  total_phases: 8
   completed_phases: 7
-  total_plans: 12
-  completed_plans: 12
+  total_plans: 15
+  completed_plans: 13
 ---
 
 # State
@@ -19,16 +18,18 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Graph must feel instant and responsive at any tree size
-**Current focus:** Phase 7 complete (state architecture) -- all 7 phases done
+**Current focus:** Phase 08 — shared-graph-big-tree-performance-pass
 
 ## Current Position
 
-Phase: 7 (complete)
-Plan: 3 of 3 complete
-Status: Phase complete
-Last activity: 2026-03-18 - Completed quick task 260319-3vm: Graph Responsiveness and Open Performance - Quick Wins
+Phase: 08 (shared-graph-big-tree-performance-pass) — EXECUTING
+Plan: 2 of 3
 
 ## Accumulated Context
+
+### Bootstrap Cache Accuracy (2026-03-19)
+
+Flags (including recencyOrderingV2) are now fetched on the critical path in useBootstrap, alongside settings and tree state. The offscreen document also caches flags and derives recencyOrdering from `cachedFlags.recencyOrderingV2` instead of hardcoding `false`. This ensures layout signature parity between the offscreen precomputer and sidepanel consumer, eliminating cache misses caused by recencyOrdering mismatch.
 
 ### Root Cause Analysis (2026-03-18)
 
@@ -184,6 +185,10 @@ GraphCanvas static useEffect uses `prevSnapshotVersionRef` to detect first rende
 
 None.
 
+### Roadmap Evolution
+
+- Phase 8 added: Shared Graph Big-Tree Performance Pass
+
 ### Quick Tasks Completed
 
 | # | Description | Date | Commit | Directory |
@@ -191,4 +196,4 @@ None.
 | 260319-3vm | Graph Responsiveness and Open Performance - Quick Wins | 2026-03-18 | e737cabc | [260319-3vm-graph-responsiveness-and-open-performanc](./quick/260319-3vm-graph-responsiveness-and-open-performanc/) |
 
 ---
-*Last updated: 2026-03-18*
+*Last updated: 2026-03-19*
