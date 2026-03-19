@@ -77,3 +77,20 @@ Plans:
 | 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
 | 2. CI/CD | v1.1 | 1/1 | Complete | 2026-02-28 |
 | 3. UX Polish | v1.1 | 3/3 | Complete | 2026-02-28 |
+
+### Phase 4: Graph Startup Optimization Without Blocking First Paint
+
+**Goal:** Graph surfaces (sidepanel, fullview, Spotlight iframe) render the first static frame without waiting on non-critical bootstrap work, using an exact layout cache that is strict enough to trust at startup
+**Requirements**: PERF-01, PERF-02, PERF-03, PERF-04, PERF-05, PERF-06
+**Depends on:** Phase 3
+**Success Criteria** (what must be TRUE):
+  1. Graph rendering does not wait on tag definitions, tree lists, command state, or platform shortcut metadata before first paint
+  2. Layout cache includes a layoutSignature and only serves cached positions when the signature matches current boot state
+  3. Changing layout settings (mode, spacing, radial params, density) and reopening the graph uses positions from a fresh cache, not stale ones
+  4. Tag dots appear after first paint once tag definitions load, without causing a layout recompute or view reset
+  5. Startup instrumentation records critical bootstrap duration, cache hit/miss type, and time to first PIXI render
+  6. If any critical pre-mount fetch fails, the surface falls back to mount-then-fetch behavior without blocking or crashing
+**Plans:** 0 plans
+
+Plans:
+- [ ] TBD (run /gsd:plan-phase 4 to break down)
