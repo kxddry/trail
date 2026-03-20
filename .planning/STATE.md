@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: release-readiness
-status: defining-requirements
-stopped_at: Milestone v1.2 started
-last_updated: "2026-03-20T15:30:00.000Z"
+status: ready-to-plan
+stopped_at: Roadmap created for v1.2
+last_updated: "2026-03-20T16:00:00.000Z"
 progress:
-  total_phases: 0
+  total_phases: 7
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -19,24 +19,26 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Defining requirements for v1.2 Release Readiness
+**Current focus:** Phase 2 - Hygiene & Dead Code Cleanup (v1.2)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
-Plan: —
-Status: Defining requirements
-Last activity: 2026-03-20 — Milestone v1.2 started
+Phase: 2 of 8 (Hygiene & Dead Code Cleanup)
+Plan: Not yet planned
+Status: Ready to plan
+Last activity: 2026-03-20 — Roadmap created for v1.2 Release Readiness (7 phases, 45 requirements)
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Performance Metrics
 
 **Velocity:**
 
 - Total plans completed: 0
-- Average duration: —
+- Average duration: --
 - Total execution time: 0
 
-**Historical (from v1.1):**
+**Historical (from v1.1 + post-v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
@@ -51,10 +53,6 @@ Last activity: 2026-03-20 — Milestone v1.2 started
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-
-### Roadmap Evolution
-
-(New milestone — no changes yet)
 
 ### Pending Todos
 
@@ -73,6 +71,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-20T15:30:00.000Z
-Stopped at: Milestone v1.2 started
+Last session: 2026-03-20T16:00:00.000Z
+Stopped at: Roadmap created for v1.2 Release Readiness
 Resume file: None

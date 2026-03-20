@@ -50,7 +50,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [ ] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
 - [ ] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
 - [ ] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
-- [ ] **SEC-08**: Protocol boundary site↔extension: payload validation tightened beyond envelope level
+- [ ] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
 - [ ] **SEC-09**: pixi.js/unsafe-eval CSP requirement documented with rationale
 
 ### Performance
@@ -89,17 +89,59 @@ Deferred to future release.
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated by roadmapper) | | |
+| HYG-01 | Phase 2 | Pending |
+| HYG-02 | Phase 2 | Pending |
+| HYG-03 | Phase 3 | Pending |
+| HYG-04 | Phase 4 | Pending |
+| HYG-05 | Phase 3 | Pending |
+| HYG-06 | Phase 3 | Pending |
+| UXP-01 | Phase 5 | Pending |
+| UXP-02 | Phase 5 | Pending |
+| UXP-03 | Phase 5 | Pending |
+| UXP-04 | Phase 5 | Pending |
+| UXP-05 | Phase 5 | Pending |
+| UXP-06 | Phase 5 | Pending |
+| UXP-07 | Phase 5 | Pending |
+| UXP-08 | Phase 5 | Pending |
+| UXP-09 | Phase 5 | Pending |
+| UXP-10 | Phase 5 | Pending |
+| STAB-01 | Phase 3 | Pending |
+| STAB-02 | Phase 4 | Pending |
+| STAB-03 | Phase 4 | Pending |
+| STAB-04 | Phase 3 | Pending |
+| STAB-05 | Phase 3 | Pending |
+| STAB-06 | Phase 4 | Pending |
+| STAB-07 | Phase 3 | Pending |
+| STAB-08 | Phase 4 | Pending |
+| STAB-09 | Phase 3 | Pending |
+| SEC-01 | Phase 6 | Pending |
+| SEC-02 | Phase 6 | Pending |
+| SEC-03 | Phase 6 | Pending |
+| SEC-04 | Phase 6 | Pending |
+| SEC-05 | Phase 6 | Pending |
+| SEC-06 | Phase 2 | Pending |
+| SEC-07 | Phase 6 | Pending |
+| SEC-08 | Phase 6 | Pending |
+| SEC-09 | Phase 6 | Pending |
+| PERF-01 | Phase 7 | Pending |
+| PERF-02 | Phase 7 | Pending |
+| PERF-03 | Phase 7 | Pending |
+| PERF-04 | Phase 7 | Pending |
+| PERF-05 | Phase 7 | Pending |
+| QA-01 | Phase 8 | Pending |
+| QA-02 | Phase 8 | Pending |
+| QA-03 | Phase 8 | Pending |
+| QA-04 | Phase 2 | Pending |
+| QA-05 | Phase 8 | Pending |
+| QA-06 | Phase 2 | Pending |
 
 **Coverage:**
 - v1.2 requirements: 45 total
-- Mapped to phases: 0
-- Unmapped: 45
+- Mapped to phases: 45
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-20*
-*Last updated: 2026-03-20 after initial definition*
+*Last updated: 2026-03-20 after roadmap creation*
