@@ -61,7 +61,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02-01-PLAN.md — Delete dead code (AuthGate, WelcomeGate, runtime-logger)
+- [x] 02-01-PLAN.md — Delete dead code (AuthGate, WelcomeGate, runtime-logger)
 - [ ] 02-02-PLAN.md — Remove logs/ artifacts, harden hygiene test, dead code audit
 
 ### Phase 3: Error Handling & Recovery

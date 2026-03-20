@@ -10,7 +10,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 ### Hygiene & Release-Critical
 
 - [ ] **HYG-01**: logs/ removed from package root; dev-log write locations documented and enforced by test
-- [ ] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
+- [x] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
 - [ ] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
 - [ ] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
 - [ ] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
@@ -48,7 +48,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [ ] **SEC-03**: Prod domains locked down; dev allowlist confirmed excluded from release builds
 - [ ] **SEC-04**: External search suggestions have user-visible toggle and privacy note (Google requests)
 - [ ] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
-- [ ] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
+- [x] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
 - [ ] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
 - [ ] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
 - [ ] **SEC-09**: pixi.js/unsafe-eval CSP requirement documented with rationale
@@ -92,7 +92,7 @@ Deferred to future release.
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | HYG-01 | Phase 2 | Pending |
-| HYG-02 | Phase 2 | Pending |
+| HYG-02 | Phase 2 | Complete |
 | HYG-03 | Phase 3 | Pending |
 | HYG-04 | Phase 4 | Pending |
 | HYG-05 | Phase 3 | Pending |
@@ -121,7 +121,7 @@ Deferred to future release.
 | SEC-03 | Phase 6 | Pending |
 | SEC-04 | Phase 6 | Pending |
 | SEC-05 | Phase 6 | Pending |
-| SEC-06 | Phase 2 | Pending |
+| SEC-06 | Phase 2 | Complete |
 | SEC-07 | Phase 6 | Pending |
 | SEC-08 | Phase 6 | Pending |
 | SEC-09 | Phase 6 | Pending |
