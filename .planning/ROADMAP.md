@@ -62,7 +62,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 
 Plans:
 - [x] 02-01-PLAN.md — Delete dead code (AuthGate, WelcomeGate, runtime-logger)
-- [ ] 02-02-PLAN.md — Remove logs/ artifacts, harden hygiene test, dead code audit
+- [x] 02-02-PLAN.md — Remove logs/ artifacts, harden hygiene test, dead code audit
 
 ### Phase 3: Error Handling & Recovery
 **Goal**: Every failure the user can encounter produces a clear, actionable UI state instead of a broken or half-mounted screen

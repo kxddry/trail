@@ -9,7 +9,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
 ### Hygiene & Release-Critical
 
-- [ ] **HYG-01**: logs/ removed from package root; dev-log write locations documented and enforced by test
+- [x] **HYG-01**: logs/ removed from package root; dev-log write locations documented and enforced by test
 - [x] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
 - [ ] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
 - [ ] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
@@ -66,9 +66,9 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [ ] **QA-01**: Smoke e2e tests cover 8 scenarios: first install, guest mode, auth, session expired, sync fail, tree switch, export/import, quota eviction
 - [ ] **QA-02**: UI interaction tests cover: dropdown keyboard, modal escape, search navigation, auth banner
 - [ ] **QA-03**: Release checklist covers: permissions, offline mode, empty states, corrupted cache, worker restart
-- [ ] **QA-04**: Root artifact hygiene test prevents logs/, tasks/, dist/ from appearing in package root
+- [x] **QA-04**: Root artifact hygiene test prevents logs/, tasks/, dist/ from appearing in package root
 - [ ] **QA-05**: Cold profile and dirty returning user tested separately
-- [ ] **QA-06**: Dead code / orphaned UX surface audit completed before release
+- [x] **QA-06**: Dead code / orphaned UX surface audit completed before release
 
 ## v2 Requirements
 
@@ -91,7 +91,7 @@ Deferred to future release.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| HYG-01 | Phase 2 | Pending |
+| HYG-01 | Phase 2 | Complete |
 | HYG-02 | Phase 2 | Complete |
 | HYG-03 | Phase 3 | Pending |
 | HYG-04 | Phase 4 | Pending |
@@ -133,9 +133,9 @@ Deferred to future release.
 | QA-01 | Phase 8 | Pending |
 | QA-02 | Phase 8 | Pending |
 | QA-03 | Phase 8 | Pending |
-| QA-04 | Phase 2 | Pending |
+| QA-04 | Phase 2 | Complete |
 | QA-05 | Phase 8 | Pending |
-| QA-06 | Phase 2 | Pending |
+| QA-06 | Phase 2 | Complete |
 
 **Coverage:**
 - v1.2 requirements: 45 total

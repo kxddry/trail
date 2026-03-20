@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 02-01-PLAN.md
-last_updated: "2026-03-20T18:14:19.787Z"
+stopped_at: Completed 02-02-PLAN.md
+last_updated: "2026-03-20T18:18:05.181Z"
 progress:
   total_phases: 7
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
+  completed_plans: 2
 ---
 
 # Project State
@@ -44,6 +44,7 @@ Plan: 2 of 2
 | 04-graph-startup-optimization | 3 | ~12 min | ~4 min |
 | 01-budgeted-rich-content-restoration | 3 | ~14 min | ~5 min |
 | Phase 02 P01 | 2min | 2 tasks | 3 files |
+| Phase 02 P02 | 5min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -52,6 +53,8 @@ Plan: 2 of 2
 Decisions are logged in PROJECT.md Key Decisions table.
 
 - [Phase 02]: Confirmed TrailLogo.tsx and guestWelcomeDismissedItem not orphaned before deleting gate components
+- [Phase 02]: Deleted 7 orphaned UX surfaces found by dead code audit (BookmarksBar, SearchBar, TabInfo, demo, sidebar, sidebar-utils, liquid-glass)
+- [Phase 02]: Left orphaned exports in entitlements.ts, logger.ts, navigation.ts undisturbed (utility/type files, low runtime cost)
 
 ### Pending Todos
 
@@ -70,6 +73,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-20T18:14:19.786Z
-Stopped at: Completed 02-01-PLAN.md
+Last session: 2026-03-20T18:18:05.179Z
+Stopped at: Completed 02-02-PLAN.md
 Resume file: None
