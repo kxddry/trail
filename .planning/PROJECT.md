@@ -33,7 +33,17 @@ Users can see and understand their browsing patterns through a visual tree — m
 
 <!-- Current scope. Building toward these. -->
 
-(No active milestone — run `/gsd:new-milestone` to start next)
+## Current Milestone: v1.2 Release Readiness
+
+**Goal:** Harden Trail extension for first public Chrome Web Store 1.0.0 release — fix failing tests, wire dead auth/onboarding code, unify error handling, add sync status, improve UI consistency, eliminate stability bugs, audit permissions/privacy, add performance budgets, and establish QA discipline.
+
+**Target features:**
+- Hygiene fixes (logs cleanup, auth gate wiring, unified error layer)
+- UI consistency (dropdown/modal behavior, search UX, onboarding hints)
+- Stability hardening (bootstrap recovery, dedup, double-submit prevention)
+- Privacy & security (manifest audit, structured logging, redaction)
+- Performance budgets (sidepanel paint, graph interactive, spotlight latency)
+- QA foundation (smoke e2e, UI interaction tests, release checklist)
 
 ### Out of Scope
 
@@ -75,5 +85,22 @@ Users can see and understand their browsing patterns through a visual tree — m
 | Bootstrap split critical/deferred | Graph surfaces render first frame without waiting on tags/trees/commands | ✓ Good (v1.1) |
 | Layout signature in cache | Exact-match cache prevents stale positions after settings change | ✓ Good (v1.1) |
 
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd:transition`):
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd:complete-milestone`):
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
+
 ---
-*Last updated: 2026-03-19 after v1.1 Adultify milestone*
+*Last updated: 2026-03-20 after v1.2 Release Readiness milestone start*
