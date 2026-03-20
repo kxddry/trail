@@ -1,15 +1,15 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Adultify
+milestone: v1.0
+milestone_name: milestone
 status: unknown
-stopped_at: Completed 04-03-PLAN.md
-last_updated: "2026-03-19T08:27:03.709Z"
+stopped_at: Completed 01-01-PLAN.md
+last_updated: "2026-03-20T11:53:34.161Z"
 progress:
-  total_phases: 4
-  completed_phases: 4
-  total_plans: 9
-  completed_plans: 9
+  total_phases: 2
+  completed_phases: 1
+  total_plans: 5
+  completed_plans: 3
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-02-28)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 04 — Graph Startup Optimization Without Blocking First Paint
+**Current focus:** Phase 01 — budgeted-rich-content-restoration-after-pan-zoom
 
 ## Current Position
 
-Phase: 04 (Graph Startup Optimization Without Blocking First Paint) — COMPLETE
-Plan: 3 of 3
+Phase: 01 (budgeted-rich-content-restoration-after-pan-zoom) — EXECUTING
+Plan: 2 of 3
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Plan: 3 of 3
 | Phase 04 P02 | 3min | 2 tasks | 6 files |
 | Phase 04 P01 | 5min | 2 tasks | 5 files |
 | Phase 04 P03 | 4min | 2 tasks | 2 files |
+| Phase 01 P01 | 4min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -88,10 +89,14 @@ Recent decisions affecting current work:
 - [Phase 04]: cachedTreeJSON in offscreen worker for SAVE_SETTINGS recomputation without re-fetching tree
 - [Phase 04]: STARTUP_T0 captured at module load before class definition for earliest possible timing
 - [Phase 04]: Fallback path preserved for old cache entries without layoutSignature field
+- [Phase 01]: RestoreScoringModel interface instead of full NodeRenderModel import keeps restore-policy lightweight
+- [Phase 01]: Median-based distance split for tier 5/6 adapts to any viewport size without tuning
+- [Phase 01]: All tree sizes use budgeted path -- removed small-tree immediate bypass for consistency
 
 ### Roadmap Evolution
 
 - Phase 4 added: Graph Startup Optimization Without Blocking First Paint
+- Phase 1 added (post-v1.1): Budgeted Rich-Content Restoration After Pan/Zoom
 
 ### Pending Todos
 
@@ -110,6 +115,6 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 
 ## Session Continuity
 
-Last session: 2026-03-19T07:31:26.137Z
-Stopped at: Completed 04-03-PLAN.md
+Last session: 2026-03-20T11:53:34.158Z
+Stopped at: Completed 01-01-PLAN.md
 Resume file: None
