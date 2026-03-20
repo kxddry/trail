@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Completed 01-02-PLAN.md
-last_updated: "2026-03-20T12:04:53.741Z"
+stopped_at: Completed 01-03-PLAN.md
+last_updated: "2026-03-20T12:11:54.495Z"
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 5
-  completed_plans: 4
+  completed_plans: 5
 ---
 
 # Project State
@@ -23,8 +23,8 @@ See: .planning/PROJECT.md (updated 2026-02-28)
 
 ## Current Position
 
-Phase: 01 (budgeted-rich-content-restoration-after-pan-zoom) — EXECUTING
-Plan: 3 of 3
+Phase: 01 (budgeted-rich-content-restoration-after-pan-zoom) — COMPLETE
+Plan: 3 of 3 (all complete)
 
 ## Performance Metrics
 
@@ -54,6 +54,7 @@ Plan: 3 of 3
 | Phase 04 P03 | 4min | 2 tasks | 2 files |
 | Phase 01 P01 | 4min | 2 tasks | 2 files |
 | Phase 01 P02 | 7min | 2 tasks | 1 files |
+| Phase 01 P03 | 3min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -96,6 +97,8 @@ Recent decisions affecting current work:
 - [Phase 01]: LRU via native Map delete+re-set -- no external LRU library, Map iteration order is insertion order
 - [Phase 01]: Batched favicon flush via single rAF per frame, not per icon -- coalesces N callbacks into one pass
 - [Phase 01]: Badge metrics cache keyed on text alone since style is constant (fontSize=9, fontWeight=700)
+- [Phase 01]: Metrics assigned before render() call in scheduleRestore so values are fresh when metricsListener fires
+- [Phase 01]: Reset restore metrics in updateVisible (not scheduleRestore) so backlog reflects queue size even when no restore is running
 
 ### Roadmap Evolution
 
@@ -119,6 +122,6 @@ None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub se
 
 ## Session Continuity
 
-Last session: 2026-03-20T12:04:53.738Z
-Stopped at: Completed 01-02-PLAN.md
+Last session: 2026-03-20T12:11:54.492Z
+Stopped at: Completed 01-03-PLAN.md
 Resume file: None
