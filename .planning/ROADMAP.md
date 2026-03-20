@@ -58,7 +58,11 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
   2. AuthGate/WelcomeGate components are either visibly active in the sidepanel flow or deleted from source
   3. emitRuntimeLog is either called on critical failure paths or removed entirely
   4. A dead code audit has been completed and orphaned UX surfaces are removed or wired in
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 02-01-PLAN.md — Delete dead code (AuthGate, WelcomeGate, runtime-logger)
+- [ ] 02-02-PLAN.md — Remove logs/ artifacts, harden hygiene test, dead code audit
 
 ### Phase 3: Error Handling & Recovery
 **Goal**: Every failure the user can encounter produces a clear, actionable UI state instead of a broken or half-mounted screen
@@ -141,7 +145,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 | 3. UX Polish | v1.1 | 3/3 | Complete | 2026-02-28 |
 | 4. Graph Startup Optimization | v1.1 | 3/3 | Complete | 2026-03-19 |
 | 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
-| 2. Hygiene & Dead Code Cleanup | v1.2 | 0/? | Not started | - |
+| 2. Hygiene & Dead Code Cleanup | v1.2 | 0/2 | Planned | - |
 | 3. Error Handling & Recovery | v1.2 | 0/? | Not started | - |
 | 4. Stability & Concurrency | v1.2 | 0/? | Not started | - |
 | 5. UX Polish | v1.2 | 0/? | Not started | - |
