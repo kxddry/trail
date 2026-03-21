@@ -3,77 +3,180 @@
 ## Milestones
 
 - ✅ **v1.0 Initial Build** - Pre-GSD (shipped)
-- 🚧 **v1.1 Adultify** - Phases 1-3 (in progress)
-
-## Overview
-
-v1.1 Adultify hardens Trail from a working prototype to a production-grade product. Auth/security requirements (AUTH-01–04) were already satisfied in the codebase; the remaining auth cleanup (AUTH-05) is folded into Phase 1 alongside data integrity work. Then CI/CD automation, and finally UX polish.
+- ✅ **v1.1 Adultify** - Phases 1-4 (shipped 2026-03-19)
+- ✅ **Post-v1.1** - Phase 01 (budgeted rich-content restoration)
+- 🚧 **v1.2 Release Readiness** - Phases 2-8 (in progress)
 
 ## Phases
 
-- [x] **Phase 1: Data Integrity & Auth Cleanup** - Remove auth bypass, wrap sync in transactions, fix ownership collisions, add retry limits (completed 2026-02-28)
-- [ ] **Phase 2: CI/CD** - Add lint/test/typecheck to pipelines, configure Dependabot, automate extension releases
-- [ ] **Phase 3: UX Polish** - Add branded error pages, loading states, destructive action confirmations, accessibility
+<details>
+<summary>✅ v1.0 Initial Build — SHIPPED (pre-GSD)</summary>
+
+Pre-GSD milestone. Extension core, tree visualization, auth, sync, dashboard, marketing site, CMS, video generation.
+
+</details>
+
+<details>
+<summary>✅ v1.1 Adultify (Phases 1-4) — SHIPPED 2026-03-19</summary>
+
+- [x] Phase 1: Data Integrity & Auth Cleanup (2/2 plans) — completed 2026-02-28
+- [x] Phase 2: CI/CD (1/1 plans) — completed 2026-02-28
+- [x] Phase 3: UX Polish (3/3 plans) — completed 2026-02-28
+- [x] Phase 4: Graph Startup Optimization (3/3 plans) — completed 2026-03-19
+
+Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
+
+</details>
+
+<details>
+<summary>✅ Post-v1.1 — Phase 01 (budgeted rich-content restoration)</summary>
+
+- [x] Phase 01: Budgeted Rich-Content Restoration After Pan/Zoom (3/3 plans)
+
+</details>
+
+### 🚧 v1.2 Release Readiness (Phases 2-8)
+
+**Milestone Goal:** Harden Trail extension for first public Chrome Web Store 1.0.0 release.
+
+- [x] **Phase 2: Hygiene & Dead Code Cleanup** - Remove dead code, enforce artifact cleanliness, audit orphaned surfaces — completed 2026-03-20
+- [x] **Phase 3: Error Handling & Recovery** - Unified error layer, graceful degradation on every failure path — completed 2026-03-21
+- [x] **Phase 4: Stability & Concurrency** - Eliminate races, double-submits, and stale state across all surfaces — completed 2026-03-21
+- [x] **Phase 5: UX Polish** - Consistent interaction patterns, better information density, onboarding hints — completed 2026-03-21
+- [x] **Phase 6: Security & Privacy Audit** - Manifest lockdown, structured logging, payload redaction, protocol hardening — completed 2026-03-21
+- [x] **Phase 7: Performance Budgets** - Measurable performance targets, adaptive degradation, skeleton loading — completed 2026-03-21
+- [x] **Phase 8: QA & Release Discipline** - Smoke tests, interaction tests, release checklist, profile testing — completed 2026-03-21
 
 ## Phase Details
 
-### Phase 1: Data Integrity & Auth Cleanup
-**Goal**: Trail data is written atomically, device ownership conflicts are handled correctly, and auth bypass is fully removed
-**Depends on**: Nothing (first phase)
-**Requirements**: AUTH-05, DATA-01, DATA-02, DATA-03, DATA-04, DATA-05, DATA-06
+### Phase 2: Hygiene & Dead Code Cleanup
+**Goal**: Every file in the codebase is either wired and working or removed; no orphaned artifacts ship in the release
+**Depends on**: Phase 01 (post-v1.1)
+**Requirements**: HYG-01, HYG-02, SEC-06, QA-04, QA-06
 **Success Criteria** (what must be TRUE):
-  1. ACCOUNT_AUTH_BYPASS is completely removed — env variable, function, middleware check, all references gone
-  2. Concurrent trail upserts complete without partial writes — operations are wrapped in database transactions
-  3. Importing a trail on a device that belongs to a different user correctly updates the device ownership rather than silently no-op'ing
-  4. A device claimed by user A cannot be silently reassigned to user B during sync — the conflict is rejected and surfaced
-  5. Webhook processing is atomic — a failure mid-handler does not leave the database in a partial state
-  6. A sync loop that keeps failing terminates after a bounded number of retries rather than running forever
-  7. Navigation errors are written to logs so developers can diagnose failures
-**Plans**: 2 plans
-Plans:
-- [x] 01-01-PLAN.md — Remove ACCOUNT_AUTH_BYPASS mechanism entirely (AUTH-05)
-- [x] 01-02-PLAN.md — Add logging for device reassignment and nav errors; verify pre-existing data integrity (DATA-01–06)
+  1. No `logs/` directory or stale dev artifacts exist in the package root, and a CI test enforces this
+  2. AuthGate/WelcomeGate components are either visibly active in the sidepanel flow or deleted from source
+  3. emitRuntimeLog is either called on critical failure paths or removed entirely
+  4. A dead code audit has been completed and orphaned UX surfaces are removed or wired in
+**Plans:** 2 plans
 
-### Phase 2: CI/CD
-**Goal**: Every pull request is automatically validated and dependency vulnerabilities are surfaced without manual effort
-**Depends on**: Nothing
-**Requirements**: CICD-01, CICD-02, CICD-03, CICD-04, CICD-05, CICD-06, CICD-07
-**Success Criteria** (what must be TRUE):
-  1. Opening a PR against the web apps triggers lint and tests in CI — a failing lint or test blocks merge
-  2. Opening a PR against the extension triggers typecheck in CI — a type error blocks merge
-  3. Dependabot opens automated PRs for dependency updates across all workspaces
-  4. New PRs are pre-populated with a template that prompts contributors for required information
-  5. A weekly scheduled job scans all dependencies and reports known vulnerabilities
-  6. PRs are automatically labeled by area (extension, web, packages, CI) without manual tagging
-  7. Merging an extension release commit triggers automated publishing to the Chrome Web Store
-**Plans**: 1 plan
 Plans:
-- [ ] 02-01-PLAN.md — Verify pre-existing CI/CD (CICD-01–06) and create extension release workflow (CICD-07)
+- [x] 02-01-PLAN.md — Delete dead code (AuthGate, WelcomeGate, runtime-logger)
+- [x] 02-02-PLAN.md — Remove logs/ artifacts, harden hygiene test, dead code audit
 
-### Phase 3: UX Polish
-**Goal**: Users encounter branded, helpful UI for every error and loading state instead of raw Next.js defaults or blank screens
-**Depends on**: Nothing
-**Requirements**: UX-01, UX-02, UX-03, UX-04, UX-05, UX-06, UX-07
+### Phase 3: Error Handling & Recovery
+**Goal**: Every failure the user can encounter produces a clear, actionable UI state instead of a broken or half-mounted screen
+**Depends on**: Phase 2
+**Requirements**: HYG-03, HYG-05, HYG-06, STAB-01, STAB-04, STAB-05, STAB-07, STAB-09
 **Success Criteria** (what must be TRUE):
-  1. Navigating to a URL that throws a server error shows a Trail-branded error page, not the Next.js default
-  2. Navigating to a URL that does not exist shows a Trail-branded 404 page, not the Next.js default
-  3. The app root displays a proper loading component while hydrating instead of plain "loading" text
-  4. Clicking a destructive action in the extension context menu presents a confirmation dialog before executing
-  5. The /trails and /settings pages show skeleton or spinner states while their data loads
-  6. Extension context menu items expose correct ARIA roles so screen readers announce them properly
-  7. Navigating between app routes plays a smooth transition animation
-**Plans**: 3 plans
+  1. Errors from rename, export, open, sync, and auth operations surface as toast or banner notifications
+  2. ErrorBoundary crash screen offers "Copy diagnostics" and "Reload in safe mode" actions
+  3. Bootstrap critical-fetch failure shows a degraded-but-usable state with retry, not a blank or half-mounted panel
+  4. Corrupted localStorage or layout cache auto-resets with a toast explaining what happened
+  5. Quota eviction and stub archives show user-visible explanations of what happened and what to do
+**Plans:** 3 plans
+
 Plans:
-- [x] 03-01-PLAN.md — Brand error pages with TrailLogo and polish loading states (UX-01, UX-02, UX-03, UX-05)
-- [x] 03-02-PLAN.md — Add destructive action confirmations and ARIA roles to extension context menus (UX-04, UX-06)
-- [ ] 03-03-PLAN.md — Add route transition animations with Motion library (UX-07)
+- [x] 03-01-PLAN.md — Unified error-to-toast layer with showOperationError helper
+- [x] 03-02-PLAN.md — ErrorBoundary crash diagnostics and bootstrap recovery
+- [x] 03-03-PLAN.md — Cache corruption recovery, offscreen fallback, quota eviction notice
+
+### Phase 4: Stability & Concurrency
+**Goal**: Rapid user actions (quick open/close, double-clicks, panel restarts) never produce duplicate requests, stale UI, or silent auth failures
+**Depends on**: Phase 3
+**Requirements**: STAB-02, STAB-03, STAB-06, STAB-08, HYG-04
+**Success Criteria** (what must be TRUE):
+  1. Opening and closing the sidepanel rapidly does not produce duplicate auth/bootstrap/search requests
+  2. Double-clicking any mutating button (create tree, rename, export, auth submit) produces exactly one operation
+  3. SESSION_EXPIRED is handled in spotlight and newtab surfaces, not just the account flow
+  4. editorMode state survives panel close and service worker restart
+  5. A sync status indicator (syncing / offline / degraded / error) is visible in the sidepanel
+**Plans:** 2 plans
+
+Plans:
+- [x] 04-01-PLAN.md — Bootstrap re-entry guard, double-submit prevention, editorMode persistence
+- [x] 04-02-PLAN.md — SESSION_EXPIRED in newtab/spotlight, sync status indicator in header
+
+### Phase 5: UX Polish
+**Goal**: Extension interactions feel consistent and self-documenting: every dropdown, modal, search box, and onboarding surface behaves predictably
+**Depends on**: Phase 4
+**Requirements**: UXP-01, UXP-02, UXP-03, UXP-04, UXP-05, UXP-06, UXP-07, UXP-08, UXP-09, UXP-10
+**Success Criteria** (what must be TRUE):
+  1. All dropdowns and modals dismiss on Esc and click-outside, return focus to trigger, and apply inert to background
+  2. Sidepanel search shows keyboard shortcut hints inline and preserves draft text on accidental blur
+  3. TreeDropdown shows last synced time, node count, and archived/stub status for each tree
+  4. First-run experience shows micro-hints for key gestures, and settings includes a "Privacy & data" section
+  5. Destructive action confirmations state what will be lost and how to recover
+**Plans:** 4 plans
+
+Plans:
+- [x] 05-01-PLAN.md — Shared overlay hook (useOverlayBehavior), search keyboard hints, verify blur-preserves-draft
+- [x] 05-02-PLAN.md — TreeDropdown metadata, tag filter presets, destructive confirmation copy
+- [x] 05-03-PLAN.md — New tab empty state, SessionExpiredBanner persistent dismiss
+- [x] 05-04-PLAN.md — Settings privacy section, first-run onboarding hints
+
+### Phase 6: Security & Privacy Audit
+**Goal**: Extension manifest, logging, and cross-boundary communication are locked down for public Chrome Web Store submission
+**Depends on**: Phase 4
+**Requirements**: SEC-01, SEC-02, SEC-03, SEC-04, SEC-05, SEC-07, SEC-08, SEC-09
+**Success Criteria** (what must be TRUE):
+  1. Manifest contains only permissions the extension actually uses; chrome.scripting and browser.search are removed if unused
+  2. Dev-only domains are confirmed excluded from release builds
+  3. Structured logger replaces raw console.* on auth/sync/storage/search paths, with URL/title/token redaction
+  4. Protocol messages between site and extension validate payloads beyond envelope level
+  5. CSP requirement for pixi.js/unsafe-eval is documented with rationale for CWS reviewers
+**Plans:** 3 plans
+
+Plans:
+- [x] 06-01-PLAN.md — Manifest lockdown, domain assertion test, CSP documentation
+- [x] 06-02-PLAN.md — Logger redaction utility and console.* migration on all background files
+- [x] 06-03-PLAN.md — Search suggestions privacy toggle, site-extension protocol Zod hardening
+
+### Phase 7: Performance Budgets
+**Goal**: Extension has measurable, enforced performance targets and degrades gracefully on constrained devices
+**Depends on**: Phase 5, Phase 6
+**Requirements**: PERF-01, PERF-02, PERF-03, PERF-04, PERF-05
+**Success Criteria** (what must be TRUE):
+  1. Three budget metrics are tracked in telemetry: first sidepanel paint, first graph interactive, spotlight query latency
+  2. Blur/LOD/animation quality degrades automatically on weak machines and large trees
+  3. Long lists (trees, tags, search results) use virtualization or chunked rendering when item count exceeds threshold
+  4. Loading states show skeleton placeholders instead of empty canvas or null suspense fallback
+**Plans:** 2 plans
+
+Plans:
+- [x] 07-01-PLAN.md — Budget metrics instrumentation, adaptive degradation defaults, spotlight index optimization
+- [x] 07-02-PLAN.md — Search results virtualization, skeleton loading for bootstrap and graph canvas
+
+### Phase 8: QA & Release Discipline
+**Goal**: A repeatable release process exists that catches regressions before Chrome Web Store submission
+**Depends on**: Phase 7
+**Requirements**: QA-01, QA-02, QA-03, QA-05
+**Success Criteria** (what must be TRUE):
+  1. Smoke e2e tests pass for all 8 scenarios: first install, guest mode, auth, session expired, sync fail, tree switch, export/import, quota eviction
+  2. UI interaction tests cover dropdown keyboard nav, modal escape, search navigation, and auth banner behavior
+  3. A release checklist document covers permissions, offline mode, empty states, corrupted cache, and worker restart
+  4. Cold profile (first install) and dirty returning user (existing data) are tested as separate paths
+**Plans:** 2 plans
+
+Plans:
+- [x] 08-01-PLAN.md — Smoke e2e test stubs and UI interaction test stubs
+- [x] 08-02-PLAN.md — Release checklist with cold/dirty profile testing sections
 
 ## Progress
 
-**Execution Order:** 1 → 2 → 3
+**Execution Order:** Phases 2-8 execute sequentially. Phase 6 can run in parallel with Phase 5 (no dependency between them). Phase 7 depends on both 5 and 6.
 
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
-| 1. Data Integrity & Auth Cleanup | 2/2 | Complete   | 2026-02-28 | - |
+| 1. Data Integrity & Auth Cleanup | v1.1 | 2/2 | Complete | 2026-02-28 |
 | 2. CI/CD | v1.1 | 1/1 | Complete | 2026-02-28 |
 | 3. UX Polish | v1.1 | 3/3 | Complete | 2026-02-28 |
+| 4. Graph Startup Optimization | v1.1 | 3/3 | Complete | 2026-03-19 |
+| 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
+| 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
+| 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
+| 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
+| 5. UX Polish | v1.2 | 4/4 | Complete | 2026-03-21 |
+| 6. Security & Privacy Audit | v1.2 | 3/3 | Complete | 2026-03-21 |
+| 7. Performance Budgets | v1.2 | 2/2 | Complete | 2026-03-21 |
+| 8. QA & Release Discipline | v1.2 | 2/2 | Complete | 2026-03-21 |

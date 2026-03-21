@@ -1,112 +1,147 @@
 # Requirements: Trail
 
-**Defined:** 2026-02-28
+**Defined:** 2026-03-20
 **Core Value:** Users can see and understand their browsing patterns through a visual tree
 
-## v1.1 Requirements
+## v1.2 Requirements
 
-Requirements for Adultify milestone. Each maps to roadmap phases.
+Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
-### Security & Auth
+### Hygiene & Release-Critical
 
-- [x] **AUTH-01**: User session persists across browser sleep — extension uses chrome.alarms for proactive token refresh instead of setTimeout *(already implemented)*
-- [x] **AUTH-02**: User sees "session expired" UI with re-login option instead of silent logout when token cannot be refreshed *(already implemented)*
-- [x] **AUTH-03**: Production secrets (.env.prod, .env.e2e) are removed from git tracking and added to .gitignore *(already protected)*
-- [x] **AUTH-04**: Auth storage key is a single shared constant instead of 6 duplicate string literals *(already centralized in storage-keys.ts)*
-- [x] **AUTH-05**: ACCOUNT_AUTH_BYPASS is completely removed from the codebase — env variable, function, middleware check, all references
-
-### Data Integrity
-
-- [x] **DATA-01**: Trail upsert operations are wrapped in a database transaction to prevent race conditions *(pre-existing, verified 2026-02-28)*
-- [x] **DATA-02**: Import endpoint correctly updates device userId on ownership collision instead of no-op *(pre-existing, verified 2026-02-28)*
-- [x] **DATA-03**: Device sync logs device ownership reassignment when a device appears under a different user *(logging added 2026-02-28)*
-- [x] **DATA-04**: Webhook handler uses database transaction for atomic processing *(pre-existing, verified 2026-02-28)*
-- [x] **DATA-05**: Sync engine has a retry limit to prevent infinite retry loops *(pre-existing 6-step backoff, verified 2026-02-28)*
-- [x] **DATA-06**: Navigation handler logs errors instead of silently swallowing them *(logging added 2026-02-28)*
-
-### CI/CD
-
-- [x] **CICD-01**: Web CI pipeline (ci-web.yml) runs lint and tests on pull requests
-- [x] **CICD-02**: Extension CI pipeline (ci-extension.yml) runs typecheck on pull requests
-- [x] **CICD-03**: Dependabot is configured for automated vulnerability scanning across all workspaces
-- [x] **CICD-04**: PR template guides contributors through required information and checks
-- [x] **CICD-05**: Scheduled security audit workflow scans dependencies for known vulnerabilities
-- [x] **CICD-06**: PR auto-labeler categorizes changes by area (extension, web, packages, CI)
-- [x] **CICD-07**: Extension release workflow automates Chrome Web Store publishing
+- [x] **HYG-01**: logs/ removed from package root; dev-log write locations documented and enforced by test
+- [x] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
+- [x] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
+- [x] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
+- [x] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
+- [x] **HYG-06**: Stub archives show user-visible explanation ("tree unloaded due to quota, will load on demand")
 
 ### UX Polish
 
-- [x] **UX-01**: App displays branded error page (error.tsx) instead of default Next.js error
-- [x] **UX-02**: App displays branded not-found page (not-found.tsx) instead of default
-- [x] **UX-03**: Root loading state shows proper loading component instead of plain "loading" text
-- [x] **UX-04**: Destructive actions in extension context menu require user confirmation before executing
-- [x] **UX-05**: /trails and /settings pages show loading states while data loads
-- [x] **UX-06**: Extension context menus include proper ARIA roles for accessibility
-- [x] **UX-07**: Web app has page transition animations between routes
+- [x] **UXP-01**: All dropdown/modal components share unified behavior (Esc, click-outside, focus return, inert management)
+- [x] **UXP-02**: Sidepanel search UI shows keyboard shortcuts (Enter/Up/Down/Esc) inline, not just in tooltip
+- [x] **UXP-03**: FloatingSearch preserves draft text on accidental blur instead of collapsing
+- [x] **UXP-04**: TreeDropdown shows last synced time, node count, and archived/stub status per tree
+- [x] **UXP-05**: Tag filter offers quick presets: all tagged, untagged, selected tags only
+- [x] **UXP-06**: New tab shows reason and fallback CTA when bookmarks are unavailable
+- [x] **UXP-07**: Settings includes "Privacy & data" section explaining what goes to cloud vs stays local
+- [x] **UXP-08**: First-run layer shows 3-4 micro-hints for key gestures (search, tree switch, tag filter, spotlight)
+- [x] **UXP-09**: SessionExpiredBanner dismiss is persistent until next meaningful state change; critical state never hidden
+- [x] **UXP-10**: Destructive action confirmations show what exactly will be lost and how to recover
 
-## Future Requirements
+### Stability
 
-Deferred to v1.2+. Tracked but not in current roadmap.
+- [x] **STAB-01**: Bootstrap has explicit recovery path — critical fetch failure shows degraded state, not half-mounted UI
+- [x] **STAB-02**: Single-flight and cancellation patterns deduplicated for auth/bootstrap/search (no races on quick open/close)
+- [x] **STAB-03**: Double-submit prevented on all mutating actions (create tree, rename, export, auth)
+- [x] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
+- [x] **STAB-05**: Offscreen layout computation failure falls back gracefully ("opened with basic layout")
+- [x] **STAB-06**: SESSION_EXPIRED handled in spotlight and newtab, not just account flow
+- [x] **STAB-07**: navigateTo failure from dropdown/context menu leaves user in clear state, not just logged
+- [x] **STAB-08**: editorMode restores correctly after panel close / service worker restart
+- [x] **STAB-09**: Quota eviction shows user notice when archives begin stubbing
 
-### Hardening
+### Security & Privacy
 
-- **HARD-01**: Rate limiting on API endpoints
-- **HARD-02**: Refresh token replay detection
+- [x] **SEC-01**: Manifest permission audit complete — unused permissions (chrome.scripting, browser.search) removed
+- [x] **SEC-02**: activeTab necessity verified given existing host permissions and injection-free flow
+- [x] **SEC-03**: Prod domains locked down; dev allowlist confirmed excluded from release builds
+- [x] **SEC-04**: External search suggestions have user-visible toggle and privacy note (Google requests)
+- [x] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
+- [x] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
+- [x] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
+- [x] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
+- [x] **SEC-09**: pixi.js/unsafe-eval CSP requirement documented with rationale
 
-### UX
+### Performance
 
-- **FUX-01**: Focus trapping in modals
-- **FUX-02**: Button system unification across apps
-- **FUX-03**: Icon system unification across apps
-- **FUX-04**: Empty state improvements for list views
-- **FUX-05**: Toast notification system in web app
+- [x] **PERF-01**: Three release budget metrics tracked: first sidepanel paint, first graph interactive, spotlight query latency
+- [x] **PERF-02**: blur/LOD/animation degrade aggressively on weak machines and heavy trees
+- [x] **PERF-03**: Derived search/index data cached on idle
+- [x] **PERF-04**: Long lists (trees/tags/results) use virtualization or chunked render where needed
+- [x] **PERF-05**: Heavy loading states show skeletons instead of empty canvas/null suspense fallback
+
+### QA & Release Discipline
+
+- [x] **QA-01**: Smoke e2e tests cover 8 scenarios: first install, guest mode, auth, session expired, sync fail, tree switch, export/import, quota eviction
+- [x] **QA-02**: UI interaction tests cover: dropdown keyboard, modal escape, search navigation, auth banner
+- [x] **QA-03**: Release checklist covers: permissions, offline mode, empty states, corrupted cache, worker restart
+- [x] **QA-04**: Root artifact hygiene test prevents logs/, tasks/, dist/ from appearing in package root
+- [x] **QA-05**: Cold profile and dirty returning user tested separately
+- [x] **QA-06**: Dead code / orphaned UX surface audit completed before release
+
+## v2 Requirements
+
+Deferred to future release.
+
+- **RATE-01**: Rate limiting on API endpoints
+- **AUTH-R01**: Refresh token replay detection
+- **MOBILE-01**: Mobile app
 
 ## Out of Scope
 
 | Feature | Reason |
 |---------|--------|
-| Mobile app | Web-first approach, mobile later |
 | Real-time collaboration | Single-user product |
-| Git history scrubbing for secrets | User must rotate secrets separately; .gitignore prevents future commits |
+| Mobile app | Web-first, mobile later |
+| New feature development | This milestone is hardening only |
+| Marketing site changes | Not release-blocking |
 
 ## Traceability
 
-Which phases cover which requirements. Updated during roadmap creation.
-
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AUTH-01 | — | Complete (pre-existing) |
-| AUTH-02 | — | Complete (pre-existing) |
-| AUTH-03 | — | Complete (pre-existing) |
-| AUTH-04 | — | Complete (pre-existing) |
-| AUTH-05 | Phase 1 | Complete |
-| DATA-01 | Phase 1 | Complete |
-| DATA-02 | Phase 1 | Complete |
-| DATA-03 | Phase 1 | Complete |
-| DATA-04 | Phase 1 | Complete |
-| DATA-05 | Phase 1 | Complete |
-| DATA-06 | Phase 1 | Complete |
-| CICD-01 | Phase 2 | Complete |
-| CICD-02 | Phase 2 | Complete |
-| CICD-03 | Phase 2 | Complete |
-| CICD-04 | Phase 2 | Complete |
-| CICD-05 | Phase 2 | Complete |
-| CICD-06 | Phase 2 | Complete |
-| CICD-07 | Phase 2 | Complete |
-| UX-01 | Phase 3 | Complete |
-| UX-02 | Phase 3 | Complete |
-| UX-03 | Phase 3 | Complete |
-| UX-04 | Phase 3 | Complete |
-| UX-05 | Phase 3 | Complete |
-| UX-06 | Phase 3 | Complete |
-| UX-07 | Phase 3 | Complete |
+| HYG-01 | Phase 2 | Complete |
+| HYG-02 | Phase 2 | Complete |
+| HYG-03 | Phase 3 | Complete |
+| HYG-04 | Phase 4 | Complete |
+| HYG-05 | Phase 3 | Complete |
+| HYG-06 | Phase 3 | Complete |
+| UXP-01 | Phase 5 | Complete |
+| UXP-02 | Phase 5 | Complete |
+| UXP-03 | Phase 5 | Complete |
+| UXP-04 | Phase 5 | Complete |
+| UXP-05 | Phase 5 | Complete |
+| UXP-06 | Phase 5 | Complete |
+| UXP-07 | Phase 5 | Complete |
+| UXP-08 | Phase 5 | Complete |
+| UXP-09 | Phase 5 | Complete |
+| UXP-10 | Phase 5 | Complete |
+| STAB-01 | Phase 3 | Complete |
+| STAB-02 | Phase 4 | Complete |
+| STAB-03 | Phase 4 | Complete |
+| STAB-04 | Phase 3 | Complete |
+| STAB-05 | Phase 3 | Complete |
+| STAB-06 | Phase 4 | Complete |
+| STAB-07 | Phase 3 | Complete |
+| STAB-08 | Phase 4 | Complete |
+| STAB-09 | Phase 3 | Complete |
+| SEC-01 | Phase 6 | Complete |
+| SEC-02 | Phase 6 | Complete |
+| SEC-03 | Phase 6 | Complete |
+| SEC-04 | Phase 6 | Complete |
+| SEC-05 | Phase 6 | Complete |
+| SEC-06 | Phase 2 | Complete |
+| SEC-07 | Phase 6 | Complete |
+| SEC-08 | Phase 6 | Complete |
+| SEC-09 | Phase 6 | Complete |
+| PERF-01 | Phase 7 | Complete |
+| PERF-02 | Phase 7 | Complete |
+| PERF-03 | Phase 7 | Complete |
+| PERF-04 | Phase 7 | Complete |
+| PERF-05 | Phase 7 | Complete |
+| QA-01 | Phase 8 | Complete |
+| QA-02 | Phase 8 | Complete |
+| QA-03 | Phase 8 | Complete |
+| QA-04 | Phase 2 | Complete |
+| QA-05 | Phase 8 | Complete |
+| QA-06 | Phase 2 | Complete |
 
 **Coverage:**
-- v1.1 requirements: 25 total (4 pre-existing, 21 active)
-- Mapped to phases: 21
-- Complete (pre-existing): 4
-- Unmapped: 0 ✓
+- v1.2 requirements: 45 total
+- Mapped to phases: 45
+- Unmapped: 0
 
 ---
-*Requirements defined: 2026-02-28*
-*Last updated: 2026-02-28 after 01-02 executed — DATA-01 through DATA-06 all complete (verified or logging added)*
+*Requirements defined: 2026-03-20*
+*Last updated: 2026-03-20 after roadmap creation*

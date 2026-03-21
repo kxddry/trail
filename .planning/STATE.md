@@ -1,100 +1,132 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.0
-milestone_name: milestone
-status: unknown
-last_updated: "2026-03-10T12:52:24Z"
+milestone: v1.2
+milestone_name: Release Readiness
+status: milestone-complete
+stopped_at: All 7 phases complete — v1.2 Release Readiness done
+last_updated: "2026-03-21T17:16:00.488Z"
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 6
-  completed_plans: 6
+  total_phases: 7
+  completed_phases: 7
+  total_plans: 18
+  completed_plans: 18
 ---
 
 # Project State
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-02-28)
+See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 2 complete — CI/CD automation done. Phase 3 is next.
+**Current focus:** Phase 08 — qa-release-discipline
 
 ## Current Position
 
-Phase: 3 of 3 (UX Polish)
-Plan: 3 of 3 in current phase (all complete — Phase 3 done)
-Status: All phases complete
-Last activity: 2026-03-10 - Completed quick task 1: Improve spotlight: refactoring, performance, UX, reliability
-
-Progress: [██████████] 100%
+Phase: 08 (qa-release-discipline) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 3
-- Average duration: ~3 min
-- Total execution time: 0.2 hours
 
-**By Phase:**
+- Total plans completed: 0
+- Average duration: --
+- Total execution time: 0
+
+**Historical (from v1.1 + post-v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01-security-auth | 1 | ~5 min | ~5 min |
 | 02-ci-cd | 1 | ~4 min | ~4 min |
-
-**Recent Trend:**
-- Last 5 plans: 02-01 (~4 min), 01-02 (~5 min), 01-01 (~2 min)
-- Trend: Fast — small, surgical plans
-
-*Updated after each plan completion*
-| Phase 03-ux-polish P03 | 2 | 2 tasks | 1 files |
-| Quick-1 spotlight-refactor | 11 min | 3 tasks | 8 files |
+| 03-ux-polish | 3 | ~6 min | ~2 min |
+| 04-graph-startup-optimization | 3 | ~12 min | ~4 min |
+| 01-budgeted-rich-content-restoration | 3 | ~14 min | ~5 min |
+| Phase 02 P01 | 2min | 2 tasks | 3 files |
+| Phase 02 P02 | 5min | 2 tasks | 8 files |
+| Phase 03 P02 | 2min | 2 tasks | 3 files |
+| Phase 03 P01 | 2min | 2 tasks | 6 files |
+| Phase 03 P03 | 6min | 2 tasks | 5 files |
+| Phase 04 P01 | 7min | 2 tasks | 5 files |
+| Phase 04 P02 | 6min | 2 tasks | 6 files |
+| Phase 06 P03 | 2min | 2 tasks | 4 files |
+| Phase 06-security-privacy-audit P01 | 3min | 4 tasks | 4 files |
+| Phase 05 P01 | 4min | 2 tasks | 5 files |
+| Phase 05 P03 | 4min | 2 tasks | 4 files |
+| Phase 06 P02 | 11min | 2 tasks | 29 files |
+| Phase 05 P04 | 2min | 2 tasks | 4 files |
+| Phase 05 P02 | 3min | 2 tasks | 4 files |
+| Phase 07 P01 | 6min | 2 tasks | 8 files |
+| Phase 07 P02 | 3min | 2 tasks | 4 files |
+| Phase 08 P02 | 1min | 1 tasks | 1 files |
+| Phase 08 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
 ### Decisions
 
 Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
 
-- [01-01]: env import kept in auth.ts — resolveAuthIssuer() uses env.appBaseUrl, so import was not bypass-only
-- [01-02]: console.warn (not error) for device reassignment — valid expected behavior, not an error, but needs audit visibility
-- [01-02]: DATA-01/02/04/05 confirmed pre-existing and intact — no code changes needed for those requirements
-- [Phase 1 discuss]: AUTH-01 through AUTH-04 already implemented — no work needed
-- [Phase 1 discuss]: ACCOUNT_AUTH_BYPASS to be removed entirely (not guarded) — always use real auth in dev
-- [Pre-GSD]: chrome.alarms required for token refresh — service workers die after ~30s idle, setTimeout is unreliable
-- [Pre-GSD]: Extension is a separate pnpm workspace — CI pipelines and changes must respect that boundary
-- [Phase 02-ci-cd]: Tag chrome-v* is the version source of truth — strip prefix to get semver, no separate version extraction needed
-- [Phase 02-ci-cd]: CWS upload uses publish=false (draft) — manual publish from Chrome Developer Dashboard gives release control
-- [Phase 02-ci-cd]: nicolo-ribaudo/chrom-webstore-upload@v1 selected as widely adopted, simple CWS upload action
-- [Phase 03-03]: No exit animation in template.tsx: instant-out + fade-in is snappier and avoids AnimatePresence at layout level
-- [Phase 03-03]: useReducedMotion() over CSS override: Motion handles its own reduced-motion detection natively
-- [03-01]: Root not-found.tsx gets secondary "go home" CTA — provides escape route to app root
-- [03-01]: settings/loading.tsx kept unchanged — existing structure accurately represents settings layout
-- [03-02]: Inline confirm over AlertDialog — two-click inline confirm keeps user in flow for context menu UX
-- [03-02]: aria-checked="mixed" for partial tag selection in BulkContextMenu
-- [03-02]: Tab items get role=menuitem (not option) — they are actions, not selections
-- [quick-1-01]: Drilldown scope lifted to SpotlightRoot — shared across search/preview/actions hooks
-- [quick-1-01]: Direct safety check instead of isDestructiveAction type guard — avoids TypeScript never-narrowing
-- [quick-1-01]: Echo index keyed by treeId:nodeId for O(1) hover-to-item resolution
+- [Phase 02]: Confirmed TrailLogo.tsx and guestWelcomeDismissedItem not orphaned before deleting gate components
+- [Phase 02]: Deleted 7 orphaned UX surfaces found by dead code audit (BookmarksBar, SearchBar, TabInfo, demo, sidebar, sidebar-utils, liquid-glass)
+- [Phase 02]: Left orphaned exports in entitlements.ts, logger.ts, navigation.ts undisturbed (utility/type files, low runtime cost)
+- [Phase 03]: Used inline styles for ErrorBoundary and DegradedBootstrap UI (matches existing pattern)
+- [Phase 03]: Bootstrap uses retryCount state in useEffect deps for auto-retry rather than imperative re-invocation
+- [Phase 03]: showOperationError keeps console.error alongside toast.error for dev diagnostics
+- [Phase 03]: navigateTo failures keep dropdown/context menu open so user retains their place
+- [Phase 03]: Used existing notifyUi/rpc.notify pattern for background-to-UI toasts
+- [Phase 03]: Offscreen failure toast fires once per session via offscreenFailNotified flag
+- [Phase 03]: Unavailable stub trees prevent click rather than showing error on repeated attempts
+- [Phase 04]: bootstrapInFlight uses useRef to avoid re-renders; editorState restored via fire-and-forget at module load
+- [Phase 04]: Newtab uses authSessionItem.watch for session expiry (useAuthPortalFlow not portable)
+- [Phase 04]: Removed unused 'degraded' from NetworkStatus type (dead code)
+- [Phase 04]: Sync indicator uses inline styles + CSS keyframes in base.css
+- [Phase 06]: Reused existing Zod schemas from site-messages.ts for runtime validation at protocol boundary
+- [Phase 06]: Used createLogger for site-msg validation warnings (structured logging pattern)
+- [Phase 06-security-privacy-audit]: Removed scripting and search permissions (0 usage in codebase)
+- [Phase 06-security-privacy-audit]: Retained activeTab (required by captureVisibleTab in thumbnail-cache.ts)
+- [Phase 06-security-privacy-audit]: Architecture test skips gracefully when manifest not built
+- [Phase 05]: useOverlayBehavior hook scopes inert to .floating-island siblings within .floating-controls
+- [Phase 05]: Empty state uses inline styles matching existing dashboard pattern
+- [Phase 05]: Session banner dismiss uses session-scoped storage (auto-clears on browser restart)
+- [Phase 05]: App.tsx clears dismiss flag when auth restored for proper re-display on next expiry
+- [Phase 05]: Keyboard hints in FloatingSearch use inline styles (matches ErrorBoundary pattern)
+- [Phase 06]: Field-name matching for redaction (not regex on values) for predictability
+- [Phase 06]: auth-orchestrator logAuth and account-keeper log helpers converted to structured logger debug level
+- [Phase 05]: Your data section uses expandable accordion with chevron rotation after dashboard section
+- [Phase 05]: OnboardingHints uses 300ms delay for position measurement, click-anywhere dismiss
+- [Phase 05]: formatRelativeTime uses Intl.DateTimeFormat for dates older than 24h
+- [Phase 05]: Untagged mode uses local useState (transient filter, not store-level)
+- [Phase 05]: Delete confirmation shows tree name, page count, and irreversibility warning
+- [Phase 07]: Created perf-metrics.ts singleton for service worker context (graph-profiler.ts uses window)
+- [Phase 07]: Used fire-and-forget SPOTLIGHT_BOOTSTRAP RPC for pre-warming (reuses existing handler)
+- [Phase 07]: Node-count quality floor uses worstDetail() merge with existing detailMode (preserves overlay/gesture overrides)
+- [Phase 07]: Virtualizer scroll container is .floating-search-list div itself (parent panel provides max-height constraint)
+- [Phase 07]: CSS-only skeleton-pulse animation using opacity cycling (no external skeleton library)
+- [Phase 07]: skeleton-block uses var(--bg-interactive) to match existing theme system
+- [Phase 08]: Documented actual manifest permissions (9 total) matching wxt.config.ts
+- [Phase 08]: Split pre-submission into separate Cold Profile and Dirty profile signoff lines
+- [Phase 08]: Followed existing test pattern: node:assert/strict, function-per-scenario, run() wrapper for test stubs
+- [Phase 08]: MANUAL prefix in console.log for each stub to enable grep-based counting and future automation discovery
 
 ### Pending Todos
 
-None — Phase 2 complete. Phase 3 is next. (User must add CWS/GitHub secrets before first release tag.)
+None.
 
 ### Blockers/Concerns
 
-None — all CI/CD requirements satisfied. Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN) before first use.
+Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN) before first use.
 
 ### Quick Tasks Completed
 
 | # | Description | Date | Commit | Status | Directory |
 |---|-------------|------|--------|--------|-----------|
 | 1 | Improve spotlight: refactoring, performance, UX, reliability | 2026-03-10 | 9461d65e | Verified | [1-improve-spotlight-refactoring-performanc](./quick/1-improve-spotlight-refactoring-performanc/) |
+| 260318-iio | Fix UI bugs in Spotlight and New Tab (5 tasks) | 2026-03-18 | 21785d27 | | [260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t](./quick/260318-iio-fix-ui-bugs-in-spotlight-and-new-tab-5-t/) |
 
 ## Session Continuity
 
-Last session: 2026-03-10
-Stopped at: Completed quick task 1 — spotlight refactoring, performance, UX/a11y, reliability.
-Resume file: .planning/quick/1-improve-spotlight-refactoring-performanc/1-SUMMARY.md
+Last session: 2026-03-21T17:16:00.486Z
+Stopped at: Completed 08-01-PLAN.md
+Resume file: None
