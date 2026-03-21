@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 03-02-PLAN.md
-last_updated: "2026-03-21T09:45:49.786Z"
+stopped_at: Completed 03-01-PLAN.md
+last_updated: "2026-03-21T09:46:14.902Z"
 progress:
   total_phases: 7
   completed_phases: 1
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 ## Current Position
 
 Phase: 03 (error-handling-recovery) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 
 ## Performance Metrics
 
@@ -46,6 +46,7 @@ Plan: 2 of 3
 | Phase 02 P01 | 2min | 2 tasks | 3 files |
 | Phase 02 P02 | 5min | 2 tasks | 8 files |
 | Phase 03 P02 | 2min | 2 tasks | 3 files |
+| Phase 03 P01 | 2min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -58,6 +59,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 02]: Left orphaned exports in entitlements.ts, logger.ts, navigation.ts undisturbed (utility/type files, low runtime cost)
 - [Phase 03]: Used inline styles for ErrorBoundary and DegradedBootstrap UI (matches existing pattern)
 - [Phase 03]: Bootstrap uses retryCount state in useEffect deps for auto-retry rather than imperative re-invocation
+- [Phase 03]: showOperationError keeps console.error alongside toast.error for dev diagnostics
+- [Phase 03]: navigateTo failures keep dropdown/context menu open so user retains their place
 
 ### Pending Todos
 
@@ -76,6 +79,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T09:45:49.784Z
-Stopped at: Completed 03-02-PLAN.md
+Last session: 2026-03-21T09:46:14.900Z
+Stopped at: Completed 03-01-PLAN.md
 Resume file: None

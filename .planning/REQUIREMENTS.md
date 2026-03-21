@@ -11,7 +11,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
 - [x] **HYG-01**: logs/ removed from package root; dev-log write locations documented and enforced by test
 - [x] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
-- [ ] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
+- [x] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
 - [ ] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
 - [x] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
 - [ ] **HYG-06**: Stub archives show user-visible explanation ("tree unloaded due to quota, will load on demand")
@@ -37,7 +37,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [ ] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
 - [ ] **STAB-05**: Offscreen layout computation failure falls back gracefully ("opened with basic layout")
 - [ ] **STAB-06**: SESSION_EXPIRED handled in spotlight and newtab, not just account flow
-- [ ] **STAB-07**: navigateTo failure from dropdown/context menu leaves user in clear state, not just logged
+- [x] **STAB-07**: navigateTo failure from dropdown/context menu leaves user in clear state, not just logged
 - [ ] **STAB-08**: editorMode restores correctly after panel close / service worker restart
 - [ ] **STAB-09**: Quota eviction shows user notice when archives begin stubbing
 
@@ -93,7 +93,7 @@ Deferred to future release.
 |-------------|-------|--------|
 | HYG-01 | Phase 2 | Complete |
 | HYG-02 | Phase 2 | Complete |
-| HYG-03 | Phase 3 | Pending |
+| HYG-03 | Phase 3 | Complete |
 | HYG-04 | Phase 4 | Pending |
 | HYG-05 | Phase 3 | Complete |
 | HYG-06 | Phase 3 | Pending |
@@ -113,7 +113,7 @@ Deferred to future release.
 | STAB-04 | Phase 3 | Pending |
 | STAB-05 | Phase 3 | Pending |
 | STAB-06 | Phase 4 | Pending |
-| STAB-07 | Phase 3 | Pending |
+| STAB-07 | Phase 3 | Complete |
 | STAB-08 | Phase 4 | Pending |
 | STAB-09 | Phase 3 | Pending |
 | SEC-01 | Phase 6 | Pending |
