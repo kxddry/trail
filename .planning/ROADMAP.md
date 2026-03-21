@@ -42,8 +42,8 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 - [x] **Phase 2: Hygiene & Dead Code Cleanup** - Remove dead code, enforce artifact cleanliness, audit orphaned surfaces — completed 2026-03-20
 - [x] **Phase 3: Error Handling & Recovery** - Unified error layer, graceful degradation on every failure path — completed 2026-03-21
 - [x] **Phase 4: Stability & Concurrency** - Eliminate races, double-submits, and stale state across all surfaces — completed 2026-03-21
-- [ ] **Phase 5: UX Polish** - Consistent interaction patterns, better information density, onboarding hints
-- [ ] **Phase 6: Security & Privacy Audit** - Manifest lockdown, structured logging, payload redaction, protocol hardening
+- [x] **Phase 5: UX Polish** - Consistent interaction patterns, better information density, onboarding hints — completed 2026-03-21
+- [x] **Phase 6: Security & Privacy Audit** - Manifest lockdown, structured logging, payload redaction, protocol hardening — completed 2026-03-21
 - [ ] **Phase 7: Performance Budgets** - Measurable performance targets, adaptive degradation, skeleton loading
 - [ ] **Phase 8: QA & Release Discipline** - Smoke tests, interaction tests, release checklist, profile testing
 
@@ -168,7 +168,7 @@ Plans:
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
 | 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
-| 5. UX Polish | v1.2 | 0/4 | Not started | - |
-| 6. Security & Privacy Audit | v1.2 | 0/3 | Not started | - |
+| 5. UX Polish | v1.2 | 4/4 | Complete | 2026-03-21 |
+| 6. Security & Privacy Audit | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 7. Performance Budgets | v1.2 | 0/? | Not started | - |
 | 8. QA & Release Discipline | v1.2 | 0/? | Not started | - |
