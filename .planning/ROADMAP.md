@@ -156,7 +156,11 @@ Plans:
   2. UI interaction tests cover dropdown keyboard nav, modal escape, search navigation, and auth banner behavior
   3. A release checklist document covers permissions, offline mode, empty states, corrupted cache, and worker restart
   4. Cold profile (first install) and dirty returning user (existing data) are tested as separate paths
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 08-01-PLAN.md — Smoke e2e test stubs and UI interaction test stubs
+- [ ] 08-02-PLAN.md — Release checklist with cold/dirty profile testing sections
 
 ## Progress
 
@@ -175,4 +179,4 @@ Plans:
 | 5. UX Polish | v1.2 | 4/4 | Complete | 2026-03-21 |
 | 6. Security & Privacy Audit | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 7. Performance Budgets | v1.2 | 2/2 | Complete | 2026-03-21 |
-| 8. QA & Release Discipline | v1.2 | 0/? | Not started | - |
+| 8. QA & Release Discipline | v1.2 | 0/2 | Not started | - |
