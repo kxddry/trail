@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 05-04-PLAN.md
-last_updated: "2026-03-21T16:32:19.186Z"
+stopped_at: Completed 05-02-PLAN.md
+last_updated: "2026-03-21T16:33:23.866Z"
 progress:
   total_phases: 7
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 14
-  completed_plans: 13
+  completed_plans: 14
 ---
 
 # Project State
@@ -56,6 +56,7 @@ Plan: 4 of 4
 | Phase 05 P03 | 4min | 2 tasks | 4 files |
 | Phase 06 P02 | 11min | 2 tasks | 29 files |
 | Phase 05 P04 | 2min | 2 tasks | 4 files |
+| Phase 05 P02 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -91,6 +92,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 06]: auth-orchestrator logAuth and account-keeper log helpers converted to structured logger debug level
 - [Phase 05]: Your data section uses expandable accordion with chevron rotation after dashboard section
 - [Phase 05]: OnboardingHints uses 300ms delay for position measurement, click-anywhere dismiss
+- [Phase 05]: formatRelativeTime uses Intl.DateTimeFormat for dates older than 24h
+- [Phase 05]: Untagged mode uses local useState (transient filter, not store-level)
+- [Phase 05]: Delete confirmation shows tree name, page count, and irreversibility warning
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:32:19.184Z
-Stopped at: Completed 05-04-PLAN.md
+Last session: 2026-03-21T16:33:23.864Z
+Stopped at: Completed 05-02-PLAN.md
 Resume file: None

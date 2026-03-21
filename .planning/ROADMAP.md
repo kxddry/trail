@@ -111,7 +111,7 @@ Plans:
 
 Plans:
 - [x] 05-01-PLAN.md — Shared overlay hook (useOverlayBehavior), search keyboard hints, verify blur-preserves-draft
-- [ ] 05-02-PLAN.md — TreeDropdown metadata, tag filter presets, destructive confirmation copy
+- [x] 05-02-PLAN.md — TreeDropdown metadata, tag filter presets, destructive confirmation copy
 - [x] 05-03-PLAN.md — New tab empty state, SessionExpiredBanner persistent dismiss
 - [x] 05-04-PLAN.md — Settings privacy section, first-run onboarding hints
 
