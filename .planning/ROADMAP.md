@@ -107,7 +107,13 @@ Plans:
   3. TreeDropdown shows last synced time, node count, and archived/stub status for each tree
   4. First-run experience shows micro-hints for key gestures, and settings includes a "Privacy & data" section
   5. Destructive action confirmations state what will be lost and how to recover
-**Plans**: TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 05-01-PLAN.md — Shared overlay hook (useOverlayBehavior), search keyboard hints, verify blur-preserves-draft
+- [ ] 05-02-PLAN.md — TreeDropdown metadata, tag filter presets, destructive confirmation copy
+- [ ] 05-03-PLAN.md — New tab empty state, SessionExpiredBanner persistent dismiss
+- [ ] 05-04-PLAN.md — Settings privacy section, first-run onboarding hints
 
 ### Phase 6: Security & Privacy Audit
 **Goal**: Extension manifest, logging, and cross-boundary communication are locked down for public Chrome Web Store submission
@@ -157,7 +163,7 @@ Plans:
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
 | 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
-| 5. UX Polish | v1.2 | 0/? | Not started | - |
+| 5. UX Polish | v1.2 | 0/4 | Not started | - |
 | 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
 | 7. Performance Budgets | v1.2 | 0/? | Not started | - |
 | 8. QA & Release Discipline | v1.2 | 0/? | Not started | - |
