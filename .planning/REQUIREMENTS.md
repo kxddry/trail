@@ -58,8 +58,8 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [x] **PERF-01**: Three release budget metrics tracked: first sidepanel paint, first graph interactive, spotlight query latency
 - [x] **PERF-02**: blur/LOD/animation degrade aggressively on weak machines and heavy trees
 - [x] **PERF-03**: Derived search/index data cached on idle
-- [ ] **PERF-04**: Long lists (trees/tags/results) use virtualization or chunked render where needed
-- [ ] **PERF-05**: Heavy loading states show skeletons instead of empty canvas/null suspense fallback
+- [x] **PERF-04**: Long lists (trees/tags/results) use virtualization or chunked render where needed
+- [x] **PERF-05**: Heavy loading states show skeletons instead of empty canvas/null suspense fallback
 
 ### QA & Release Discipline
 
@@ -128,8 +128,8 @@ Deferred to future release.
 | PERF-01 | Phase 7 | Complete |
 | PERF-02 | Phase 7 | Complete |
 | PERF-03 | Phase 7 | Complete |
-| PERF-04 | Phase 7 | Pending |
-| PERF-05 | Phase 7 | Pending |
+| PERF-04 | Phase 7 | Complete |
+| PERF-05 | Phase 7 | Complete |
 | QA-01 | Phase 8 | Pending |
 | QA-02 | Phase 8 | Pending |
 | QA-03 | Phase 8 | Pending |

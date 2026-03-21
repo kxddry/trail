@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 07-01-PLAN.md
-last_updated: "2026-03-21T16:56:54.434Z"
+stopped_at: Completed 07-02-PLAN.md
+last_updated: "2026-03-21T17:03:03.334Z"
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 16
-  completed_plans: 15
+  completed_plans: 16
 ---
 
 # Project State
@@ -58,6 +58,7 @@ Plan: 2 of 2
 | Phase 05 P04 | 2min | 2 tasks | 4 files |
 | Phase 05 P02 | 3min | 2 tasks | 4 files |
 | Phase 07 P01 | 6min | 2 tasks | 8 files |
+| Phase 07 P02 | 3min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -99,6 +100,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 07]: Created perf-metrics.ts singleton for service worker context (graph-profiler.ts uses window)
 - [Phase 07]: Used fire-and-forget SPOTLIGHT_BOOTSTRAP RPC for pre-warming (reuses existing handler)
 - [Phase 07]: Node-count quality floor uses worstDetail() merge with existing detailMode (preserves overlay/gesture overrides)
+- [Phase 07]: Virtualizer scroll container is .floating-search-list div itself (parent panel provides max-height constraint)
+- [Phase 07]: CSS-only skeleton-pulse animation using opacity cycling (no external skeleton library)
+- [Phase 07]: skeleton-block uses var(--bg-interactive) to match existing theme system
 
 ### Pending Todos
 
@@ -117,6 +121,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:56:54.433Z
-Stopped at: Completed 07-01-PLAN.md
+Last session: 2026-03-21T17:03:03.332Z
+Stopped at: Completed 07-02-PLAN.md
 Resume file: None
