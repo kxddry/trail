@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 06-01-PLAN.md
-last_updated: "2026-03-21T16:18:47.185Z"
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-21T16:19:50.411Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 14
-  completed_plans: 9
+  completed_plans: 11
 ---
 
 # Project State
@@ -24,7 +24,7 @@ See: .planning/PROJECT.md (updated 2026-03-20)
 ## Current Position
 
 Phase: 05 (ux-polish) — EXECUTING
-Plan: 3 of 4
+Plan: 4 of 4
 
 ## Performance Metrics
 
@@ -52,6 +52,8 @@ Plan: 3 of 4
 | Phase 04 P02 | 6min | 2 tasks | 6 files |
 | Phase 06 P03 | 2min | 2 tasks | 4 files |
 | Phase 06-security-privacy-audit P01 | 3min | 4 tasks | 4 files |
+| Phase 05 P01 | 4min | 2 tasks | 5 files |
+| Phase 05 P03 | 4min | 2 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -78,6 +80,11 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 06-security-privacy-audit]: Removed scripting and search permissions (0 usage in codebase)
 - [Phase 06-security-privacy-audit]: Retained activeTab (required by captureVisibleTab in thumbnail-cache.ts)
 - [Phase 06-security-privacy-audit]: Architecture test skips gracefully when manifest not built
+- [Phase 05]: useOverlayBehavior hook scopes inert to .floating-island siblings within .floating-controls
+- [Phase 05]: Empty state uses inline styles matching existing dashboard pattern
+- [Phase 05]: Session banner dismiss uses session-scoped storage (auto-clears on browser restart)
+- [Phase 05]: App.tsx clears dismiss flag when auth restored for proper re-display on next expiry
+- [Phase 05]: Keyboard hints in FloatingSearch use inline styles (matches ErrorBoundary pattern)
 
 ### Pending Todos
 
@@ -96,6 +103,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:18:47.183Z
-Stopped at: Completed 06-01-PLAN.md
+Last session: 2026-03-21T16:19:50.409Z
+Stopped at: Completed 05-01-PLAN.md
 Resume file: None

@@ -18,15 +18,15 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
 ### UX Polish
 
-- [ ] **UXP-01**: All dropdown/modal components share unified behavior (Esc, click-outside, focus return, inert management)
-- [ ] **UXP-02**: Sidepanel search UI shows keyboard shortcuts (Enter/Up/Down/Esc) inline, not just in tooltip
-- [ ] **UXP-03**: FloatingSearch preserves draft text on accidental blur instead of collapsing
+- [x] **UXP-01**: All dropdown/modal components share unified behavior (Esc, click-outside, focus return, inert management)
+- [x] **UXP-02**: Sidepanel search UI shows keyboard shortcuts (Enter/Up/Down/Esc) inline, not just in tooltip
+- [x] **UXP-03**: FloatingSearch preserves draft text on accidental blur instead of collapsing
 - [ ] **UXP-04**: TreeDropdown shows last synced time, node count, and archived/stub status per tree
 - [ ] **UXP-05**: Tag filter offers quick presets: all tagged, untagged, selected tags only
-- [ ] **UXP-06**: New tab shows reason and fallback CTA when bookmarks are unavailable
+- [x] **UXP-06**: New tab shows reason and fallback CTA when bookmarks are unavailable
 - [ ] **UXP-07**: Settings includes "Privacy & data" section explaining what goes to cloud vs stays local
 - [ ] **UXP-08**: First-run layer shows 3-4 micro-hints for key gestures (search, tree switch, tag filter, spotlight)
-- [ ] **UXP-09**: SessionExpiredBanner dismiss is persistent until next meaningful state change; critical state never hidden
+- [x] **UXP-09**: SessionExpiredBanner dismiss is persistent until next meaningful state change; critical state never hidden
 - [ ] **UXP-10**: Destructive action confirmations show what exactly will be lost and how to recover
 
 ### Stability
@@ -97,15 +97,15 @@ Deferred to future release.
 | HYG-04 | Phase 4 | Complete |
 | HYG-05 | Phase 3 | Complete |
 | HYG-06 | Phase 3 | Complete |
-| UXP-01 | Phase 5 | Pending |
-| UXP-02 | Phase 5 | Pending |
-| UXP-03 | Phase 5 | Pending |
+| UXP-01 | Phase 5 | Complete |
+| UXP-02 | Phase 5 | Complete |
+| UXP-03 | Phase 5 | Complete |
 | UXP-04 | Phase 5 | Pending |
 | UXP-05 | Phase 5 | Pending |
-| UXP-06 | Phase 5 | Pending |
+| UXP-06 | Phase 5 | Complete |
 | UXP-07 | Phase 5 | Pending |
 | UXP-08 | Phase 5 | Pending |
-| UXP-09 | Phase 5 | Pending |
+| UXP-09 | Phase 5 | Complete |
 | UXP-10 | Phase 5 | Pending |
 | STAB-01 | Phase 3 | Complete |
 | STAB-02 | Phase 4 | Complete |
