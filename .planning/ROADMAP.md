@@ -91,7 +91,11 @@ Plans:
   3. SESSION_EXPIRED is handled in spotlight and newtab surfaces, not just the account flow
   4. editorMode state survives panel close and service worker restart
   5. A sync status indicator (syncing / offline / degraded / error) is visible in the sidepanel
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 04-01-PLAN.md — Bootstrap re-entry guard, double-submit prevention, editorMode persistence
+- [ ] 04-02-PLAN.md — SESSION_EXPIRED in newtab/spotlight, sync status indicator in header
 
 ### Phase 5: UX Polish
 **Goal**: Extension interactions feel consistent and self-documenting: every dropdown, modal, search box, and onboarding surface behaves predictably
@@ -152,7 +156,7 @@ Plans:
 | 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
 | 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
-| 4. Stability & Concurrency | v1.2 | 0/? | Not started | - |
+| 4. Stability & Concurrency | v1.2 | 0/2 | Planning | - |
 | 5. UX Polish | v1.2 | 0/? | Not started | - |
 | 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
 | 7. Performance Budgets | v1.2 | 0/? | Not started | - |
