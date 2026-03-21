@@ -2,8 +2,8 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
-status: unknown
-stopped_at: Completed 08-01-PLAN.md
+status: milestone-complete
+stopped_at: All 7 phases complete — v1.2 Release Readiness done
 last_updated: "2026-03-21T17:16:00.488Z"
 progress:
   total_phases: 7
