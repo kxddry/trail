@@ -41,7 +41,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 
 - [x] **Phase 2: Hygiene & Dead Code Cleanup** - Remove dead code, enforce artifact cleanliness, audit orphaned surfaces — completed 2026-03-20
 - [x] **Phase 3: Error Handling & Recovery** - Unified error layer, graceful degradation on every failure path — completed 2026-03-21
-- [ ] **Phase 4: Stability & Concurrency** - Eliminate races, double-submits, and stale state across all surfaces
+- [x] **Phase 4: Stability & Concurrency** - Eliminate races, double-submits, and stale state across all surfaces — completed 2026-03-21
 - [ ] **Phase 5: UX Polish** - Consistent interaction patterns, better information density, onboarding hints
 - [ ] **Phase 6: Security & Privacy Audit** - Manifest lockdown, structured logging, payload redaction, protocol hardening
 - [ ] **Phase 7: Performance Budgets** - Measurable performance targets, adaptive degradation, skeleton loading
@@ -156,7 +156,7 @@ Plans:
 | 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
 | 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
-| 4. Stability & Concurrency | v1.2 | 0/2 | Planning | - |
+| 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
 | 5. UX Polish | v1.2 | 0/? | Not started | - |
 | 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
 | 7. Performance Budgets | v1.2 | 0/? | Not started | - |
