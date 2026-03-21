@@ -159,8 +159,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 08-01-PLAN.md — Smoke e2e test stubs and UI interaction test stubs
-- [ ] 08-02-PLAN.md — Release checklist with cold/dirty profile testing sections
+- [x] 08-01-PLAN.md — Smoke e2e test stubs and UI interaction test stubs
+- [x] 08-02-PLAN.md — Release checklist with cold/dirty profile testing sections
 
 ## Progress
 

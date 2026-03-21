@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 07-02-PLAN.md
-last_updated: "2026-03-21T17:03:03.334Z"
+stopped_at: Completed 08-02-PLAN.md
+last_updated: "2026-03-21T17:15:20.148Z"
 progress:
   total_phases: 7
-  completed_phases: 6
-  total_plans: 16
-  completed_plans: 16
+  completed_phases: 7
+  total_plans: 18
+  completed_plans: 18
 ---
 
 # Project State
@@ -19,11 +19,11 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 07 — performance-budgets
+**Current focus:** Phase 08 — qa-release-discipline
 
 ## Current Position
 
-Phase: 07 (performance-budgets) — EXECUTING
+Phase: 08 (qa-release-discipline) — EXECUTING
 Plan: 2 of 2
 
 ## Performance Metrics
@@ -59,6 +59,7 @@ Plan: 2 of 2
 | Phase 05 P02 | 3min | 2 tasks | 4 files |
 | Phase 07 P01 | 6min | 2 tasks | 8 files |
 | Phase 07 P02 | 3min | 2 tasks | 4 files |
+| Phase 08 P02 | 1min | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -103,6 +104,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 07]: Virtualizer scroll container is .floating-search-list div itself (parent panel provides max-height constraint)
 - [Phase 07]: CSS-only skeleton-pulse animation using opacity cycling (no external skeleton library)
 - [Phase 07]: skeleton-block uses var(--bg-interactive) to match existing theme system
+- [Phase 08]: Documented actual manifest permissions (9 total) matching wxt.config.ts
+- [Phase 08]: Split pre-submission into separate Cold Profile and Dirty profile signoff lines
 
 ### Pending Todos
 
@@ -121,6 +124,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T17:03:03.332Z
-Stopped at: Completed 07-02-PLAN.md
+Last session: 2026-03-21T17:15:20.146Z
+Stopped at: Completed 08-02-PLAN.md
 Resume file: None
