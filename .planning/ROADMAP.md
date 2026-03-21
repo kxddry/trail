@@ -40,7 +40,7 @@ Full details: [milestones/v1.1-ROADMAP.md](milestones/v1.1-ROADMAP.md)
 **Milestone Goal:** Harden Trail extension for first public Chrome Web Store 1.0.0 release.
 
 - [x] **Phase 2: Hygiene & Dead Code Cleanup** - Remove dead code, enforce artifact cleanliness, audit orphaned surfaces — completed 2026-03-20
-- [ ] **Phase 3: Error Handling & Recovery** - Unified error layer, graceful degradation on every failure path
+- [x] **Phase 3: Error Handling & Recovery** - Unified error layer, graceful degradation on every failure path — completed 2026-03-21
 - [ ] **Phase 4: Stability & Concurrency** - Eliminate races, double-submits, and stale state across all surfaces
 - [ ] **Phase 5: UX Polish** - Consistent interaction patterns, better information density, onboarding hints
 - [ ] **Phase 6: Security & Privacy Audit** - Manifest lockdown, structured logging, payload redaction, protocol hardening
@@ -151,7 +151,7 @@ Plans:
 | 4. Graph Startup Optimization | v1.1 | 3/3 | Complete | 2026-03-19 |
 | 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
-| 3. Error Handling & Recovery | v1.2 | 0/3 | Planned | - |
+| 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 4. Stability & Concurrency | v1.2 | 0/? | Not started | - |
 | 5. UX Polish | v1.2 | 0/? | Not started | - |
 | 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
