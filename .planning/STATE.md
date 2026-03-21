@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 08-02-PLAN.md
-last_updated: "2026-03-21T17:15:20.148Z"
+stopped_at: Completed 08-01-PLAN.md
+last_updated: "2026-03-21T17:16:00.488Z"
 progress:
   total_phases: 7
   completed_phases: 7
@@ -60,6 +60,7 @@ Plan: 2 of 2
 | Phase 07 P01 | 6min | 2 tasks | 8 files |
 | Phase 07 P02 | 3min | 2 tasks | 4 files |
 | Phase 08 P02 | 1min | 1 tasks | 1 files |
+| Phase 08 P01 | 2min | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -106,6 +107,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 07]: skeleton-block uses var(--bg-interactive) to match existing theme system
 - [Phase 08]: Documented actual manifest permissions (9 total) matching wxt.config.ts
 - [Phase 08]: Split pre-submission into separate Cold Profile and Dirty profile signoff lines
+- [Phase 08]: Followed existing test pattern: node:assert/strict, function-per-scenario, run() wrapper for test stubs
+- [Phase 08]: MANUAL prefix in console.log for each stub to enable grep-based counting and future automation discovery
 
 ### Pending Todos
 
@@ -124,6 +127,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T17:15:20.146Z
-Stopped at: Completed 08-02-PLAN.md
+Last session: 2026-03-21T17:16:00.486Z
+Stopped at: Completed 08-01-PLAN.md
 Resume file: None

@@ -63,8 +63,8 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
 ### QA & Release Discipline
 
-- [ ] **QA-01**: Smoke e2e tests cover 8 scenarios: first install, guest mode, auth, session expired, sync fail, tree switch, export/import, quota eviction
-- [ ] **QA-02**: UI interaction tests cover: dropdown keyboard, modal escape, search navigation, auth banner
+- [x] **QA-01**: Smoke e2e tests cover 8 scenarios: first install, guest mode, auth, session expired, sync fail, tree switch, export/import, quota eviction
+- [x] **QA-02**: UI interaction tests cover: dropdown keyboard, modal escape, search navigation, auth banner
 - [x] **QA-03**: Release checklist covers: permissions, offline mode, empty states, corrupted cache, worker restart
 - [x] **QA-04**: Root artifact hygiene test prevents logs/, tasks/, dist/ from appearing in package root
 - [x] **QA-05**: Cold profile and dirty returning user tested separately
@@ -130,8 +130,8 @@ Deferred to future release.
 | PERF-03 | Phase 7 | Complete |
 | PERF-04 | Phase 7 | Complete |
 | PERF-05 | Phase 7 | Complete |
-| QA-01 | Phase 8 | Pending |
-| QA-02 | Phase 8 | Pending |
+| QA-01 | Phase 8 | Complete |
+| QA-02 | Phase 8 | Complete |
 | QA-03 | Phase 8 | Complete |
 | QA-04 | Phase 2 | Complete |
 | QA-05 | Phase 8 | Complete |
