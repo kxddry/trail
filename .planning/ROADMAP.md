@@ -94,8 +94,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Bootstrap re-entry guard, double-submit prevention, editorMode persistence
-- [ ] 04-02-PLAN.md — SESSION_EXPIRED in newtab/spotlight, sync status indicator in header
+- [x] 04-01-PLAN.md — Bootstrap re-entry guard, double-submit prevention, editorMode persistence
+- [x] 04-02-PLAN.md — SESSION_EXPIRED in newtab/spotlight, sync status indicator in header
 
 ### Phase 5: UX Polish
 **Goal**: Extension interactions feel consistent and self-documenting: every dropdown, modal, search box, and onboarding surface behaves predictably

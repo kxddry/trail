@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
-status: phase-complete
-stopped_at: Phase 03 complete — verified
-last_updated: "2026-03-21T09:54:46.449Z"
+status: unknown
+stopped_at: Completed 04-02-PLAN.md
+last_updated: "2026-03-21T15:46:44.297Z"
 progress:
   total_phases: 7
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
 ---
 
 # Project State
@@ -19,13 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 04 — Stability & Concurrency (next)
+**Current focus:** Phase 04 — stability-concurrency
 
 ## Current Position
 
-Phase: 03 (error-handling-recovery) — COMPLETE
-Plan: 3 of 3 (all complete)
-Next: Phase 04 — Stability & Concurrency
+Phase: 04 (stability-concurrency) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -49,6 +48,8 @@ Next: Phase 04 — Stability & Concurrency
 | Phase 03 P02 | 2min | 2 tasks | 3 files |
 | Phase 03 P01 | 2min | 2 tasks | 6 files |
 | Phase 03 P03 | 6min | 2 tasks | 5 files |
+| Phase 04 P01 | 7min | 2 tasks | 5 files |
+| Phase 04 P02 | 6min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,10 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 03]: Used existing notifyUi/rpc.notify pattern for background-to-UI toasts
 - [Phase 03]: Offscreen failure toast fires once per session via offscreenFailNotified flag
 - [Phase 03]: Unavailable stub trees prevent click rather than showing error on repeated attempts
+- [Phase 04]: bootstrapInFlight uses useRef to avoid re-renders; editorState restored via fire-and-forget at module load
+- [Phase 04]: Newtab uses authSessionItem.watch for session expiry (useAuthPortalFlow not portable)
+- [Phase 04]: Removed unused 'degraded' from NetworkStatus type (dead code)
+- [Phase 04]: Sync indicator uses inline styles + CSS keyframes in base.css
 
 ### Pending Todos
 
@@ -84,6 +89,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T09:54:46.447Z
-Stopped at: Completed 03-03-PLAN.md
+Last session: 2026-03-21T15:46:44.295Z
+Stopped at: Completed 04-02-PLAN.md
 Resume file: None

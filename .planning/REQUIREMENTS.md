@@ -32,13 +32,13 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 ### Stability
 
 - [x] **STAB-01**: Bootstrap has explicit recovery path — critical fetch failure shows degraded state, not half-mounted UI
-- [ ] **STAB-02**: Single-flight and cancellation patterns deduplicated for auth/bootstrap/search (no races on quick open/close)
-- [ ] **STAB-03**: Double-submit prevented on all mutating actions (create tree, rename, export, auth)
+- [x] **STAB-02**: Single-flight and cancellation patterns deduplicated for auth/bootstrap/search (no races on quick open/close)
+- [x] **STAB-03**: Double-submit prevented on all mutating actions (create tree, rename, export, auth)
 - [x] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
 - [x] **STAB-05**: Offscreen layout computation failure falls back gracefully ("opened with basic layout")
 - [ ] **STAB-06**: SESSION_EXPIRED handled in spotlight and newtab, not just account flow
 - [x] **STAB-07**: navigateTo failure from dropdown/context menu leaves user in clear state, not just logged
-- [ ] **STAB-08**: editorMode restores correctly after panel close / service worker restart
+- [x] **STAB-08**: editorMode restores correctly after panel close / service worker restart
 - [x] **STAB-09**: Quota eviction shows user notice when archives begin stubbing
 
 ### Security & Privacy
@@ -108,13 +108,13 @@ Deferred to future release.
 | UXP-09 | Phase 5 | Pending |
 | UXP-10 | Phase 5 | Pending |
 | STAB-01 | Phase 3 | Complete |
-| STAB-02 | Phase 4 | Pending |
-| STAB-03 | Phase 4 | Pending |
+| STAB-02 | Phase 4 | Complete |
+| STAB-03 | Phase 4 | Complete |
 | STAB-04 | Phase 3 | Complete |
 | STAB-05 | Phase 3 | Complete |
 | STAB-06 | Phase 4 | Pending |
 | STAB-07 | Phase 3 | Complete |
-| STAB-08 | Phase 4 | Pending |
+| STAB-08 | Phase 4 | Complete |
 | STAB-09 | Phase 3 | Complete |
 | SEC-01 | Phase 6 | Pending |
 | SEC-02 | Phase 6 | Pending |
