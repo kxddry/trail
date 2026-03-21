@@ -141,7 +141,11 @@ Plans:
   2. Blur/LOD/animation quality degrades automatically on weak machines and large trees
   3. Long lists (trees, tags, search results) use virtualization or chunked rendering when item count exceeds threshold
   4. Loading states show skeleton placeholders instead of empty canvas or null suspense fallback
-**Plans**: TBD
+**Plans:** 2 plans
+
+Plans:
+- [ ] 07-01-PLAN.md — Budget metrics instrumentation, adaptive degradation defaults, spotlight index optimization
+- [ ] 07-02-PLAN.md — Search results virtualization, skeleton loading for bootstrap and graph canvas
 
 ### Phase 8: QA & Release Discipline
 **Goal**: A repeatable release process exists that catches regressions before Chrome Web Store submission
@@ -170,5 +174,5 @@ Plans:
 | 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
 | 5. UX Polish | v1.2 | 4/4 | Complete | 2026-03-21 |
 | 6. Security & Privacy Audit | v1.2 | 3/3 | Complete | 2026-03-21 |
-| 7. Performance Budgets | v1.2 | 0/? | Not started | - |
+| 7. Performance Budgets | v1.2 | 0/2 | Not started | - |
 | 8. QA & Release Discipline | v1.2 | 0/? | Not started | - |
