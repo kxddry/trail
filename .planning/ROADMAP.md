@@ -144,7 +144,7 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Budget metrics instrumentation, adaptive degradation defaults, spotlight index optimization
+- [x] 07-01-PLAN.md — Budget metrics instrumentation, adaptive degradation defaults, spotlight index optimization
 - [ ] 07-02-PLAN.md — Search results virtualization, skeleton loading for bootstrap and graph canvas
 
 ### Phase 8: QA & Release Discipline

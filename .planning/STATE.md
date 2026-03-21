@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 05-02-PLAN.md
-last_updated: "2026-03-21T16:33:23.866Z"
+stopped_at: Completed 07-01-PLAN.md
+last_updated: "2026-03-21T16:56:54.434Z"
 progress:
   total_phases: 7
   completed_phases: 5
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 16
+  completed_plans: 15
 ---
 
 # Project State
@@ -19,12 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 05 — ux-polish
+**Current focus:** Phase 07 — performance-budgets
 
 ## Current Position
 
-Phase: 05 (ux-polish) — EXECUTING
-Plan: 4 of 4
+Phase: 07 (performance-budgets) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
@@ -57,6 +57,7 @@ Plan: 4 of 4
 | Phase 06 P02 | 11min | 2 tasks | 29 files |
 | Phase 05 P04 | 2min | 2 tasks | 4 files |
 | Phase 05 P02 | 3min | 2 tasks | 4 files |
+| Phase 07 P01 | 6min | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -95,6 +96,9 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 05]: formatRelativeTime uses Intl.DateTimeFormat for dates older than 24h
 - [Phase 05]: Untagged mode uses local useState (transient filter, not store-level)
 - [Phase 05]: Delete confirmation shows tree name, page count, and irreversibility warning
+- [Phase 07]: Created perf-metrics.ts singleton for service worker context (graph-profiler.ts uses window)
+- [Phase 07]: Used fire-and-forget SPOTLIGHT_BOOTSTRAP RPC for pre-warming (reuses existing handler)
+- [Phase 07]: Node-count quality floor uses worstDetail() merge with existing detailMode (preserves overlay/gesture overrides)
 
 ### Pending Todos
 
@@ -113,6 +117,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:33:23.864Z
-Stopped at: Completed 05-02-PLAN.md
+Last session: 2026-03-21T16:56:54.433Z
+Stopped at: Completed 07-01-PLAN.md
 Resume file: None
