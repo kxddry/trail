@@ -79,7 +79,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Unified error-to-toast layer with showOperationError helper
 - [x] 03-02-PLAN.md — ErrorBoundary crash diagnostics and bootstrap recovery
-- [ ] 03-03-PLAN.md — Cache corruption recovery, offscreen fallback, quota eviction notice
+- [x] 03-03-PLAN.md — Cache corruption recovery, offscreen fallback, quota eviction notice
 
 ### Phase 4: Stability & Concurrency
 **Goal**: Rapid user actions (quick open/close, double-clicks, panel restarts) never produce duplicate requests, stale UI, or silent auth failures

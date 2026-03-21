@@ -14,7 +14,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [x] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
 - [ ] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
 - [x] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
-- [ ] **HYG-06**: Stub archives show user-visible explanation ("tree unloaded due to quota, will load on demand")
+- [x] **HYG-06**: Stub archives show user-visible explanation ("tree unloaded due to quota, will load on demand")
 
 ### UX Polish
 
@@ -34,12 +34,12 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [x] **STAB-01**: Bootstrap has explicit recovery path — critical fetch failure shows degraded state, not half-mounted UI
 - [ ] **STAB-02**: Single-flight and cancellation patterns deduplicated for auth/bootstrap/search (no races on quick open/close)
 - [ ] **STAB-03**: Double-submit prevented on all mutating actions (create tree, rename, export, auth)
-- [ ] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
-- [ ] **STAB-05**: Offscreen layout computation failure falls back gracefully ("opened with basic layout")
+- [x] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
+- [x] **STAB-05**: Offscreen layout computation failure falls back gracefully ("opened with basic layout")
 - [ ] **STAB-06**: SESSION_EXPIRED handled in spotlight and newtab, not just account flow
 - [x] **STAB-07**: navigateTo failure from dropdown/context menu leaves user in clear state, not just logged
 - [ ] **STAB-08**: editorMode restores correctly after panel close / service worker restart
-- [ ] **STAB-09**: Quota eviction shows user notice when archives begin stubbing
+- [x] **STAB-09**: Quota eviction shows user notice when archives begin stubbing
 
 ### Security & Privacy
 
@@ -96,7 +96,7 @@ Deferred to future release.
 | HYG-03 | Phase 3 | Complete |
 | HYG-04 | Phase 4 | Pending |
 | HYG-05 | Phase 3 | Complete |
-| HYG-06 | Phase 3 | Pending |
+| HYG-06 | Phase 3 | Complete |
 | UXP-01 | Phase 5 | Pending |
 | UXP-02 | Phase 5 | Pending |
 | UXP-03 | Phase 5 | Pending |
@@ -110,12 +110,12 @@ Deferred to future release.
 | STAB-01 | Phase 3 | Complete |
 | STAB-02 | Phase 4 | Pending |
 | STAB-03 | Phase 4 | Pending |
-| STAB-04 | Phase 3 | Pending |
-| STAB-05 | Phase 3 | Pending |
+| STAB-04 | Phase 3 | Complete |
+| STAB-05 | Phase 3 | Complete |
 | STAB-06 | Phase 4 | Pending |
 | STAB-07 | Phase 3 | Complete |
 | STAB-08 | Phase 4 | Pending |
-| STAB-09 | Phase 3 | Pending |
+| STAB-09 | Phase 3 | Complete |
 | SEC-01 | Phase 6 | Pending |
 | SEC-02 | Phase 6 | Pending |
 | SEC-03 | Phase 6 | Pending |
