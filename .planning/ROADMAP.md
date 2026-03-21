@@ -74,7 +74,12 @@ Plans:
   3. Bootstrap critical-fetch failure shows a degraded-but-usable state with retry, not a blank or half-mounted panel
   4. Corrupted localStorage or layout cache auto-resets with a toast explaining what happened
   5. Quota eviction and stub archives show user-visible explanations of what happened and what to do
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 03-01-PLAN.md — Unified error-to-toast layer with showOperationError helper
+- [ ] 03-02-PLAN.md — ErrorBoundary crash diagnostics and bootstrap recovery
+- [ ] 03-03-PLAN.md — Cache corruption recovery, offscreen fallback, quota eviction notice
 
 ### Phase 4: Stability & Concurrency
 **Goal**: Rapid user actions (quick open/close, double-clicks, panel restarts) never produce duplicate requests, stale UI, or silent auth failures
@@ -146,7 +151,7 @@ Plans:
 | 4. Graph Startup Optimization | v1.1 | 3/3 | Complete | 2026-03-19 |
 | 01. Budgeted Rich-Content Restoration | post-v1.1 | 3/3 | Complete | 2026-03-20 |
 | 2. Hygiene & Dead Code Cleanup | v1.2 | 2/2 | Complete | 2026-03-20 |
-| 3. Error Handling & Recovery | v1.2 | 0/? | Not started | - |
+| 3. Error Handling & Recovery | v1.2 | 0/3 | Planned | - |
 | 4. Stability & Concurrency | v1.2 | 0/? | Not started | - |
 | 5. UX Polish | v1.2 | 0/? | Not started | - |
 | 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
