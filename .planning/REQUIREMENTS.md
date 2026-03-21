@@ -13,7 +13,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [x] **HYG-02**: AuthGate/WelcomeGate either wired into sidepanel flow or dead code removed
 - [ ] **HYG-03**: Unified error → toast/banner layer surfaces errors from rename/export/open/sync/auth operations
 - [ ] **HYG-04**: UI shows explicit sync status indicator (syncing / offline / degraded / error)
-- [ ] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
+- [x] **HYG-05**: ErrorBoundary offers Copy diagnostics and Reload with safe mode actions
 - [ ] **HYG-06**: Stub archives show user-visible explanation ("tree unloaded due to quota, will load on demand")
 
 ### UX Polish
@@ -31,7 +31,7 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 
 ### Stability
 
-- [ ] **STAB-01**: Bootstrap has explicit recovery path — critical fetch failure shows degraded state, not half-mounted UI
+- [x] **STAB-01**: Bootstrap has explicit recovery path — critical fetch failure shows degraded state, not half-mounted UI
 - [ ] **STAB-02**: Single-flight and cancellation patterns deduplicated for auth/bootstrap/search (no races on quick open/close)
 - [ ] **STAB-03**: Double-submit prevented on all mutating actions (create tree, rename, export, auth)
 - [ ] **STAB-04**: Corrupted layout cache/localStorage auto-resets with recoverable toast notification
@@ -95,7 +95,7 @@ Deferred to future release.
 | HYG-02 | Phase 2 | Complete |
 | HYG-03 | Phase 3 | Pending |
 | HYG-04 | Phase 4 | Pending |
-| HYG-05 | Phase 3 | Pending |
+| HYG-05 | Phase 3 | Complete |
 | HYG-06 | Phase 3 | Pending |
 | UXP-01 | Phase 5 | Pending |
 | UXP-02 | Phase 5 | Pending |
@@ -107,7 +107,7 @@ Deferred to future release.
 | UXP-08 | Phase 5 | Pending |
 | UXP-09 | Phase 5 | Pending |
 | UXP-10 | Phase 5 | Pending |
-| STAB-01 | Phase 3 | Pending |
+| STAB-01 | Phase 3 | Complete |
 | STAB-02 | Phase 4 | Pending |
 | STAB-03 | Phase 4 | Pending |
 | STAB-04 | Phase 3 | Pending |
