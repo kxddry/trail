@@ -125,7 +125,12 @@ Plans:
   3. Structured logger replaces raw console.* on auth/sync/storage/search paths, with URL/title/token redaction
   4. Protocol messages between site and extension validate payloads beyond envelope level
   5. CSP requirement for pixi.js/unsafe-eval is documented with rationale for CWS reviewers
-**Plans**: TBD
+**Plans:** 3 plans
+
+Plans:
+- [ ] 06-01-PLAN.md — Manifest lockdown, domain assertion test, CSP documentation
+- [ ] 06-02-PLAN.md — Logger redaction utility and console.* migration on all background files
+- [ ] 06-03-PLAN.md — Search suggestions privacy toggle, site-extension protocol Zod hardening
 
 ### Phase 7: Performance Budgets
 **Goal**: Extension has measurable, enforced performance targets and degrades gracefully on constrained devices
@@ -164,6 +169,6 @@ Plans:
 | 3. Error Handling & Recovery | v1.2 | 3/3 | Complete | 2026-03-21 |
 | 4. Stability & Concurrency | v1.2 | 2/2 | Complete | 2026-03-21 |
 | 5. UX Polish | v1.2 | 0/4 | Not started | - |
-| 6. Security & Privacy Audit | v1.2 | 0/? | Not started | - |
+| 6. Security & Privacy Audit | v1.2 | 0/3 | Not started | - |
 | 7. Performance Budgets | v1.2 | 0/? | Not started | - |
 | 8. QA & Release Discipline | v1.2 | 0/? | Not started | - |
