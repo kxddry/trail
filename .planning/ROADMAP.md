@@ -129,7 +129,7 @@ Plans:
 
 Plans:
 - [x] 06-01-PLAN.md — Manifest lockdown, domain assertion test, CSP documentation
-- [ ] 06-02-PLAN.md — Logger redaction utility and console.* migration on all background files
+- [x] 06-02-PLAN.md — Logger redaction utility and console.* migration on all background files
 - [x] 06-03-PLAN.md — Search suggestions privacy toggle, site-extension protocol Zod hardening
 
 ### Phase 7: Performance Budgets

@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
 status: unknown
-stopped_at: Completed 05-01-PLAN.md
-last_updated: "2026-03-21T16:19:50.411Z"
+stopped_at: Completed 06-02-PLAN.md
+last_updated: "2026-03-21T16:27:26.269Z"
 progress:
   total_phases: 7
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 14
-  completed_plans: 11
+  completed_plans: 12
 ---
 
 # Project State
@@ -54,6 +54,7 @@ Plan: 4 of 4
 | Phase 06-security-privacy-audit P01 | 3min | 4 tasks | 4 files |
 | Phase 05 P01 | 4min | 2 tasks | 5 files |
 | Phase 05 P03 | 4min | 2 tasks | 4 files |
+| Phase 06 P02 | 11min | 2 tasks | 29 files |
 
 ## Accumulated Context
 
@@ -85,6 +86,8 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 05]: Session banner dismiss uses session-scoped storage (auto-clears on browser restart)
 - [Phase 05]: App.tsx clears dismiss flag when auth restored for proper re-display on next expiry
 - [Phase 05]: Keyboard hints in FloatingSearch use inline styles (matches ErrorBoundary pattern)
+- [Phase 06]: Field-name matching for redaction (not regex on values) for predictability
+- [Phase 06]: auth-orchestrator logAuth and account-keeper log helpers converted to structured logger debug level
 
 ### Pending Todos
 
@@ -103,6 +106,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T16:19:50.409Z
-Stopped at: Completed 05-01-PLAN.md
+Last session: 2026-03-21T16:27:26.268Z
+Stopped at: Completed 06-02-PLAN.md
 Resume file: None

@@ -47,9 +47,9 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [x] **SEC-02**: activeTab necessity verified given existing host permissions and injection-free flow
 - [x] **SEC-03**: Prod domains locked down; dev allowlist confirmed excluded from release builds
 - [x] **SEC-04**: External search suggestions have user-visible toggle and privacy note (Google requests)
-- [ ] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
+- [x] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
 - [x] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
-- [ ] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
+- [x] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
 - [x] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
 - [x] **SEC-09**: pixi.js/unsafe-eval CSP requirement documented with rationale
 
@@ -120,9 +120,9 @@ Deferred to future release.
 | SEC-02 | Phase 6 | Complete |
 | SEC-03 | Phase 6 | Complete |
 | SEC-04 | Phase 6 | Complete |
-| SEC-05 | Phase 6 | Pending |
+| SEC-05 | Phase 6 | Complete |
 | SEC-06 | Phase 2 | Complete |
-| SEC-07 | Phase 6 | Pending |
+| SEC-07 | Phase 6 | Complete |
 | SEC-08 | Phase 6 | Complete |
 | SEC-09 | Phase 6 | Complete |
 | PERF-01 | Phase 7 | Pending |
