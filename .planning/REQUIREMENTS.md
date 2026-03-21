@@ -46,11 +46,11 @@ Requirements for Release Readiness milestone. Each maps to roadmap phases.
 - [ ] **SEC-01**: Manifest permission audit complete — unused permissions (chrome.scripting, browser.search) removed
 - [ ] **SEC-02**: activeTab necessity verified given existing host permissions and injection-free flow
 - [ ] **SEC-03**: Prod domains locked down; dev allowlist confirmed excluded from release builds
-- [ ] **SEC-04**: External search suggestions have user-visible toggle and privacy note (Google requests)
+- [x] **SEC-04**: External search suggestions have user-visible toggle and privacy note (Google requests)
 - [ ] **SEC-05**: Structured logger replaces raw console.* on critical path (auth/sync/storage/search)
 - [x] **SEC-06**: emitRuntimeLog either wired to critical failures or dead diagnostic code removed
 - [ ] **SEC-07**: Redaction policy applied to URL/title/token payloads in logs and reports
-- [ ] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
+- [x] **SEC-08**: Protocol boundary site<->extension: payload validation tightened beyond envelope level
 - [ ] **SEC-09**: pixi.js/unsafe-eval CSP requirement documented with rationale
 
 ### Performance
@@ -119,11 +119,11 @@ Deferred to future release.
 | SEC-01 | Phase 6 | Pending |
 | SEC-02 | Phase 6 | Pending |
 | SEC-03 | Phase 6 | Pending |
-| SEC-04 | Phase 6 | Pending |
+| SEC-04 | Phase 6 | Complete |
 | SEC-05 | Phase 6 | Pending |
 | SEC-06 | Phase 2 | Complete |
 | SEC-07 | Phase 6 | Pending |
-| SEC-08 | Phase 6 | Pending |
+| SEC-08 | Phase 6 | Complete |
 | SEC-09 | Phase 6 | Pending |
 | PERF-01 | Phase 7 | Pending |
 | PERF-02 | Phase 7 | Pending |

@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Release Readiness
-status: phase-complete
-stopped_at: Phase 04 complete — verified
-last_updated: "2026-03-21T15:46:44.297Z"
+status: unknown
+stopped_at: Completed 06-03-PLAN.md
+last_updated: "2026-03-21T16:18:41.829Z"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
+  total_plans: 14
+  completed_plans: 9
 ---
 
 # Project State
@@ -19,13 +19,12 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-20)
 
 **Core value:** Users can see and understand their browsing patterns through a visual tree
-**Current focus:** Phase 05 — UX Polish (next)
+**Current focus:** Phase 05 — ux-polish
 
 ## Current Position
 
-Phase: 04 (stability-concurrency) — COMPLETE
-Plan: 2 of 2 (all complete)
-Next: Phase 05 — UX Polish
+Phase: 05 (ux-polish) — EXECUTING
+Plan: 3 of 4
 
 ## Performance Metrics
 
@@ -51,6 +50,8 @@ Next: Phase 05 — UX Polish
 | Phase 03 P03 | 6min | 2 tasks | 5 files |
 | Phase 04 P01 | 7min | 2 tasks | 5 files |
 | Phase 04 P02 | 6min | 2 tasks | 6 files |
+| Phase 06 P03 | 2min | 2 tasks | 4 files |
+| Phase 06-security-privacy-audit P01 | 3min | 4 tasks | 4 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,11 @@ Decisions are logged in PROJECT.md Key Decisions table.
 - [Phase 04]: Newtab uses authSessionItem.watch for session expiry (useAuthPortalFlow not portable)
 - [Phase 04]: Removed unused 'degraded' from NetworkStatus type (dead code)
 - [Phase 04]: Sync indicator uses inline styles + CSS keyframes in base.css
+- [Phase 06]: Reused existing Zod schemas from site-messages.ts for runtime validation at protocol boundary
+- [Phase 06]: Used createLogger for site-msg validation warnings (structured logging pattern)
+- [Phase 06-security-privacy-audit]: Removed scripting and search permissions (0 usage in codebase)
+- [Phase 06-security-privacy-audit]: Retained activeTab (required by captureVisibleTab in thumbnail-cache.ts)
+- [Phase 06-security-privacy-audit]: Architecture test skips gracefully when manifest not built
 
 ### Pending Todos
 
@@ -90,6 +96,6 @@ Release workflow requires 4 GitHub secrets (CWS_EXTENSION_ID, CWS_CLIENT_ID, CWS
 
 ## Session Continuity
 
-Last session: 2026-03-21T15:46:44.295Z
-Stopped at: Completed 04-02-PLAN.md
+Last session: 2026-03-21T16:18:32.631Z
+Stopped at: Completed 06-03-PLAN.md
 Resume file: None

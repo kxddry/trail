@@ -128,9 +128,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Manifest lockdown, domain assertion test, CSP documentation
+- [x] 06-01-PLAN.md — Manifest lockdown, domain assertion test, CSP documentation
 - [ ] 06-02-PLAN.md — Logger redaction utility and console.* migration on all background files
-- [ ] 06-03-PLAN.md — Search suggestions privacy toggle, site-extension protocol Zod hardening
+- [x] 06-03-PLAN.md — Search suggestions privacy toggle, site-extension protocol Zod hardening
 
 ### Phase 7: Performance Budgets
 **Goal**: Extension has measurable, enforced performance targets and degrades gracefully on constrained devices
