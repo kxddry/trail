@@ -6,7 +6,7 @@
   "types": "src/index.ts",
   "dependencies": {
     "@trail/db": "workspace:*",
-    "@trpc/server": "^11.9.0",
+    "@trpc/server": "^11.15.0",
     "superjson": "^2.2.6",
     "zod": "^4.3.6"
   }
