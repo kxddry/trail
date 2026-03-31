@@ -28,3 +28,5 @@
 {"t":0,"agent":"a618b15","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":376437}
 {"t":0,"agent":"a9c8f6e","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":434269}
 {"t":0,"agent":"a93e6d4","agent_type":"executor","event":"agent_stop","success":true,"duration_ms":475495}
+{"t":0,"agent":"system","event":"keyword_detected","keyword":"ralplan"}
+{"t":0,"agent":"system","event":"mode_change","mode_from":"none","mode_to":"ralplan"}
