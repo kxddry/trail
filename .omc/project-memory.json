@@ -1,0 +1,513 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1774942801107,
+  "projectRoot": "/Users/iv/dev/trail",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "C/C++",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "Makefile"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "cypress",
+        "version": "15.11.0",
+        "category": "testing"
+      },
+      {
+        "name": "next",
+        "version": "16.1.6",
+        "category": "fullstack"
+      }
+    ],
+    "packageManager": "pnpm",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": "pnpm build",
+    "testCommand": "pnpm test",
+    "lintCommand": "pnpm lint",
+    "devCommand": "pnpm dev",
+    "scripts": {
+      "dev": "sh -c 'pnpm -r --parallel --filter \"!./apps/video\" dev & pnpm --dir extension dev:local; wait'",
+      "dev:web": "pnpm -r --parallel --filter '!./apps/video' dev",
+      "dev:extension": "pnpm --dir extension dev:local",
+      "dev:marketing": "pnpm --filter @trail/marketing dev",
+      "dev:account": "pnpm --filter @trail/account dev",
+      "build": "pnpm run db:generate && pnpm -r --filter '!./apps/video' build",
+      "lint": "pnpm -r --filter '!./apps/video' lint",
+      "test": "pnpm -r --filter '!./apps/video' test",
+      "test:e2e": "cypress run",
+      "test:e2e:open": "cypress open",
+      "typecheck": "pnpm -r --filter '!./apps/video' typecheck",
+      "format": "pnpm -r --filter '!./apps/video' format",
+      "db:generate": "pnpm --filter @trail/db prisma generate",
+      "db:migrate": "pnpm --filter @trail/db prisma migrate dev",
+      "db:migrate:deploy": "pnpm --filter @trail/db prisma migrate deploy",
+      "db:studio": "pnpm --filter @trail/db prisma studio"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": true,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "apps": {
+      "path": "apps",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774942801068,
+      "keyFiles": []
+    },
+    "cypress": {
+      "path": "cypress",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774942801070,
+      "keyFiles": []
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 2,
+      "lastAccessed": 1774942801074,
+      "keyFiles": [
+        "README.md",
+        "architecture.md"
+      ]
+    },
+    "extension": {
+      "path": "extension",
+      "purpose": null,
+      "fileCount": 18,
+      "lastAccessed": 1774942801080,
+      "keyFiles": [
+        "CSP-RATIONALE.md",
+        "RELEASE-CHECKLIST.md",
+        "components.json",
+        "eslint.config.mjs",
+        "package.json"
+      ]
+    },
+    "figma-workspace": {
+      "path": "figma-workspace",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774942801083,
+      "keyFiles": []
+    },
+    "logo": {
+      "path": "logo",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774942801084,
+      "keyFiles": []
+    },
+    "logs": {
+      "path": "logs",
+      "purpose": null,
+      "fileCount": 2,
+      "lastAccessed": 1774942801087,
+      "keyFiles": [
+        "mcp-puppeteer-2026-03-24.log"
+      ]
+    },
+    "packages": {
+      "path": "packages",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1774942801088,
+      "keyFiles": []
+    },
+    "pens": {
+      "path": "pens",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1774942801090,
+      "keyFiles": []
+    },
+    "sanity": {
+      "path": "sanity",
+      "purpose": null,
+      "fileCount": 10,
+      "lastAccessed": 1774942801092,
+      "keyFiles": [
+        "README.md",
+        "eslint.config.mjs",
+        "package-lock.json",
+        "package.json",
+        "sanity.cli.ts"
+      ]
+    },
+    "tasks": {
+      "path": "tasks",
+      "purpose": null,
+      "fileCount": 4,
+      "lastAccessed": 1774942801093,
+      "keyFiles": [
+        "backlog.md",
+        "lessons.md",
+        "todo.md",
+        "ui-overhaul-plan.md"
+      ]
+    },
+    "packages/config": {
+      "path": "packages/config",
+      "purpose": "Configuration files",
+      "fileCount": 4,
+      "lastAccessed": 1774942801100,
+      "keyFiles": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "tsconfig.base.json"
+      ]
+    },
+    "sanity/dist": {
+      "path": "sanity/dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 2,
+      "lastAccessed": 1774942801106,
+      "keyFiles": [
+        "favicon.ico",
+        "index.html"
+      ]
+    },
+    "sanity/node_modules": {
+      "path": "sanity/node_modules",
+      "purpose": "Dependencies",
+      "fileCount": 2,
+      "lastAccessed": 1774942801107,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "packages/db/prisma/schema.prisma",
+      "accessCount": 15,
+      "lastAccessed": 1774950697345,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/trpc-context.ts",
+      "accessCount": 13,
+      "lastAccessed": 1774951654189,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/user.ts",
+      "accessCount": 11,
+      "lastAccessed": 1774956973742,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/src/client.ts",
+      "accessCount": 10,
+      "lastAccessed": 1774956794552,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/auth/extension-auth.ts",
+      "accessCount": 10,
+      "lastAccessed": 1774957141100,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/v1/oauth/authorize/route.ts",
+      "accessCount": 9,
+      "lastAccessed": 1774951170682,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/env.ts",
+      "accessCount": 9,
+      "lastAccessed": 1774951756143,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/oauth.ts",
+      "accessCount": 9,
+      "lastAccessed": 1774957100951,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/auth.ts",
+      "accessCount": 7,
+      "lastAccessed": 1774950775751,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/auth/logout/route.ts",
+      "accessCount": 7,
+      "lastAccessed": 1774951224254,
+      "type": "file"
+    },
+    {
+      "path": "packages/trpc/src/types.ts",
+      "accessCount": 7,
+      "lastAccessed": 1774956700185,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/v1/auth/session-state/route.ts",
+      "accessCount": 7,
+      "lastAccessed": 1774957050607,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/auth/callback/route.ts",
+      "accessCount": 6,
+      "lastAccessed": 1774951200902,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/lib/auth.ts",
+      "accessCount": 6,
+      "lastAccessed": 1774951637932,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/proxy.ts",
+      "accessCount": 5,
+      "lastAccessed": 1774951148035,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/auth/user-auth.ts",
+      "accessCount": 5,
+      "lastAccessed": 1774951384179,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/package.json",
+      "accessCount": 5,
+      "lastAccessed": 1774956679242,
+      "type": "file"
+    },
+    {
+      "path": "packages/trpc/src/router.ts",
+      "accessCount": 4,
+      "lastAccessed": 1774943671752,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/v1/oauth/token/route.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774943651163,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 3,
+      "lastAccessed": 1774943662173,
+      "type": "file"
+    },
+    {
+      "path": "packages/trpc/src/trpc.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774943671941,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/auth/headers.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774943691823,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/auth-client.ts",
+      "accessCount": 3,
+      "lastAccessed": 1774950776515,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/trpc/[trpc]/route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943337903,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/.env.example",
+      "accessCount": 2,
+      "lastAccessed": 1774943341465,
+      "type": "file"
+    },
+    {
+      "path": "packages/trpc/package.json",
+      "accessCount": 2,
+      "lastAccessed": 1774943377200,
+      "type": "file"
+    },
+    {
+      "path": "extension/src/background/services/auth-orchestrator.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943638812,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/(app)/layout.tsx",
+      "accessCount": 2,
+      "lastAccessed": 1774943639660,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/auth/[...all]/route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943650018,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/auth/login/route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943672312,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/v1/auth/logout/route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943672893,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/app/api/v1/oauth/revoke/route.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943686370,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/backend/auth/jwks.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943692361,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/next.config.mjs",
+      "accessCount": 2,
+      "lastAccessed": 1774943701704,
+      "type": "file"
+    },
+    {
+      "path": "extension/src/background/messaging/handlers/site-message-handlers.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943717263,
+      "type": "file"
+    },
+    {
+      "path": "extension/src/shared/config/storage-items.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943732162,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/server/auth-redirect.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943733057,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/package.json",
+      "accessCount": 2,
+      "lastAccessed": 1774943763542,
+      "type": "file"
+    },
+    {
+      "path": "extension/package.json",
+      "accessCount": 2,
+      "lastAccessed": 1774943778703,
+      "type": "file"
+    },
+    {
+      "path": "packages/trpc/src/index.ts",
+      "accessCount": 2,
+      "lastAccessed": 1774943784942,
+      "type": "file"
+    },
+    {
+      "path": ".claude/ralph-loop.local.md",
+      "accessCount": 1,
+      "lastAccessed": 1774942854603,
+      "type": "file"
+    },
+    {
+      "path": "apps/marketing/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1774942959530,
+      "type": "file"
+    },
+    {
+      "path": "apps/video/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1774942959728,
+      "type": "file"
+    },
+    {
+      "path": "packages/db/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1774942964566,
+      "type": "file"
+    },
+    {
+      "path": "apps/marketing/.env.example",
+      "accessCount": 1,
+      "lastAccessed": 1774942964612,
+      "type": "file"
+    },
+    {
+      "path": "packages/ui/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1774943012129,
+      "type": "file"
+    },
+    {
+      "path": "packages/content/package.json",
+      "accessCount": 1,
+      "lastAccessed": 1774943020164,
+      "type": "file"
+    },
+    {
+      "path": "extension/src/background/messaging/handlers/oauth-auth-handlers.ts",
+      "accessCount": 1,
+      "lastAccessed": 1774943322197,
+      "type": "file"
+    },
+    {
+      "path": "extension/src/background/services/auth-policy-keeper.ts",
+      "accessCount": 1,
+      "lastAccessed": 1774943322904,
+      "type": "file"
+    },
+    {
+      "path": "apps/account/src/lib/__tests__/auth.test.ts",
+      "accessCount": 1,
+      "lastAccessed": 1774943327496,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
