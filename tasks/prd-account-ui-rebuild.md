@@ -18,24 +18,6 @@
 - **REST + Server Actions**: существующие REST API (`/api/v1/*`) остаются для extension. Веб-UI использует **Server Actions** для мутаций, а данные загружает **напрямую из Supabase** в Server Components (не через REST).
 - **Разделение**: API-роуты обслуживают extension, Server Actions обслуживают веб-UI. Общая бизнес-логика живет в `src/server/backend/`.
 
-### Текущее состояние
-
-Сохранившийся backend:
-
-| Модуль | Путь | Назначение |
-|--------|------|------------|
-| Auth | `src/lib/auth.ts` | `getAuthSession()` — Supabase cookie-сессия |
-| Supabase Server | `src/lib/supabase/server.ts` | `createSupabaseServerClient()` |
-| Supabase Client | `src/lib/supabase/client.ts` | `createSupabaseBrowserClient()` |
-| Supabase Middleware | `src/lib/supabase/middleware.ts` | `updateSession()` — refresh cookie |
-| User | `src/server/backend/user.ts` | CRUD пользователей, onboarding |
-| Subscription | `src/server/backend/subscription-access.ts` | Проверка тиров, snapshot подписки |
-| Account Snapshot | `src/server/backend/account-snapshot.ts` | `buildAccountSnapshot()` |
-| Trail Serializers | `src/server/backend/trail-serializers.ts` | `toTrailSummary()`, `toTrailRecord()` |
-| Onboarding | `src/server/onboarding.ts` | `buildOnboardingState()` |
-| Plans | `packages/content/src/plans.ts` | `trailPlans` — определения планов |
-| Billing | `src/server/backend/billing/provider.ts` | `getBillingProvider()` |
-
 ---
 
 ## 2. Стек
@@ -45,8 +27,7 @@
 | Next.js | 16 (App Router) | Фреймворк |
 | React | 19 | UI-библиотека |
 | TypeScript | 5.x | Типизация |
-| Tailwind CSS | v4 | Стилизация |
-| shadcn/ui | latest | Компонентная библиотека (reinit через CLI) |
+| shadcn/ui | latest | Компонентная библиотека - init with CLI |
 | Supabase | — | Auth (Google OAuth + Magic Link), PostgreSQL |
 | Zod | 3.x | Валидация (уже используется в schemas.ts) |
 
