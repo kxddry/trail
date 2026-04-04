@@ -1,0 +1,78 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - link "Trail" [ref=e7] [cursor=pointer]:
+        - /url: /trails
+        - generic [ref=e8]: Trail
+      - generic [ref=e9]:
+        - generic [ref=e10]:
+          - generic [ref=e11]: Navigation
+          - list [ref=e13]:
+            - listitem [ref=e14]:
+              - link "Trails" [ref=e15] [cursor=pointer]:
+                - /url: /trails
+                - img [ref=e16]
+                - generic [ref=e20]: Trails
+            - listitem [ref=e21]:
+              - link "Activity" [ref=e22] [cursor=pointer]:
+                - /url: /activity
+                - img [ref=e23]
+                - generic [ref=e25]: Activity
+        - generic [ref=e26]:
+          - generic [ref=e27]: Account
+          - list [ref=e29]:
+            - listitem [ref=e30]:
+              - link "Settings" [ref=e31] [cursor=pointer]:
+                - /url: /settings
+                - img [ref=e32]
+                - generic [ref=e35]: Settings
+            - listitem [ref=e36]:
+              - link "Billing" [ref=e37] [cursor=pointer]:
+                - /url: /billing
+                - img [ref=e38]
+                - generic [ref=e40]: Billing
+      - generic [ref=e42]:
+        - img "Ivan Kudryavtsev" [ref=e44]
+        - generic [ref=e45]:
+          - paragraph [ref=e46]: Ivan Kudryavtsev
+          - paragraph [ref=e47]: ivakudry@gmail.com
+        - link "Sign out" [ref=e48] [cursor=pointer]:
+          - /url: /auth/logout
+          - img [ref=e49]
+    - main [ref=e52]:
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - heading "Settings" [level=1] [ref=e56]
+          - paragraph [ref=e57]: Manage your account preferences.
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e60]: Profile
+            - generic [ref=e61]: Your account information.
+          - generic [ref=e62]:
+            - img "Ivan Kudryavtsev" [ref=e64]
+            - generic [ref=e65]:
+              - paragraph [ref=e66]: Ivan Kudryavtsev
+              - paragraph [ref=e67]: ivakudry@gmail.com
+        - generic [ref=e68]:
+          - generic [ref=e69]:
+            - generic [ref=e70]: Subscription
+            - generic [ref=e71]: Your current plan and status.
+          - generic [ref=e72]: Free plan
+          - generic [ref=e73]:
+            - text: Manage your subscription on the
+            - link "Billing page" [ref=e74] [cursor=pointer]:
+              - /url: /billing
+            - text: .
+        - generic [ref=e75]:
+          - heading "Danger Zone" [level=2] [ref=e77]
+          - generic [ref=e78]:
+            - generic [ref=e79]:
+              - generic [ref=e80]: Reset onboarding
+              - generic [ref=e81]: Clear the onboarding completion flag so it shows again on next login. Useful for testing.
+            - button "Reset onboarding" [ref=e83]:
+              - img
+              - text: Reset onboarding
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e89] [cursor=pointer]:
+    - img [ref=e90]
+  - alert [ref=e93]
