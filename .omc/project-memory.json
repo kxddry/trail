@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1775313738694,
-  "projectRoot": "/Users/iv/dev/trail",
+  "lastScanned": 1775553956936,
+  "projectRoot": "/Users/iv/dev/active/trail",
   "techStack": {
     "languages": [
       {
@@ -81,21 +81,21 @@
       "path": "apps",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775313738549,
+      "lastAccessed": 1775553956897,
       "keyFiles": []
     },
     "cypress": {
       "path": "cypress",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775313738550,
+      "lastAccessed": 1775553956901,
       "keyFiles": []
     },
     "docs": {
       "path": "docs",
       "purpose": "Documentation",
       "fileCount": 2,
-      "lastAccessed": 1775313738555,
+      "lastAccessed": 1775553956907,
       "keyFiles": [
         "README.md",
         "architecture.md"
@@ -105,7 +105,7 @@
       "path": "extension",
       "purpose": null,
       "fileCount": 18,
-      "lastAccessed": 1775313738556,
+      "lastAccessed": 1775553956910,
       "keyFiles": [
         "CSP-RATIONALE.md",
         "RELEASE-CHECKLIST.md",
@@ -118,21 +118,21 @@
       "path": "figma-workspace",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775313738556,
+      "lastAccessed": 1775553956913,
       "keyFiles": []
     },
     "logo": {
       "path": "logo",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775313738556,
+      "lastAccessed": 1775553956914,
       "keyFiles": []
     },
     "logs": {
       "path": "logs",
       "purpose": null,
       "fileCount": 2,
-      "lastAccessed": 1775313738556,
+      "lastAccessed": 1775553956915,
       "keyFiles": [
         "mcp-puppeteer-2026-03-24.log"
       ]
@@ -141,21 +141,21 @@
       "path": "packages",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775313738556,
+      "lastAccessed": 1775553956916,
       "keyFiles": []
     },
     "pens": {
       "path": "pens",
       "purpose": null,
       "fileCount": 0,
-      "lastAccessed": 1775313738557,
+      "lastAccessed": 1775553956918,
       "keyFiles": []
     },
     "sanity": {
       "path": "sanity",
       "purpose": null,
       "fileCount": 10,
-      "lastAccessed": 1775313738557,
+      "lastAccessed": 1775553956920,
       "keyFiles": [
         "README.md",
         "eslint.config.mjs",
@@ -168,7 +168,7 @@
       "path": "supabase",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775313738558,
+      "lastAccessed": 1775553956923,
       "keyFiles": [
         "config.toml"
       ]
@@ -177,7 +177,7 @@
       "path": "tasks",
       "purpose": null,
       "fileCount": 5,
-      "lastAccessed": 1775313738559,
+      "lastAccessed": 1775553956924,
       "keyFiles": [
         "backlog.md",
         "lessons.md",
@@ -190,7 +190,7 @@
       "path": "packages/config",
       "purpose": "Configuration files",
       "fileCount": 4,
-      "lastAccessed": 1775313738561,
+      "lastAccessed": 1775553956929,
       "keyFiles": [
         "package.json",
         "pnpm-lock.yaml",
@@ -201,7 +201,7 @@
       "path": "sanity/dist",
       "purpose": "Distribution/build output",
       "fileCount": 2,
-      "lastAccessed": 1775313738563,
+      "lastAccessed": 1775553956931,
       "keyFiles": [
         "favicon.ico",
         "index.html"
@@ -211,14 +211,14 @@
       "path": "sanity/node_modules",
       "purpose": "Dependencies",
       "fileCount": 2,
-      "lastAccessed": 1775313738648,
+      "lastAccessed": 1775553956933,
       "keyFiles": []
     },
     "supabase/migrations": {
       "path": "supabase/migrations",
       "purpose": "Database migrations",
       "fileCount": 5,
-      "lastAccessed": 1775313738662,
+      "lastAccessed": 1775553956935,
       "keyFiles": [
         "001_create_schema.sql",
         "002_auth_triggers.sql",
@@ -226,307 +226,6 @@
       ]
     }
   },
-  "hotPaths": [
-    {
-      "path": "",
-      "accessCount": 57,
-      "lastAccessed": 1775315611280,
-      "type": "directory"
-    },
-    {
-      "path": "apps/account",
-      "accessCount": 47,
-      "lastAccessed": 1775314780757,
-      "type": "directory"
-    },
-    {
-      "path": "apps/account/src/server/backend/user.ts",
-      "accessCount": 25,
-      "lastAccessed": 1775229320876,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/auth/callback/route.ts",
-      "accessCount": 23,
-      "lastAccessed": 1775309649739,
-      "type": "file"
-    },
-    {
-      "path": "extension/src",
-      "accessCount": 22,
-      "lastAccessed": 1775326121796,
-      "type": "directory"
-    },
-    {
-      "path": "apps/account/app/(app)/OnboardingGate.tsx",
-      "accessCount": 21,
-      "lastAccessed": 1775046873983,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/onboarding/route.ts",
-      "accessCount": 19,
-      "lastAccessed": 1775120484808,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/lib/auth.ts",
-      "accessCount": 19,
-      "lastAccessed": 1775309642248,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/proxy.ts",
-      "accessCount": 18,
-      "lastAccessed": 1775228285191,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/v1/onboarding/route.ts",
-      "accessCount": 18,
-      "lastAccessed": 1775229410772,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/lib/supabase/middleware.ts",
-      "accessCount": 16,
-      "lastAccessed": 1775309641393,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/server/onboarding.ts",
-      "accessCount": 15,
-      "lastAccessed": 1775309653677,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/next.config.mjs",
-      "accessCount": 13,
-      "lastAccessed": 1775191995567,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/v1/oauth/authorize/route.ts",
-      "accessCount": 13,
-      "lastAccessed": 1775227723168,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/lib/supabase/server.ts",
-      "accessCount": 13,
-      "lastAccessed": 1775228620398,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src",
-      "accessCount": 11,
-      "lastAccessed": 1775122990501,
-      "type": "directory"
-    },
-    {
-      "path": "apps/account/app/auth/login/route.ts",
-      "accessCount": 11,
-      "lastAccessed": 1775309649794,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/v1/oauth/token/route.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775123533195,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/lib/supabase/client.ts",
-      "accessCount": 10,
-      "lastAccessed": 1775227909041,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/v1/billing/webhooks/nowpayments/route.ts",
-      "accessCount": 8,
-      "lastAccessed": 1775123757129,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/.env.local",
-      "accessCount": 7,
-      "lastAccessed": 1775229841374,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/features/spotlight/ui/SpotlightGraphFrame.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1775032628488,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/components/login-form.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1775121822775,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app",
-      "accessCount": 6,
-      "lastAccessed": 1775155375061,
-      "type": "directory"
-    },
-    {
-      "path": "packages/db/src/client.ts",
-      "accessCount": 6,
-      "lastAccessed": 1775229852134,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/apps/newtab/ui/NewTabApp.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1775315278544,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/apps/sidepanel/ui/components/SearchResultsList.tsx",
-      "accessCount": 6,
-      "lastAccessed": 1775326184410,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/.env.example",
-      "accessCount": 5,
-      "lastAccessed": 1775227704335,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/env.ts",
-      "accessCount": 5,
-      "lastAccessed": 1775227877930,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/src/server/backend/oauth.ts",
-      "accessCount": 5,
-      "lastAccessed": 1775309663514,
-      "type": "file"
-    },
-    {
-      "path": "packages/db",
-      "accessCount": 4,
-      "lastAccessed": 1775228514096,
-      "type": "directory"
-    },
-    {
-      "path": "supabase/migrations/001_create_schema.sql",
-      "accessCount": 4,
-      "lastAccessed": 1775228621454,
-      "type": "file"
-    },
-    {
-      "path": "apps/marketing/app/components/ui/color-bends.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1775032567681,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/api/onboarding/reset/route.ts",
-      "accessCount": 3,
-      "lastAccessed": 1775120162724,
-      "type": "file"
-    },
-    {
-      "path": "supabase/config.toml",
-      "accessCount": 3,
-      "lastAccessed": 1775190026660,
-      "type": "file"
-    },
-    {
-      "path": "supabase/migrations/002_auth_triggers.sql",
-      "accessCount": 3,
-      "lastAccessed": 1775228351938,
-      "type": "file"
-    },
-    {
-      "path": "apps/account/app/v1/[...path]/route.ts",
-      "accessCount": 3,
-      "lastAccessed": 1775309661021,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/shared/config/backend.ts",
-      "accessCount": 3,
-      "lastAccessed": 1775314769414,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/features/spotlight/ui/SpotlightRoot.tsx",
-      "accessCount": 3,
-      "lastAccessed": 1775326153049,
-      "type": "file"
-    },
-    {
-      "path": ".env.prod",
-      "accessCount": 1,
-      "lastAccessed": 1775030391528,
-      "type": "file"
-    },
-    {
-      "path": "apps/marketing/.env.local",
-      "accessCount": 1,
-      "lastAccessed": 1775030392174,
-      "type": "file"
-    },
-    {
-      "path": "apps/marketing/.env.example",
-      "accessCount": 1,
-      "lastAccessed": 1775030392210,
-      "type": "file"
-    },
-    {
-      "path": ".env.e2e",
-      "accessCount": 1,
-      "lastAccessed": 1775030392379,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/.env.example",
-      "accessCount": 1,
-      "lastAccessed": 1775030393015,
-      "type": "file"
-    },
-    {
-      "path": "packages",
-      "accessCount": 1,
-      "lastAccessed": 1775030395988,
-      "type": "directory"
-    },
-    {
-      "path": "apps/marketing/next.config.mjs",
-      "accessCount": 1,
-      "lastAccessed": 1775030402846,
-      "type": "file"
-    },
-    {
-      "path": "README.md",
-      "accessCount": 1,
-      "lastAccessed": 1775030456466,
-      "type": "file"
-    },
-    {
-      "path": "extension/src/features/spotlight/ui/spotlight-ipc.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775032550057,
-      "type": "directory"
-    },
-    {
-      "path": "apps/account/src/server/backend/trails-sync.ts",
-      "accessCount": 1,
-      "lastAccessed": 1775038507731,
-      "type": "file"
-    },
-    {
-      "path": "packages/db/src",
-      "accessCount": 1,
-      "lastAccessed": 1775038612968,
-      "type": "directory"
-    }
-  ],
+  "hotPaths": [],
   "userDirectives": []
 }
