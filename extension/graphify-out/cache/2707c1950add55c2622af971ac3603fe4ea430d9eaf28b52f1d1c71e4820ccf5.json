@@ -1,0 +1,1 @@
+{"nodes": [{"id": "defaults", "label": "defaults.ts", "file_type": "code", "source_file": "src/shared/layout/defaults.ts", "source_location": "L1"}], "edges": [{"source": "defaults", "target": "settings_js", "relation": "imports_from", "confidence": "EXTRACTED", "source_file": "src/shared/layout/defaults.ts", "source_location": "L1", "weight": 1.0}]}
