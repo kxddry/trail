@@ -7,6 +7,58 @@
 
 ---
 
+## 🔧 Velocipede Audit (2026-04-17) — Reinvented wheels → installed libs
+
+Audit across UI, hooks/utils, animations, state/messaging. Grouped by risk.
+
+### Safe wins (small, obvious, no risk)
+
+- [ ] S1. `Icons.Loader2 animate-spin` → `<Spinner />` — `TreeDropdown.tsx:306,664`, `OnboardingWizard.tsx:281`
+- [ ] S2. Raw `<span>pin</span>` → `<Badge>` — `TrailNode.tsx:141`
+- [ ] S3. Dead `transition-all duration-200` w/ no state change — remove from `FloatingControls.tsx:57`
+- [ ] S4. Redundant `requestAnimationFrame` wrappers around ReactFlow APIs — remove in `TrailGraph.tsx:126,134`
+- [ ] S5. Local `formatRelativeTime` copy — import shared one in `SyncConflictBanner.tsx:74-83`
+- [ ] S6. Dead `uuid()` `Math.random` fallback — use `crypto.randomUUID()` in `observability.ts:71-81`
+- [ ] S7. Empty `src/shared/utils/debounce.ts` — implement tiny util, replace manual `setTimeout`/`clearTimeout` debounces in `commands.ts:38-46` and `notifications.ts:80,219-232`
+- [ ] S8. "Loading..." text in `SettingsApp.tsx:50` → `<Skeleton>` (match `AccountPage.tsx:95`)
+- [ ] S9. ContextMenu section label `<div role="presentation">` → `ContextMenuLabel` — `ContextMenus.tsx:266-270`
+
+### Medium wins (clear replacements, moderate effort)
+
+- [ ] M1. `formatTime()` + `formatRelativeTime()` in `format.ts:3-11,87-105` → `date-fns` `formatDistanceToNow(..., { addSuffix: true })`
+- [ ] M2. `withTimeout` in `useBootstrap.ts:14-28` → native `Promise.race`/`AbortSignal.timeout` or remove
+- [ ] M3. Set `retry: 1` **per-query** for network-bound reads only (auth, sync) — NOT global, leaves local RPC intact
+- [ ] M4. `useSettings` manual `useState/useEffect/saveSettings` → `useQuery` + `useMutation` (`apps/settings/hooks/useSettings.ts`) ⚠️ blocked by uncommitted shadcn migration of settings pages
+- [ ] M5. `useTrees` manual `refresh()` chain → `useQuery` + `useMutation` + `invalidateQueries` (`apps/settings/hooks/useTrees.ts`) ⚠️ same block as M4
+- [ ] M6. ContextMenu raw `overflow-y-auto` + `ResizeObserver` layout calc → `ScrollArea` (`ContextMenus.tsx:274`)
+- [ ] M7. Dead custom dropdown scroll-lock JS in `ContextMenus.tsx` (`updateTabsLayout`, 3× `useLayoutEffect`) — removed by M6
+
+### Large / risky (needs care, may defer)
+
+- [ ] L1. `ContextMenus.tsx` (~400 lines of manual positioning, portal, escape, click-outside) → shadcn `ContextMenu`
+- [ ] L2. `SettingsApp.tsx` `useState<Page>` nav (27-69) → shadcn `Tabs` (vertical) or `NavigationMenu`
+- [ ] L3. `useBootstrap.ts` manual Promise.all+retry → `useQuery` tree + suspense
+- [ ] L4. `useShortcuts.ts` (370-line keydown switch) — refactor to declarative lookup table (NOT a wheel; no lib to swap in unless we add `tinykeys`)
+- [ ] L5. `useSystemThemeListener` + `apply-theme.ts` (manual `.dark` toggle + custom LS keys) → `next-themes` ThemeProvider (requires migration of `trail_theme` key)
+- [ ] L8. `tree-storage.ts:56-117` manual `normalizeXxx` chains → `zod` `.safeParse()` with defaults
+- [ ] L9. `useRuntimeMessages.ts:26-29` extra `getCommandState()` RPC on every TREE_UPDATED → include `CommandState` in payload OR react-query invalidate
+- [ ] L10. `supabase.ts:16-31` `chromeStorageAdapter` → WXT `storage.defineItem` typed items
+
+### Dropped after review (kept for the record)
+
+- ~~L6. trail-logo `@keyframes` → motion~~ — native CSS keyframes are the idiomatic choice for a mount-only logo; motion would add bundle for no benefit.
+- ~~L7. setTimeout state resets → AnimatePresence~~ — 650ms checkmark flash / 2s "Copied!" label are idiomatic transient React flags, not mount/unmount concerns.
+
+### Deferred (do not touch)
+
+- D1. `auth-orchestrator.ts` pub-sub pattern — cross-context, load-bearing; refactor only with specific need
+- D2. `register-proxy-services.ts` RPC dispatch — transport core, works, skip
+- D3. `tree-storage.ts` in-memory loading-promise deduplication — service-worker-specific, not a wheel
+- D4. `src/shared/lib/uuid.ts` intentional UUIDv7 (time-ordered DB keys) — keep
+- D5. `useIsMobile` — standard shadcn boilerplate; leave
+
+---
+
 ## Wave 1 — Bug triage & hygiene (ship-blockers)
 
 - [ ] Version sync: `package.json` 0.9.1 → 1.0.0 to match `wxt.config.ts`
