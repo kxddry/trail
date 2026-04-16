@@ -1,23 +1,162 @@
-# TODO
+# v1.0 Ship Plan — Trail Extension
 
-- [x] Add `@webext-core/messaging` and `@webext-core/proxy-service` and wire shared transport primitives under `src/shared`.
-- [x] Define the new `ExtensionProtocolMap`, `WebsiteProtocolMap`, page namespace constant, and proxy-service keys/interfaces.
-- [x] Migrate sidepanel -> background request/response APIs from `rpc.*` wrappers to proxy services.
-- [x] Migrate content/background sender-aware flows to `@webext-core/messaging`.
-- [x] Migrate background push events (`TREE_UPDATED`, `TREES_UPDATED`, `NOTIFY`, site relays) to typed extension messages.
-- [x] Replace the content/site bridge with `defineWindowMessaging` and remove the old envelope, TTL, nonce, and relay plumbing.
-- [x] Remove legacy RPC transport files and generic router code after all call sites are cut over.
-- [x] Replace RPC schema tests with transport-contract coverage and add focused bridge tests.
-- [x] Run `pnpm run typecheck`, `pnpm run test`, and `pnpm build`.
+> Started: 2026-04-16
+> Mode: Autopilot. Aggressive scope per user decision.
+> Sync strategy: LWW + Obsidian-style visible conflict resolution (not CRDT).
+> Observability: Sentry free + PostHog free.
 
-## Review
+---
 
-- Added `@webext-core/messaging` and `@webext-core/proxy-service`, then introduced the new transport layer under `src/shared/transport` with typed extension messages, window messaging, and proxy-service contracts/clients.
-- Migrated sidepanel request/response APIs to proxy services, moved sidepanel runtime subscriptions to `onExtensionMessage`, and rewired background push notifications plus the editor-exit relay to typed extension events.
-- Replaced the content/site bridge with the new `trail-bridge-v1` window messaging contract and a thin runtime adapter, removing the old envelope-based relay path and the legacy RPC router/client/schema files.
-- Removed the exported `rpc.*` message factory API and deleted the remaining dead `SITE_MESSAGE_FORWARD` transport contract pieces from `src/shared/rpc/contracts.ts`; the file still retains internal handler typing used by existing background handler maps.
-- Added `tests/transport-contracts.test.ts` and `tests/content-bridge-runtime.test.ts`, and updated smoke coverage to document the new site ping/open-panel/editor/event flows.
-- Verification:
-  - `pnpm run test` passed.
-  - `pnpm build` passed.
-  - `pnpm run typecheck` still fails on pre-existing unrelated issues in `src/features/graph/elk-graph.ts` and `src/ui/components/ui/{calendar,context-menu,dropdown-menu,menubar,slider,sonner,spinner}.tsx`.
+## Wave 1 — Bug triage & hygiene (ship-blockers)
+
+- [ ] Version sync: `package.json` 0.9.1 → 1.0.0 to match `wxt.config.ts`
+- [ ] Remove ghost `src/features/graph/elk-graph.ts` from tsconfig (file doesn't exist, typecheck fails)
+- [ ] Fix shadcn component typecheck errors (`calendar`, `context-menu`, `dropdown-menu`, `menubar`, `slider`, `sonner`, `spinner`)
+- [ ] Remove dead deps: `elkjs` (removed from src), `motion` (will re-add after use), audit `@tanstack/react-virtual`
+- [ ] Fix `FloatingControls.tsx:15` — unused `_searchInputRef` blocking ⌘K
+- [ ] Fix `OnboardingHints.tsx:11` — `#searchBtn` DOM selector points at non-existent element
+- [ ] Fix `nav-tree.ts:68` — implement or remove `setRoot` stub
+- [ ] Fix `nav-tree.ts:196` — remove contradictory "remove deleteNode" comment
+- [ ] Fix `Header.tsx:19` — wire `syncIndicator` to real store state
+- [ ] Fix `navigation-handler.ts:107` — honor tab.pinned on new node
+- [ ] Fix `commands.ts:87` — `slice(0, 0)` → `[]` for redo invalidation clarity
+- [ ] Fix `tab-lru.ts:48` — verify `latestTabId` reset semantics on tab close
+
+## Wave 2 — Dev hygiene & CI/CD
+
+- [ ] Add Husky + lint-staged with pre-commit: `typecheck --changed` + `lint --fix` + `prettier --write`
+- [ ] Add `.github/workflows/ci.yml`: lint + typecheck + test + build on PR and main
+- [ ] Add `.github/workflows/release.yml`: build .zip on tag push, upload artifact
+- [ ] Add `CHANGELOG.md` + `changesets` tooling
+- [ ] Replace custom test runner with Vitest (consistency with ecosystem)
+- [ ] Add `README.md` (user-facing: what is Trail, install, features)
+- [ ] Add `ARCHITECTURE.md` (transport, state, storage, rendering, sync)
+- [ ] Add `CONTRIBUTING.md` (setup, commit conventions, testing, PR flow)
+- [ ] Update `CSP-RATIONALE.md` (remove stale PixiJS mention)
+- [ ] Remove committed `graphify-out/` from repo, add to `.gitignore`
+
+## Wave 3 — Observability
+
+- [ ] Integrate `@sentry/browser` in sidepanel + background + settings; DSN via env var
+- [ ] Integrate `posthog-js` for analytics; project key via env var
+- [ ] Define analytics event schema (install, onboarding_started/completed, first_tree_created, node_created/deleted, search_used, sync_ok/failed, auth_login/logout, settings_opened, feedback_submitted)
+- [ ] Wire global error boundary → Sentry
+- [ ] Add error boundary for settings page entrypoint
+- [ ] PII masking in Sentry config (URLs, titles stripped from events)
+- [ ] Opt-out toggle in settings (respect privacy-first default)
+
+## Wave 4 — Command palette & core UX
+
+- [ ] Wire `cmdk` via `<CommandDialog>`: search nodes, recent trees, actions (new tree, rename, delete, open settings, help)
+- [ ] Replace placeholder search input with Command palette overlay on ⌘K / ⌘F / /
+- [ ] Add inline node rename RPC (`RENAME_NODE`) + UI (double-click title, Enter to commit, Esc cancel)
+- [ ] Add empty states: zero trees, empty tree (first-node CTA), zero search results, offline banner
+- [ ] Add feedback button in header menu → opens dialog with "bug/feature/other" → posts to GitHub or mailto
+- [ ] Keyboard shortcuts cheat-sheet (⌘/) with full list, not just the implemented ones
+- [ ] Node context menu: edit title, edit URL, copy link, duplicate, open in new tab, pin, delete (consolidate existing menus)
+
+## Wave 5 — Onboarding wizard
+
+- [ ] Multi-step onboarding: welcome → explain concept → permissions priming → create first tree (interactive) → demo tree explore → done
+- [ ] Replace tooltip-based `OnboardingHints` with proper wizard (stored `trail_onboarding` flag)
+- [ ] Demo tree preset: "Research: How Chrome Extensions Work" (preloaded tree with ~20 interesting nodes)
+- [ ] Permissions priming screen: explain webNavigation + tabs BEFORE chrome asks
+- [ ] Skip button on every step, progress indicator
+
+## Wave 6 — Settings overhaul
+
+- [ ] Account page (profile, sign in/out, subscription status placeholder)
+- [ ] Data page (export JSON, export Markdown, import, clear local data, delete account w/ confirmation)
+- [ ] Shortcuts page (view all, future: customize)
+- [ ] Privacy page (policy link, terms link, telemetry opt-out, encryption toggle when implemented)
+- [ ] About page (version, changelog link, credits, report bug, suggest feature)
+- [ ] Replace existing flat nav with shadcn Sidebar + nested pages
+- [ ] Keep existing Appearance + Behavior + Trees pages, reorganize under new structure
+
+## Wave 7 — Theme system
+
+- [ ] Audit: default to `system` preference, not forced light/dark
+- [ ] Remove FOUC: inject theme script in `<head>` before bundle (synchronous)
+- [ ] Verify all shadcn components respect `data-theme` attribute
+- [ ] Settings → Appearance → Theme picker: Light / Dark / System
+- [ ] Persist via `chrome.storage.local` + reflect across all surfaces (sidepanel, settings, future popup)
+
+## Wave 8 — Auth & sync foundations
+
+- [ ] `@supabase/supabase-js` client factory for extension (SUPABASE_URL + ANON_KEY from env)
+- [ ] `chrome.identity.launchWebAuthFlow` + PKCE auth flow → Google OAuth via Supabase
+- [ ] Session persistence in `chrome.storage.local` (trail_auth_session per existing schema)
+- [ ] Background auth orchestrator: refresh token on wake, broadcast auth state to sidepanel
+- [ ] Sync engine skeleton: subscribe to local tree mutations, debounced push to server
+- [ ] LWW reconciliation: server returns (id, updated_at, body_checksum); local picks newer by updated_at
+- [ ] Visible conflict UI: banner "This tree was updated on another device" with "Keep mine / Use server / Review side-by-side" buttons
+- [ ] Side-by-side diff viewer for conflict review
+
+## Wave 9 — Migrations, offline, rate limiting
+
+- [ ] Local schema versioning: `trail_schema_version` storage key, migration runner on background wake
+- [ ] Initial v1 migration (baseline) so future changes are trackable
+- [ ] Offline queue: pending ops array in `chrome.storage.local`, drain on online event
+- [ ] Sync debounce: batch tree updates at 2s, flush immediately on tab close
+- [ ] Rate limiting: at most 10 sync requests / 30s window, retry with exponential backoff
+- [ ] Service worker keep-alive strategy: alarms API for periodic sync checks
+
+## Wave 10 — Tests
+
+- [ ] Migrate from custom `tests/*.test.ts` runner to Vitest
+- [ ] Add React Testing Library for component tests
+- [ ] Add Playwright MV3 runner (loads unpacked extension)
+- [ ] E2E suite: install → onboard → create tree → edit node → search → open settings → export
+- [ ] E2E suite: sign in flow (with supabase test project), create tree, switch device, see sync
+- [ ] E2E suite: conflict resolution (mutate same tree on two client instances)
+- [ ] Unit: sync engine, conflict resolver, migration runner, LWW comparator
+
+## Wave 11 — Animations
+
+- [ ] Integrate `motion` (already in deps, unused) or `framer-motion`
+- [ ] Animate: Command palette open/close, settings page transitions, onboarding step advance, node add/remove in graph, sync banner slide-in, toast stack
+- [ ] Keep instant: selection indicator, theme switch (per user feedback), hover states
+- [ ] Reduce-motion respect via `prefers-reduced-motion` media query
+
+## Wave 12 — Polish & scaffolds
+
+- [ ] i18n scaffold via `chrome.i18n`: create `_locales/en/messages.json`, extract hardcoded strings
+- [ ] i18n second language: `_locales/ru/messages.json` (user is RU; ship bilingual)
+- [ ] Accessibility audit: focus rings on all interactive elements, `aria-label` on icon-only buttons, keyboard nav in Command palette, Escape to close dialogs, sensible tab order
+- [ ] Storybook setup (`@storybook/react-vite`): stories for core UI components
+- [ ] Changelog auto-gen from commit messages via `changesets`
+
+## Wave 13 — Performance
+
+- [ ] Profile baseline: React DevTools Profiler + Chrome Performance on 3100-node tree
+- [ ] Offload d3-hierarchy layout to Web Worker (or keep in background service worker since it's already there)
+- [ ] Virtualize tree list in Trees settings page (`@tanstack/react-virtual`)
+- [ ] Virtualize pinned dropdown if >50 items
+- [ ] Connect `adaptivePerformance` flag to actual graph render path (currently disconnected)
+- [ ] Incremental layout cache: invalidate only affected subtree on node add, not full recompute
+
+## Wave 14 — Release prep
+
+- [ ] Permissions audit: verify minimal set, write per-permission justification to store listing
+- [ ] CSP tightening: verify no `unsafe-eval`, no `unsafe-inline` in built manifest
+- [ ] Sensitive URL blocklist: default skip `chrome-extension://`, `devtools://`, `localhost`, `127.0.0.1`; user-configurable
+- [ ] Client-side encryption (AES-GCM with user-derived key) for sync payload — behind feature flag
+- [ ] Store listing: 5 screenshots (captured via Playwright on demo tree), 1 promo tile (440x280), description with keywords
+- [ ] Privacy policy page at `gettrail.net/privacy` (content already drafted in repo root)
+- [ ] Terms page at `gettrail.net/terms` (content already drafted in repo root)
+- [ ] Beta channel: separate Web Store listing `trail-beta` with pre-release builds
+- [ ] `CHANGELOG.md` v1.0.0 entry
+
+## Deferred (v1.1+)
+
+Nothing — user chose Aggressive scope. Items that won't fit in this session will stay in this plan with status.
+
+---
+
+## Session log
+
+### 2026-04-16 — Session kickoff
+
+- Audit completed; transport migration (prev todo) confirmed shipped.
+- User interview: Aggressive scope, LWW+conflict UI, Sentry+PostHog free, hosted Supabase exists (org `trail`, project likely `prod` which is paused or `dev` which wasn't linkable — will proceed with env placeholders).
+- Kicking off Wave 1.
