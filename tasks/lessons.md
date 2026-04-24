@@ -14,3 +14,8 @@
 - **Mistake**: Spotlight graph hover and result-list hover were sharing the same highlight/focus channel, so transient pointer movement triggered recentering and could clear the committed highlight on leave.
 - **Rule**: In any preview UI with keyboard focus plus pointer hover, model committed selection and transient hover as separate states and only let committed selection drive camera/view intents.
 - **Why**: Hover is ephemeral. If it shares state with committed focus, the UI jitters, loses restore semantics, and creates hard-to-reproduce interaction bugs.
+
+## 2026-04-22: Confirm the product surface before reviewing "onboarding"
+- **Mistake**: I interpreted "current onboarding flow" as the account web onboarding and reviewed the wrong surface before the user clarified they meant the extension onboarding.
+- **Rule**: When a repo has multiple onboarding surfaces, first map every onboarding implementation in code and confirm the relevant surface from surrounding context before giving recommendations.
+- **Why**: "Onboarding" is a product-wide concept, not a unique screen. Reviewing the wrong flow wastes time and produces misleading guidance even if the UX analysis itself is sound.
