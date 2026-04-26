@@ -1,5 +1,10 @@
 # Lessons Learned — Trail Extension
 
+## 2026-04-25: "Branch" usually means Trail navigation branch in this repo
+- **Mistake**: Interpreted a question about users manually switching between branches as Git branch/worktree behavior, while the repo context was the Trail extension's browsing-tree branches.
+- **Rule**: In this project, resolve ambiguous "branch/tree/session/current" language against the extension domain first: navigation graph nodes, tab mappings, active tree/current node, and sidepanel state. Only discuss Git if the user explicitly names Git, commits, checkouts, or repository history.
+- **Why**: Trail's core product model is a browser-session graph. Jumping to Git advice wastes the user's time and misses the actual failure mode.
+
 ## 2026-04-16: `exactOptionalPropertyTypes` incompatible with shadcn/Radix prop patterns
 - **Mistake**: Enabled `exactOptionalPropertyTypes: true` alongside shadcn/Radix components. Radix passes optional props through spread where target types expect non-optional — causes TS2375 on calendar, context-menu, dropdown-menu, menubar, slider, sonner.
 - **Rule**: Keep `strict: true` and `noUncheckedIndexedAccess: true`, but turn off `exactOptionalPropertyTypes` when using shadcn/Radix. Document the trade-off in a tsconfig comment.
