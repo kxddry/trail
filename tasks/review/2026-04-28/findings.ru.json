@@ -1,0 +1,948 @@
+{
+  "meta": {
+    "project": "Trail",
+    "baseline": "dev@f0e25577",
+    "review_date": "2026-04-28",
+    "scope": "Полный локальный аудит, только ревью, без production-аккаунтов и внешних секретов",
+    "dashboard": "tasks/review/2026-04-28/dashboard.ru.html",
+    "notes": [
+      "Findings со статусом fixed — это повторно проверенные старые находки, а не активные баги.",
+      "Supabase pgTAP был запущен, но локально заблокирован: Supabase/Postgres не слушал 127.0.0.1:54322.",
+      "Browser-проверки account выполнялись с локальными тестовыми env-значениями и без входа реального пользователя."
+    ],
+    "locale": "ru",
+    "source_locale": "en"
+  },
+  "command_results": [
+    {
+      "command": "pnpm lint",
+      "status": "failed",
+      "summary": "Падает в apps/marketing app/components/landing/Hero.tsx:144 на правиле react-hooks/set-state-in-effect."
+    },
+    {
+      "command": "pnpm test",
+      "status": "failed",
+      "summary": "Корневой test gate падает на extension/tests/transport-contracts.test.ts: event/auth-transition есть в protocols, но отсутствует в ожидаемых константах."
+    },
+    {
+      "command": "pnpm typecheck",
+      "status": "passed",
+      "summary": "Все workspace typecheck targets завершились успешно."
+    },
+    {
+      "command": "pnpm -C apps/marketing build",
+      "status": "passed_with_warnings",
+      "summary": "Build проходит; SSG повторно выводит предупреждения Node --localstorage-file."
+    },
+    {
+      "command": "pnpm -C apps/account build",
+      "status": "failed",
+      "summary": "Падает без env-заглушек при сборе page data для /api/v1/plans: отсутствуют NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, TRAIL_EXTENSION_JWT_SECRET, DATABASE_URL."
+    },
+    {
+      "command": "pnpm -C extension check",
+      "status": "passed_with_warnings",
+      "summary": "Typecheck, lint и format проходят; ESLint сообщает 3 предупреждения."
+    },
+    {
+      "command": "pnpm -C extension test",
+      "status": "failed",
+      "summary": "Падает на transport-contracts.test.ts из-за drift в контракте AUTH_TRANSITION."
+    },
+    {
+      "command": "pnpm -C extension build",
+      "status": "passed_with_warnings",
+      "summary": "Production build проходит с предупреждениями: unresolved font references, смешанный dynamic/static import и чанки больше 500 kB."
+    },
+    {
+      "command": "pnpm -C extension exec playwright test",
+      "status": "failed",
+      "summary": "5 тестов: 2 passed, 3 failed на устаревших ожиданиях текста onboarding/settings UI."
+    },
+    {
+      "command": "pnpm -C apps/account test -- targeted account API/security tests",
+      "status": "failed",
+      "summary": "148 тестов passed, 8 failed, 1 suite failed. Причины: отсутствующие Supabase env в тестах, mismatch мока NOWPayments db.from и drift ожидаемого кода unsupported grant type."
+    },
+    {
+      "command": "pnpm -C apps/marketing test",
+      "status": "passed",
+      "summary": "11 тестов passed; stderr с Telegram API error ожидаем для failure-path теста."
+    },
+    {
+      "command": "pnpm -C packages/db test",
+      "status": "passed",
+      "summary": "3 теста passed."
+    },
+    {
+      "command": "pnpm exec supabase test db",
+      "status": "blocked",
+      "summary": "Локально заблокировано: connection refused на 127.0.0.1:54322."
+    },
+    {
+      "command": "pnpm audit --prod",
+      "status": "failed",
+      "summary": "10 production vulnerabilities: 2 high, 7 moderate, 1 low. Включая Next.js DoS и Picomatch ReDoS."
+    },
+    {
+      "command": "Browser checks: marketing/account/extension preview",
+      "status": "partial",
+      "summary": "Marketing routes загружаются. Account routes редиректят на login без аутентификации, но выводят next-intl INVALID_KEY из-за dotted message keys. Extension preview server сообщает unresolved imports для RenameNodeDialog и #i18n modules."
+    }
+  ],
+  "findings": [
+    {
+      "id": "SEC-001",
+      "severity": "P0",
+      "surface": "account-api",
+      "category": "security-auth",
+      "status": "confirmed-codepath",
+      "confidence": 0.9,
+      "title": "Публичные billing/subscription API принимают unsigned bearer tokens вида internal:<uuid>",
+      "impact": "Любой caller, который знает или угадает UUID пользователя, может попросить публичные billing/subscription routes резолвить этого пользователя без подписанного extension token или cookie session. Комментарий в коде говорит, что token предназначен для in-process proxy routes, но публичные route handlers напрямую включают этот режим.",
+      "evidence": [
+        "apps/account/src/server/auth/get-authenticated-user.ts:56-59 резолвит internal:<uuid>, когда allowInternal равен true.",
+        "apps/account/app/api/v1/subscription/route.ts:21-22 и apps/account/app/api/v1/billing/route.ts:24-25 передают allowInternal: true в публичных Request handlers.",
+        "rg нашёл allowInternal usage в billing, portal, subscription, checkout, cancel и resume API routes."
+      ],
+      "repro": "Отправить Authorization: Bearer internal:<victim-user-uuid> в route, который передаёт allowInternal, после того как в локальной DB есть соответствующая user row.",
+      "commands": [
+        "rg -n \"allowInternal|internal:\" apps/account --glob '!**/.next/**'"
+      ],
+      "files": [
+        "apps/account/src/server/auth/get-authenticated-user.ts:56",
+        "apps/account/app/api/v1/subscription/route.ts:22",
+        "apps/account/app/api/v1/billing/route.ts:25"
+      ],
+      "owner_area": "account security",
+      "old_finding_status": "new",
+      "fix_priority": 1
+    },
+    {
+      "id": "SEC-002",
+      "severity": "P1",
+      "surface": "account-auth",
+      "category": "identity-integrity",
+      "status": "confirmed",
+      "confidence": 0.86,
+      "title": "Server ensurePublicUser всё ещё hardcode-ит email_verified=true и не вызывает sync RPC",
+      "impact": "Migration 013 явно добавила sync_public_user_from_auth, чтобы держать public.users в синхронизации с auth.users, но account server path всё ещё оптимистично пишет email_verified=true и игнорирует duplicates. Состояние email verification может расходиться в зависимости от поверхности, которая создала row.",
+      "evidence": [
+        "apps/account/src/server/backend/user.ts:83-95 делает upsert email_verified: true с ignoreDuplicates.",
+        "supabase/migrations/013_email_verified_source_of_truth.sql:12-16 говорит, что server code должен вызывать sync_public_user_from_auth и заменить этот drift.",
+        "extension/src/shared/auth/auth-orchestrator.ts:204-206 вызывает RPC, поэтому поведение различается между surfaces."
+      ],
+      "repro": "Создать или обновить web account path, где public.users существует или email verification меняется; сравнить public.users.email_verified с auth.users.email_confirmed_at.",
+      "commands": [
+        "rg -n \"sync_public_user_from_auth|email_verified\" apps/account extension supabase --glob '!**/.next/**'"
+      ],
+      "files": [
+        "apps/account/src/server/backend/user.ts:90",
+        "supabase/migrations/013_email_verified_source_of_truth.sql:12"
+      ],
+      "owner_area": "account auth",
+      "old_finding_status": "still-valid-partial",
+      "fix_priority": 2
+    },
+    {
+      "id": "SEC-003",
+      "severity": "P1",
+      "surface": "account-auth",
+      "category": "session-revocation",
+      "status": "confirmed",
+      "confidence": 0.88,
+      "title": "Global revoke extension sessions всё ещё использует read-modify-write вместо atomic auth_session_version RPC",
+      "impact": "Concurrent revocations могут потерять increment auth_session_version, из-за чего часть access tokens останется валидной дольше ожидаемого. Migration 013 добавила bump_auth_session_version именно для замены этого паттерна.",
+      "evidence": [
+        "apps/account/src/server/backend/oauth.ts:505-523 читает auth_session_version и затем обновляет его на current + 1.",
+        "supabase/migrations/013_email_verified_source_of_truth.sql:50-68 определяет bump_auth_session_version и документирует race."
+      ],
+      "repro": "Запустить concurrent revokeAllExtensionSessionsForUser calls и проверить, увеличивается ли version один раз или два.",
+      "commands": [
+        "rg -n \"auth_session_version|bump_auth_session_version\" apps/account supabase --glob '!**/.next/**'"
+      ],
+      "files": [
+        "apps/account/src/server/backend/oauth.ts:505",
+        "supabase/migrations/013_email_verified_source_of_truth.sql:52"
+      ],
+      "owner_area": "account auth",
+      "old_finding_status": "still-valid",
+      "fix_priority": 2
+    },
+    {
+      "id": "SEC-004",
+      "severity": "P0",
+      "surface": "extension-settings",
+      "category": "data-deletion",
+      "status": "confirmed",
+      "confidence": 0.92,
+      "title": "Fallback удаления аккаунта всё ещё soft-delete-ит каждый доступный trail при RPC failure",
+      "impact": "Если request_account_deletion fails, extension fallback обновляет trails, где id != all-zero UUID. Сегодня RLS ограничивает ущерб caller-ом, но любая RLS regression превращает это в cross-tenant wipe, а даже scoped behavior удаляет все trails пользователя при RPC failure.",
+      "evidence": [
+        "extension/src/apps/settings/pages/AccountPage.tsx:440-445 выполняет supabase.from('trails').update(...).neq('id', all-zero), когда есть rpcResult.error.",
+        "Это было P0 в review от 2026-04-19 и остаётся в коде."
+      ],
+      "repro": "Заставить request_account_deletion RPC упасть и проверить fallback update по trails с единственным predicate neq('id', zero).",
+      "commands": [
+        "rg -n \"request_account_deletion|neq\\(\" extension/src/apps/settings/pages/AccountPage.tsx"
+      ],
+      "files": [
+        "extension/src/apps/settings/pages/AccountPage.tsx:440"
+      ],
+      "owner_area": "extension account settings",
+      "old_finding_status": "still-valid",
+      "fix_priority": 1
+    },
+    {
+      "id": "DATA-001",
+      "severity": "P1",
+      "surface": "account-sync",
+      "category": "data-integrity",
+      "status": "confirmed",
+      "confidence": 0.82,
+      "title": "Single-trail upsert остаётся read-then-write без transaction",
+      "impact": "Concurrent sync requests для одного trail могут оба увидеть отсутствие existing row или stale metadata, что приводит к unique conflicts или last-write surprises вне transaction.",
+      "evidence": [
+        "apps/account/src/server/backend/trails-sync.ts:345-352 читает existing row.",
+        "apps/account/src/server/backend/trails-sync.ts:400-426 затем отдельно делает update или insert."
+      ],
+      "repro": "Отправить concurrent PUT/upsert requests для одного trail id и device/user в одном timestamp window.",
+      "commands": [
+        "nl -ba apps/account/src/server/backend/trails-sync.ts | sed -n '345,426p'"
+      ],
+      "files": [
+        "apps/account/src/server/backend/trails-sync.ts:345",
+        "apps/account/src/server/backend/trails-sync.ts:418"
+      ],
+      "owner_area": "account sync",
+      "old_finding_status": "still-valid",
+      "fix_priority": 2
+    },
+    {
+      "id": "DATA-002",
+      "severity": "P1",
+      "surface": "account-sync",
+      "category": "data-integrity",
+      "status": "confirmed",
+      "confidence": 0.8,
+      "title": "ensureSyncDevices всё ещё переназначает existing device ids между users",
+      "impact": "Если один и тот же device id появляется под другим account, server обновляет owner устройства вместо reject или namespace. Это может сломать trails, которые ссылаются на device id предыдущего owner-а.",
+      "evidence": [
+        "apps/account/src/server/backend/trails-sync.ts:162-170 логирует device ownership reassignment и затем обновляет device."
+      ],
+      "repro": "Синхронизировать два accounts с одним persisted device id и проверить devices.user_id до и после второго sync.",
+      "commands": [
+        "nl -ba apps/account/src/server/backend/trails-sync.ts | sed -n '156,170p'"
+      ],
+      "files": [
+        "apps/account/src/server/backend/trails-sync.ts:162"
+      ],
+      "owner_area": "account sync",
+      "old_finding_status": "still-valid",
+      "fix_priority": 2
+    },
+    {
+      "id": "TEST-001",
+      "severity": "P1",
+      "surface": "extension",
+      "category": "test-gate",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Aggregate extension test gate красный из-за drift в AUTH_TRANSITION protocol contract",
+      "impact": "Primary extension test script останавливается на transport-contracts.test.ts, скрывает последующие тесты в chained script и блокирует CI.",
+      "evidence": [
+        "pnpm test и pnpm -C extension test оба падают: actual EXTENSION_MESSAGE содержит event/auth-transition, а expected list нет.",
+        "extension/src/shared/transport/protocols.ts:21 объявляет AUTH_TRANSITION; extension/tests/transport-contracts.test.ts:47 expected list его пропускает."
+      ],
+      "repro": "Запустить pnpm -C extension test.",
+      "commands": [
+        "pnpm test",
+        "pnpm -C extension test"
+      ],
+      "files": [
+        "extension/src/shared/transport/protocols.ts:21",
+        "extension/tests/transport-contracts.test.ts:47"
+      ],
+      "owner_area": "extension test harness",
+      "old_finding_status": "new",
+      "fix_priority": 1
+    },
+    {
+      "id": "TEST-002",
+      "severity": "P1",
+      "surface": "extension",
+      "category": "e2e",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Extension Playwright e2e suite устарел: падают 3 из 5 тестов",
+      "impact": "Release-relevant browser automation не отражает текущие onboarding/settings UI, поэтому e2e нельзя считать надёжным shipping gate.",
+      "evidence": [
+        "pnpm -C extension exec playwright test: onboarding heading 'Welcome to Trail' не найден.",
+        "Privacy onboarding heading 'What Trail records' не найден.",
+        "Settings heading 'Trail Settings' не найден.",
+        "2 tests pass, 3 fail."
+      ],
+      "repro": "Запустить pnpm -C extension build && pnpm -C extension exec playwright test.",
+      "commands": [
+        "pnpm -C extension exec playwright test"
+      ],
+      "files": [
+        "extension/tests/e2e/onboarding.spec.ts:12",
+        "extension/tests/e2e/onboarding.spec.ts:41",
+        "extension/tests/e2e/smoke.spec.ts:15"
+      ],
+      "owner_area": "extension e2e",
+      "old_finding_status": "still-valid",
+      "fix_priority": 1
+    },
+    {
+      "id": "TEST-003",
+      "severity": "P1",
+      "surface": "extension",
+      "category": "test-coverage",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Manual smoke/ui stubs всё ещё проходят через assert.ok(true)",
+      "impact": "Extension test script показывает critical auth/offline/export/UI scenarios как executable tests, но они только логируют manual instructions и всегда проходят.",
+      "evidence": [
+        "extension/tests/smoke-e2e.test.ts:4-8 документирует always-passing stubs.",
+        "extension/tests/ui-interaction.test.ts:4-8 документирует always-passing stubs.",
+        "rg нашёл 17 occurrences 'stub - automation pending' в этих файлах."
+      ],
+      "repro": "Проверить smoke-e2e.test.ts и ui-interaction.test.ts; каждый scenario заканчивается assert.ok(true).",
+      "commands": [
+        "rg -n \"assert\\.ok\\(true|stub\" extension/tests"
+      ],
+      "files": [
+        "extension/tests/smoke-e2e.test.ts:31",
+        "extension/tests/ui-interaction.test.ts:34"
+      ],
+      "owner_area": "extension test coverage",
+      "old_finding_status": "still-valid",
+      "fix_priority": 2
+    },
+    {
+      "id": "TEST-004",
+      "severity": "P1",
+      "surface": "account-api",
+      "category": "test-harness",
+      "status": "confirmed",
+      "confidence": 0.95,
+      "title": "Targeted account API tests красные из-за env, mock и response-code drift",
+      "impact": "Account API suite сейчас смешивает реальные failures и harness failures, из-за чего auth/billing regression review ненадёжен.",
+      "evidence": [
+        "Targeted account test run: 148 passed, 8 failed, 1 suite failed.",
+        "trails.test.ts падает на import, потому что отсутствуют NEXT_PUBLIC_SUPABASE_URL и NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        "nowpayments-webhook.test.ts падает, потому что route использует db.from, но mock его не предоставляет.",
+        "oauth.test.ts unsupported grant type ожидал unsupported_grant_type, но route возвращает VALIDATION_ERROR."
+      ],
+      "repro": "Запустить targeted account test command, записанный в command_results.",
+      "commands": [
+        "pnpm -C apps/account test -- src/lib/__tests__/auth.test.ts app/api/v1/__tests__/billing.test.ts app/api/v1/__tests__/subscription.test.ts app/api/v1/__tests__/nowpayments-webhook.test.ts app/api/v1/__tests__/oauth.test.ts app/api/v1/__tests__/trails-sync.test.ts"
+      ],
+      "files": [
+        "apps/account/src/env.ts:23",
+        "apps/account/app/api/v1/billing/webhooks/nowpayments/route.ts:233",
+        "apps/account/app/api/v1/__tests__/oauth.test.ts:240"
+      ],
+      "owner_area": "account tests",
+      "old_finding_status": "new",
+      "fix_priority": 1
+    },
+    {
+      "id": "CI-001",
+      "severity": "P1",
+      "surface": "ci-neon",
+      "category": "ci-release",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Neon preview workflow вызывает отсутствующий root script db:migrate:deploy",
+      "impact": "PR database preview/migration validation likely падает до schema diff, потому что workflow вызывает script, которого нет в package.json.",
+      "evidence": [
+        ".github/workflows/neon-workflow.yml:67-68 запускает pnpm db:migrate:deploy.",
+        "Root package.json scripts включает db:migrate и db:types, но не db:migrate:deploy."
+      ],
+      "repro": "Запустить rg -n 'db:migrate:deploy' .github/workflows package.json.",
+      "commands": [
+        "rg -n \"db:migrate:deploy\" .github/workflows package.json"
+      ],
+      "files": [
+        ".github/workflows/neon-workflow.yml:68",
+        "package.json:18"
+      ],
+      "owner_area": "devops",
+      "old_finding_status": "new",
+      "fix_priority": 2
+    },
+    {
+      "id": "CI-002",
+      "severity": "P1",
+      "surface": "ci-extension",
+      "category": "ci-release",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Extension workflows кэшируются по отсутствующему extension/pnpm-lock.yaml",
+      "impact": "CI, release и security audit workflows ссылаются на lockfile, которого нет, при этом изменения root pnpm-lock.yaml влияют на extension installs. Это создаёт cache drift и blind spots в path triggers.",
+      "evidence": [
+        "test -f extension/pnpm-lock.yaml вернул missing.",
+        ".github/workflows/ci-extension.yml:36, release-extension.yml:42 и security.yml:46 используют cache-dependency-path: extension/pnpm-lock.yaml.",
+        "git ls-files показывает root и nested app/package lockfiles, но не extension lockfile."
+      ],
+      "repro": "Запустить test -f extension/pnpm-lock.yaml и проверить workflow cache-dependency-path entries.",
+      "commands": [
+        "test -f extension/pnpm-lock.yaml && echo exists || echo missing",
+        "git ls-files '*pnpm-lock.yaml'"
+      ],
+      "files": [
+        ".github/workflows/ci-extension.yml:36",
+        ".github/workflows/release-extension.yml:42",
+        ".github/workflows/security.yml:46"
+      ],
+      "owner_area": "devops",
+      "old_finding_status": "new",
+      "fix_priority": 2
+    },
+    {
+      "id": "CI-003",
+      "severity": "P1",
+      "surface": "extension-release",
+      "category": "ci-release",
+      "status": "confirmed",
+      "confidence": 0.95,
+      "title": "Extension release gate слабее, чем extension CI",
+      "impact": "Tag release workflow может package и upload draft extension без запуска тех же format и Playwright e2e gates, которые используются в CI.",
+      "evidence": [
+        "ci-extension.yml запускает Format check и E2E Playwright.",
+        "release-extension.yml запускает lint, typecheck, test, build, package, upload, но не format:check или Playwright e2e."
+      ],
+      "repro": "Сравнить .github/workflows/ci-extension.yml и release-extension.yml.",
+      "commands": [
+        "nl -ba .github/workflows/ci-extension.yml",
+        "nl -ba .github/workflows/release-extension.yml"
+      ],
+      "files": [
+        ".github/workflows/ci-extension.yml:44",
+        ".github/workflows/ci-extension.yml:59",
+        ".github/workflows/release-extension.yml:47"
+      ],
+      "owner_area": "release",
+      "old_finding_status": "new",
+      "fix_priority": 2
+    },
+    {
+      "id": "CI-004",
+      "severity": "P2",
+      "surface": "supabase-ci",
+      "category": "ci-release",
+      "status": "confirmed-and-blocked-local",
+      "confidence": 0.88,
+      "title": "Supabase pgTAP path локально заблокирован, а CI использует unpinned CLI и отсутствующий seed file",
+      "impact": "Database-policy verification локально невоспроизводим без запуска Supabase, а CI может drift-ить из-за latest CLI behavior. config.toml включает seed.sql, но файла нет.",
+      "evidence": [
+        "pnpm exec supabase test db локально упал: connection refused на 127.0.0.1:54322.",
+        "ci-supabase.yml:20-23 использует supabase/setup-cli version: latest.",
+        "supabase/config.toml:60-65 включает ./seed.sql; test -f supabase/seed.sql вернул missing."
+      ],
+      "repro": "Запустить pnpm exec supabase test db без локального Supabase; проверить ci-supabase.yml и supabase/config.toml.",
+      "commands": [
+        "pnpm exec supabase test db",
+        "test -f supabase/seed.sql && echo present || echo missing"
+      ],
+      "files": [
+        ".github/workflows/ci-supabase.yml:23",
+        "supabase/config.toml:65"
+      ],
+      "owner_area": "database ci",
+      "old_finding_status": "new",
+      "fix_priority": 3
+    },
+    {
+      "id": "SEC-005",
+      "severity": "P1",
+      "surface": "dependencies",
+      "category": "security-dependencies",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Production dependency audit сообщает 10 vulnerabilities, включая high advisories Next.js и Picomatch",
+      "impact": "App поставляется с уязвимыми версиями согласно pnpm audit. Самый impact-ный item — Next.js Server Components DoS, patched в >=16.2.3; текущий Next.js — 16.1.6.",
+      "evidence": [
+        "pnpm audit --prod нашёл 10 vulnerabilities: 2 high, 7 moderate, 1 low.",
+        "High advisories: Picomatch ReDoS и Next.js DoS with Server Components.",
+        "Moderate advisories включают Next.js request smuggling, image cache growth, postponed resume buffering, Server Actions CSRF, follow-redirects header leak и PostCSS XSS."
+      ],
+      "repro": "Запустить pnpm audit --prod.",
+      "commands": [
+        "pnpm audit --prod"
+      ],
+      "files": [
+        "package.json:31",
+        "pnpm-lock.yaml"
+      ],
+      "owner_area": "dependencies",
+      "old_finding_status": "new",
+      "fix_priority": 2
+    },
+    {
+      "id": "BUILD-001",
+      "severity": "P1",
+      "surface": "marketing",
+      "category": "quality-gate",
+      "status": "confirmed",
+      "confidence": 1,
+      "title": "Workspace lint падает на marketing Hero useEffect setState",
+      "impact": "Top-level lint gate красный, поэтому CI должен блокировать, а любые последующие lint findings masked до фикса этой ошибки.",
+      "evidence": [
+        "pnpm lint падает на apps/marketing/app/components/landing/Hero.tsx:144.",
+        "ESLint rule react-hooks/set-state-in-effect отклоняет synchronous setEnableVideo(false) внутри useEffect."
+      ],
+      "repro": "Запустить pnpm lint.",
+      "commands": [
+        "pnpm lint"
+      ],
+      "files": [
+        "apps/marketing/app/components/landing/Hero.tsx:144"
+      ],
+      "owner_area": "marketing frontend",
+      "old_finding_status": "new",
+      "fix_priority": 1
+    },
+    {
+      "id": "BUILD-002",
+      "severity": "P2",
+      "surface": "account",
+      "category": "build-reproducibility",
+      "status": "confirmed",
+      "confidence": 0.9,
+      "title": "Account build локально падает без CI env stubs",
+      "impact": "Документированная локальная build command не самодостаточна; /api/v1/plans импортирует server env во время page-data collection и падает до завершения build.",
+      "evidence": [
+        "pnpm -C apps/account build падает: missing NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, TRAIL_EXTENSION_JWT_SECRET, DATABASE_URL.",
+        "ci-web.yml обходит это env stubs, но README quickstart всё ещё упоминает stale Prisma scripts вместо этих env requirements."
+      ],
+      "repro": "Запустить pnpm -C apps/account build в clean shell без app env files.",
+      "commands": [
+        "pnpm -C apps/account build"
+      ],
+      "files": [
+        "apps/account/src/env.ts:23",
+        ".github/workflows/ci-web.yml:35"
+      ],
+      "owner_area": "account dev experience",
+      "old_finding_status": "new",
+      "fix_priority": 3
+    },
+    {
+      "id": "I18N-001",
+      "severity": "P1",
+      "surface": "account",
+      "category": "runtime-i18n",
+      "status": "confirmed-browser",
+      "confidence": 0.96,
+      "title": "Account app выводит next-intl INVALID_KEY errors из-за dotted message keys",
+      "impact": "Каждый проверенный account route логирует runtime i18n error, потому что keys в errors namespace содержат dots. Это может ломать translated error rendering и загрязняет browser console при нормальной навигации.",
+      "evidence": [
+        "Browser checks на /login, /onboarding, /trails, /activity, /billing, /settings показали next-intl INVALID_KEY errors.",
+        "apps/account/messages/en.json и ru.json определяют errors.auth.unauthorized, trail.notFound, billing.missingPlan, onboarding.resetFailed как flat dotted keys."
+      ],
+      "repro": "Запустить account dev server и открыть http://localhost:4001/login; проверить browser console.",
+      "commands": [
+        "Browser local account route check",
+        "rg -n 'auth\\.unauthorized|trail\\.notFound|billing\\.missingPlan' apps/account/messages"
+      ],
+      "files": [
+        "apps/account/messages/en.json:117",
+        "apps/account/messages/ru.json:117"
+      ],
+      "owner_area": "account i18n",
+      "old_finding_status": "new",
+      "fix_priority": 2
+    },
+    {
+      "id": "UI-001",
+      "severity": "P2",
+      "surface": "marketing",
+      "category": "accessibility",
+      "status": "likely",
+      "confidence": 0.72,
+      "title": "Feedback widget dialog фокусирует textarea, но без видимого focus trap или focus restore",
+      "impact": "Keyboard users likely могут tab-нуться за пределы modal, а закрытие widget может не вернуть focus на trigger. Это high-friction support path.",
+      "evidence": [
+        "FeedbackWidget ставит aria-modal=true и фокусирует textarea через setTimeout.",
+        "Вокруг dialog open/close code не видно focus-trap implementation или trigger focus restore."
+      ],
+      "repro": "Открыть feedback widget, пройти focusable elements через Tab, закрыть Escape и проверить location focus.",
+      "commands": [
+        "Browser marketing route check",
+        "nl -ba apps/marketing/app/components/FeedbackWidget.tsx | sed -n '59,174p'"
+      ],
+      "files": [
+        "apps/marketing/app/components/FeedbackWidget.tsx:64",
+        "apps/marketing/app/components/FeedbackWidget.tsx:160"
+      ],
+      "owner_area": "marketing ui",
+      "old_finding_status": "new",
+      "fix_priority": 4
+    },
+    {
+      "id": "UI-002",
+      "severity": "P2",
+      "surface": "account",
+      "category": "accessibility",
+      "status": "confirmed-codepath",
+      "confidence": 0.84,
+      "title": "Account trail cards кликабельны как Cards вместо links/buttons, а actions скрыты до hover",
+      "impact": "Card navigation не semantic для keyboard и assistive tech users, а action menu invisible до hover/focus. Это основная navigation surface для account trails.",
+      "evidence": [
+        "trails-list.tsx:161-168 рендерит Card с onClick router.push.",
+        "trails-list.tsx:190-196 рендерит icon button, скрытый opacity-0 до group hover/focus."
+      ],
+      "repro": "Пройти /trails с sample data клавиатурой и проверить, reachable ли каждая card и announced ли она как link.",
+      "commands": [
+        "nl -ba 'apps/account/app/(dashboard)/trails/trails-list.tsx' | sed -n '159,196p'"
+      ],
+      "files": [
+        "apps/account/app/(dashboard)/trails/trails-list.tsx:161",
+        "apps/account/app/(dashboard)/trails/trails-list.tsx:193"
+      ],
+      "owner_area": "account ui",
+      "old_finding_status": "new",
+      "fix_priority": 4
+    },
+    {
+      "id": "UI-003",
+      "severity": "P2",
+      "surface": "account-extension",
+      "category": "touch-keyboard",
+      "status": "confirmed-codepath",
+      "confidence": 0.8,
+      "title": "Несколько важных actions доступны только по hover или opacity-hidden",
+      "impact": "Touch users и keyboard users без точного focus path могут пропустить open/external/rename/delete actions в account и extension tree surfaces.",
+      "evidence": [
+        "apps/account/app/(dashboard)/trails/[id]/trail-detail.tsx:290 скрывает external link до group hover.",
+        "extension/src/apps/sidepanel/ui/components/TreeDropdown.tsx:519 скрывает item actions до group hover или selected state."
+      ],
+      "repro": "Использовать touch emulation или keyboard-only navigation на trail detail и extension TreeDropdown.",
+      "commands": [
+        "rg -n \"opacity-0 group-hover\" apps extension --glob '!**/.next/**'"
+      ],
+      "files": [
+        "apps/account/app/(dashboard)/trails/[id]/trail-detail.tsx:290",
+        "extension/src/apps/sidepanel/ui/components/TreeDropdown.tsx:519"
+      ],
+      "owner_area": "account and extension ui",
+      "old_finding_status": "new",
+      "fix_priority": 4
+    },
+    {
+      "id": "UI-004",
+      "severity": "P2",
+      "surface": "extension",
+      "category": "accessibility-responsive",
+      "status": "confirmed-codepath",
+      "confidence": 0.82,
+      "title": "Extension onboarding использует fixed-height dialog и non-modal dialog semantics для modal-like overlays",
+      "impact": "Wizard может clip-иться на коротких sidepanel heights, а celebration/commitment overlays могут объявляться как dialogs, хотя semantics разрешают background interaction.",
+      "evidence": [
+        "OnboardingWizard DialogContent использует h-[480px] max-w-[400px].",
+        "TourCelebration использует role=dialog aria-modal=false, покрывая sidepanel."
+      ],
+      "repro": "Открыть extension preview или sidepanel на короткой высоте и пройти onboarding keyboard/screen-reader dialog checks.",
+      "commands": [
+        "nl -ba extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx | sed -n '293,296p'",
+        "rg -n \"role=\\\"dialog\\\"|aria-modal=\\\"false\\\"\" extension/src/apps/sidepanel/ui/onboarding"
+      ],
+      "files": [
+        "extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx:295",
+        "extension/src/apps/sidepanel/ui/onboarding/celebration/TourCelebration.tsx:98"
+      ],
+      "owner_area": "extension onboarding",
+      "old_finding_status": "new",
+      "fix_priority": 4
+    },
+    {
+      "id": "UI-005",
+      "severity": "P2",
+      "surface": "extension",
+      "category": "responsive-density",
+      "status": "likely",
+      "confidence": 0.68,
+      "title": "Fixed dimensions graph node могут обрезать длинные titles и URLs",
+      "impact": "Core value Trail — scannable research context. Fixed 160 x 60 nodes могут скрывать meaningful title/URL distinctions в плотных research sessions.",
+      "evidence": [
+        "TrailNode использует min-h-[60px] w-[160px] с compact title/detail presentation.",
+        "Перед фиксом нужна browser verification на sample long-label data."
+      ],
+      "repro": "Загрузить preview data или real tree с длинными page titles и сравнить visible node labels на разных zoom levels.",
+      "commands": [
+        "nl -ba extension/src/features/graph/components/TrailNode.tsx | sed -n '140,164p'"
+      ],
+      "files": [
+        "extension/src/features/graph/components/TrailNode.tsx:145"
+      ],
+      "owner_area": "extension graph",
+      "old_finding_status": "new",
+      "fix_priority": 5
+    },
+    {
+      "id": "DOC-001",
+      "severity": "P2",
+      "surface": "docs",
+      "category": "developer-experience",
+      "status": "confirmed",
+      "confidence": 0.95,
+      "title": "README и env comments всё ещё описывают удалённые Prisma/Better Auth/tRPC workflows",
+      "impact": "Новые contributors и agents, следующие README, будут запускать nonexistent scripts и строить неверную mental model backend stack.",
+      "evidence": [
+        "README ссылается на Prisma, Better Auth, tRPC, db:generate, db:migrate:deploy, db:studio.",
+        "Root package.json не определяет db:generate, db:migrate:deploy или db:studio.",
+        "apps/account/.env.example всё ещё говорит, что DATABASE_URL required for Prisma CLI."
+      ],
+      "repro": "Запустить rg -n 'Prisma|Better Auth|tRPC|db:migrate:deploy|db:generate' README.md apps/account/.env.example package.json.",
+      "commands": [
+        "rg -n \"db:migrate:deploy|db:generate|Prisma|Better Auth|tRPC\" README.md apps/account/.env.example package.json"
+      ],
+      "files": [
+        "README.md:9",
+        "README.md:42",
+        "apps/account/.env.example:1",
+        "package.json:18"
+      ],
+      "owner_area": "docs",
+      "old_finding_status": "new",
+      "fix_priority": 5
+    },
+    {
+      "id": "REL-001",
+      "severity": "P2",
+      "surface": "extension-build",
+      "category": "performance-release",
+      "status": "confirmed",
+      "confidence": 0.86,
+      "title": "Extension production build проходит с unresolved font references и >500 kB chunk warnings",
+      "impact": "Extension ships background chunk 551 kB и react-vendor chunk 635 kB. Build также оставляет несколько font URL references unresolved at build time.",
+      "evidence": [
+        "pnpm -C extension build завершился успешно.",
+        "Warnings: Geist font file references did not resolve at build time; settings.ts импортируется dynamically и statically; chunks larger than 500 kB."
+      ],
+      "repro": "Запустить pnpm -C extension build.",
+      "commands": [
+        "pnpm -C extension build"
+      ],
+      "files": [
+        "extension/wxt.config.ts:35"
+      ],
+      "owner_area": "extension performance",
+      "old_finding_status": "new",
+      "fix_priority": 5
+    },
+    {
+      "id": "BUILD-003",
+      "severity": "P2",
+      "surface": "extension-preview",
+      "category": "preview-harness",
+      "status": "confirmed-browser-server-log",
+      "confidence": 0.93,
+      "title": "Extension preview:ui стартует, но Vite не может resolve sidepanel imports",
+      "impact": "Local UI preview route нельзя считать надёжным для sidepanel/onboarding review: Vite сообщает unresolved imports для missing RenameNodeDialog component и #i18n alias. Это блокирует requested browser preview path от проверки real extension UI.",
+      "evidence": [
+        "pnpm -C extension preview:ui served on localhost:5174, затем Vite logged failed import analysis для extension/preview/PreviewApp.tsx:3.",
+        "Vite также logged unresolved #i18n imports из OnboardingWizard.tsx, onboarding wizard screens и useDeleteFlow.ts.",
+        "rg --files extension/src | rg 'Rename|rename|i18n' нашёл inline-rename-context.tsx, но не RenameNodeDialog file."
+      ],
+      "repro": "Запустить pnpm -C extension preview:ui и открыть preview route; увидеть Vite import-analysis errors для @apps/sidepanel/ui/components/RenameNodeDialog и #i18n.",
+      "commands": [
+        "pnpm -C extension preview:ui",
+        "rg -n \"preview:ui|RenameNodeDialog|#i18n\" extension/package.json extension/preview extension/src --glob '!**/dist/**' --glob '!**/node_modules/**'",
+        "rg --files extension/src | rg 'Rename|rename|i18n'"
+      ],
+      "files": [
+        "extension/package.json:11",
+        "extension/preview/PreviewApp.tsx:3",
+        "extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx:14",
+        "extension/src/apps/sidepanel/ui/hooks/useDeleteFlow.ts:3"
+      ],
+      "owner_area": "extension dev preview",
+      "old_finding_status": "new",
+      "fix_priority": 3
+    },
+    {
+      "id": "REVAL-001",
+      "severity": "P0",
+      "surface": "supabase-rls",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code-unverified-local-db",
+      "confidence": 0.82,
+      "title": "Старая P0 users RLS column-write issue выглядит исправленной migration 014 и pgTAP coverage",
+      "impact": "Старую finding не нужно держать active, если pgTAP не падает в запущенном Supabase environment.",
+      "evidence": [
+        "supabase/migrations/014_users_column_grants.sql revoke-ит broad update и grant-ит safe column allow-list.",
+        "supabase/tests/rls_users.test.sql проверяет, что users не могут обновлять email_verified или auth_session_version.",
+        "Local pgTAP не смог запуститься, потому что Supabase не был started."
+      ],
+      "repro": "Запустить local Supabase и выполнить pnpm exec supabase test db.",
+      "commands": [
+        "pnpm exec supabase test db"
+      ],
+      "files": [
+        "supabase/migrations/014_users_column_grants.sql",
+        "supabase/tests/rls_users.test.sql"
+      ],
+      "owner_area": "database security",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-002",
+      "severity": "P0",
+      "surface": "supabase-account-deletion",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code-unverified-local-db",
+      "confidence": 0.82,
+      "title": "Старый P0 account-deletion RPC revocation gap выглядит исправленным migration 008 и pgTAP coverage",
+      "impact": "RPC теперь revokes extension_device_sessions и oauth_refresh_tokens и bumps auth_session_version; local DB verification остаётся blocked.",
+      "evidence": [
+        "supabase/migrations/008_fix_account_deletion_rpc.sql обновляет extension_device_sessions и oauth_refresh_tokens и bumps auth_session_version.",
+        "supabase/tests/request_account_deletion.test.sql проверяет эти effects."
+      ],
+      "repro": "Запустить local Supabase и выполнить pnpm exec supabase test db.",
+      "commands": [
+        "pnpm exec supabase test db"
+      ],
+      "files": [
+        "supabase/migrations/008_fix_account_deletion_rpc.sql",
+        "supabase/tests/request_account_deletion.test.sql"
+      ],
+      "owner_area": "database security",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-003",
+      "severity": "P0",
+      "surface": "extension-sync",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code",
+      "confidence": 0.9,
+      "title": "Старая MV3 setInterval sync-pull и Supabase autoRefreshToken issue выглядит исправленной",
+      "impact": "Periodic sync теперь использует chrome.alarms, а Supabase autoRefreshToken disabled для extension client.",
+      "evidence": [
+        "extension/src/background/sync/sync-engine.ts:85-90 документирует chrome.alarms as authoritative.",
+        "sync-engine.ts:1445-1449 создаёт trail-sync-pull alarm.",
+        "service-worker.ts:36-43 регистрирует onAlarm на module top level.",
+        "shared/lib/supabase.ts:39-42 ставит autoRefreshToken: false."
+      ],
+      "repro": "Проверить listed files; runtime alarm wake behavior всё ещё заслуживает browser/service-worker trace в later fix pass.",
+      "commands": [
+        "rg -n \"chrome\\.alarms|autoRefreshToken|setInterval\" extension/src"
+      ],
+      "files": [
+        "extension/src/background/sync/sync-engine.ts:85",
+        "extension/src/background/service-worker.ts:39",
+        "extension/src/shared/lib/supabase.ts:42"
+      ],
+      "owner_area": "extension sync",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-004",
+      "severity": "P0",
+      "surface": "extension-sync",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code",
+      "confidence": 0.88,
+      "title": "Старая pending-op skipped-as-terminal loss выглядит исправленной",
+      "impact": "Skipped push outcomes больше не удаляются из pending queue, а cold-start drain ждёт first signed-in transition.",
+      "evidence": [
+        "sync-engine.ts:182-188 говорит, что skipped is not terminal.",
+        "sync-engine.ts:1512-1516 документирует ожидание signed-in transition, чтобы избежать old queue-loss bug."
+      ],
+      "repro": "Поставить pending push в queue, разбудить service worker signed out, затем sign in и подтвердить, что queue drains после auth settles.",
+      "commands": [
+        "rg -n \"skipped|drainPendingOps\" extension/src/background/sync/sync-engine.ts"
+      ],
+      "files": [
+        "extension/src/background/sync/sync-engine.ts:182",
+        "extension/src/background/sync/sync-engine.ts:1512"
+      ],
+      "owner_area": "extension sync",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-005",
+      "severity": "P1",
+      "surface": "account-import",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code",
+      "confidence": 0.9,
+      "title": "Старая import-device ownership collision выглядит исправленной",
+      "impact": "Import device ids теперь scoped by user id, поэтому import device одного user не должен collide с import device другого user.",
+      "evidence": [
+        "apps/account/app/api/v1/trails/import/route.ts:16-17 возвращает import:<userId>.",
+        "Старый hardcoded import device id больше не присутствует."
+      ],
+      "repro": "Import trails под двумя users и сравнить devices.id values.",
+      "commands": [
+        "rg -n \"importDeviceId|IMPORT_DEVICE_ID\" apps/account/app/api/v1/trails/import/route.ts"
+      ],
+      "files": [
+        "apps/account/app/api/v1/trails/import/route.ts:16"
+      ],
+      "owner_area": "account API",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-006",
+      "severity": "P1",
+      "surface": "account-api",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code",
+      "confidence": 0.9,
+      "title": "Старая permissive chrome-extension CORS issue выглядит исправленной",
+      "impact": "CORS теперь allowlist-ит explicit extension IDs вместо startsWith chrome-extension:// и omits Access-Control-Allow-Origin для disallowed origins.",
+      "evidence": [
+        "apps/account/src/server/api/cors.ts парсит OAUTH_ALLOWED_EXTENSION_IDS в exact origins.",
+        "corsHeaders emits Access-Control-Allow-Origin только когда origin есть в allowlist."
+      ],
+      "repro": "Запустить cors tests или вызвать OPTIONS с random chrome-extension:// origin.",
+      "commands": [
+        "pnpm -C apps/account test -- src/server/api/__tests__/cors.test.ts"
+      ],
+      "files": [
+        "apps/account/src/server/api/cors.ts:4",
+        "apps/account/src/server/api/cors.ts:23"
+      ],
+      "owner_area": "account security",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    },
+    {
+      "id": "REVAL-007",
+      "severity": "P0",
+      "surface": "architecture",
+      "category": "old-finding-revalidation",
+      "status": "fixed-in-code",
+      "confidence": 0.9,
+      "title": "Старая packages/trpc ghost-router finding выглядит resolved",
+      "impact": "Старый trpc package исчез, а remaining package — auth-token. Stray packages/ui directory содержит только ignored node_modules bins.",
+      "evidence": [
+        "test -d packages/trpc вернул missing.",
+        "find packages -maxdepth 2 -name package.json показывает только auth-token, config, content, db.",
+        "packages/ui не имеет package.json и содержит только ignored node_modules bin entries."
+      ],
+      "repro": "Запустить test -d packages/trpc и find packages -maxdepth 2 -name package.json.",
+      "commands": [
+        "test -d packages/trpc && echo trpc-exists || echo trpc-missing",
+        "find packages -maxdepth 2 -name package.json -print"
+      ],
+      "files": [
+        "packages/auth-token/package.json"
+      ],
+      "owner_area": "architecture",
+      "old_finding_status": "fixed",
+      "fix_priority": 0
+    }
+  ]
+}

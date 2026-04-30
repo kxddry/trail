@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Trail Comprehensive Review - 2026-04-28</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #17120f;
+        --panel: #211a15;
+        --panel-2: #2b211a;
+        --ink: #f2e8db;
+        --muted: #bcae9f;
+        --faint: #8f8173;
+        --line: #46382d;
+        --line-strong: #675344;
+        --p0: #ff6b4a;
+        --p1: #e8a84d;
+        --p2: #d8c07d;
+        --ok: #8fbf83;
+        --blocked: #d17878;
+        --blue: #8aa8b8;
+        --shadow: rgba(0, 0, 0, 0.28);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        background: var(--bg);
+      }
+
+      body {
+        margin: 0;
+        min-height: 100%;
+        background:
+          linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px) 0 0 / 72px 72px,
+          linear-gradient(0deg, rgba(255, 255, 255, 0.016) 1px, transparent 1px) 0 0 / 72px 72px,
+          var(--bg);
+        color: var(--ink);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        letter-spacing: 0;
+      }
+
+      button,
+      input,
+      select {
+        font: inherit;
+      }
+
+      a {
+        color: var(--ink);
+      }
+
+      .shell {
+        width: min(1480px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 28px 0 54px;
+      }
+
+      .topline {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 28px;
+        align-items: end;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--line-strong);
+      }
+
+      .kicker {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        font-weight: 760;
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        max-width: 860px;
+        margin-top: 8px;
+        font-size: clamp(38px, 5vw, 78px);
+      }
+
+      h2 {
+        font-size: clamp(24px, 2vw, 34px);
+      }
+
+      h3 {
+        font-size: 16px;
+      }
+
+      .meta {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(86px, 1fr));
+        gap: 8px;
+        width: min(520px, 100%);
+      }
+
+      .metric {
+        min-height: 78px;
+        padding: 12px;
+        background: rgba(33, 26, 21, 0.9);
+        border: 1px solid var(--line);
+      }
+
+      .metric strong {
+        display: block;
+        font-size: 28px;
+        line-height: 1;
+      }
+
+      .metric span {
+        display: block;
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .brief {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+        gap: 18px;
+        margin: 24px 0;
+      }
+
+      .note,
+      .filters,
+      .section,
+      .command-table,
+      .empty {
+        min-width: 0;
+        background: rgba(33, 26, 21, 0.94);
+        border: 1px solid var(--line);
+        box-shadow: 0 18px 42px var(--shadow);
+      }
+
+      .note {
+        padding: 18px;
+      }
+
+      .note p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .note ul {
+        margin: 14px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .filters {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: repeat(6, minmax(120px, 1fr));
+        gap: 10px;
+        padding: 12px;
+        margin: 18px 0 22px;
+      }
+
+      .field {
+        display: grid;
+        gap: 5px;
+        min-width: 0;
+      }
+
+      label {
+        color: var(--faint);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+
+      select,
+      input[type="search"] {
+        min-height: 38px;
+        width: 100%;
+        border: 1px solid var(--line-strong);
+        border-radius: 0;
+        background: #17120f;
+        color: var(--ink);
+        padding: 0 10px;
+      }
+
+      .severity-toggles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        align-items: end;
+      }
+
+      .chip-toggle {
+        display: inline-grid;
+        grid-template-columns: auto 1fr;
+        gap: 6px;
+        align-items: center;
+        min-height: 38px;
+        padding: 0 10px;
+        border: 1px solid var(--line-strong);
+        background: #17120f;
+        color: var(--ink);
+        font-size: 13px;
+        cursor: pointer;
+      }
+
+      .chip-toggle input {
+        accent-color: var(--p1);
+      }
+
+      .reset {
+        min-height: 38px;
+        border: 1px solid var(--line-strong);
+        background: var(--panel-2);
+        color: var(--ink);
+        cursor: pointer;
+      }
+
+      .reset:hover,
+      .chip-toggle:hover,
+      select:hover,
+      input[type="search"]:hover {
+        border-color: var(--ink);
+      }
+
+      .sections {
+        display: grid;
+        gap: 18px;
+      }
+
+      .section {
+        padding: 18px;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 16px;
+        align-items: start;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .section-head p {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .count {
+        min-width: 70px;
+        padding: 8px 10px;
+        border: 1px solid var(--line-strong);
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        text-align: center;
+      }
+
+      .ledger {
+        display: grid;
+      }
+
+      .finding {
+        display: grid;
+        grid-template-columns: 78px minmax(0, 1fr) 170px 120px;
+        gap: 16px;
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .finding:last-child {
+        border-bottom: 0;
+      }
+
+      .id {
+        color: var(--faint);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .severity {
+        display: inline-flex;
+        width: fit-content;
+        min-width: 42px;
+        justify-content: center;
+        padding: 4px 7px;
+        border: 1px solid currentColor;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+      }
+
+      .severity.P0 {
+        color: var(--p0);
+      }
+
+      .severity.P1 {
+        color: var(--p1);
+      }
+
+      .severity.P2 {
+        color: var(--p2);
+      }
+
+      .titleline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .titleline strong {
+        font-size: 16px;
+        line-height: 1.25;
+      }
+
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .tag {
+        padding: 3px 7px;
+        border: 1px solid var(--line);
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 11px;
+      }
+
+      .finding p {
+        margin: 12px 0 0;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .status {
+        color: var(--muted);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+
+      .priority {
+        display: grid;
+        gap: 7px;
+        align-content: start;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .bar {
+        height: 7px;
+        background: #17120f;
+        border: 1px solid var(--line);
+      }
+
+      .bar > span {
+        display: block;
+        height: 100%;
+        background: var(--p1);
+      }
+
+      details {
+        grid-column: 2 / -1;
+        margin-top: -8px;
+      }
+
+      summary {
+        width: fit-content;
+        color: var(--ink);
+        cursor: pointer;
+        font-size: 13px;
+      }
+
+      .details-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 12px;
+      }
+
+      .detail-block {
+        min-width: 0;
+        border: 1px solid var(--line);
+        background: #17120f;
+        padding: 12px;
+      }
+
+      .detail-block h4 {
+        margin: 0 0 8px;
+        color: var(--faint);
+        font-size: 11px;
+        font-weight: 650;
+        text-transform: uppercase;
+      }
+
+      .detail-block ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        line-height: 1.45;
+      }
+
+      .detail-block code {
+        color: var(--ink);
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      .command-table {
+        overflow: auto;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      th,
+      td {
+        border-bottom: 1px solid var(--line);
+        padding: 11px 12px;
+        color: var(--muted);
+        font-size: 13px;
+        text-align: left;
+        vertical-align: top;
+      }
+
+      th {
+        color: var(--ink);
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+
+      td code {
+        color: var(--ink);
+        white-space: nowrap;
+      }
+
+      .command-pass {
+        color: var(--ok);
+      }
+
+      .command-fail {
+        color: var(--blocked);
+      }
+
+      .command-blocked {
+        color: var(--p1);
+      }
+
+      .empty {
+        padding: 18px;
+        color: var(--muted);
+      }
+
+      .load-error {
+        display: none;
+        margin-top: 14px;
+        padding: 12px;
+        border: 1px solid var(--p1);
+        color: var(--p2);
+        background: #231913;
+      }
+
+      .footer {
+        margin-top: 24px;
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      @media (max-width: 1040px) {
+        .topline,
+        .brief,
+        .filters {
+          grid-template-columns: 1fr;
+        }
+
+        .meta {
+          width: 100%;
+        }
+
+        .finding {
+          grid-template-columns: 70px minmax(0, 1fr);
+        }
+
+        .status,
+        .priority,
+        details {
+          grid-column: 2;
+        }
+
+        .details-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 620px) {
+        .shell {
+          width: min(100% - 20px, 1480px);
+          padding-top: 18px;
+        }
+
+        .meta {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .section,
+        .note {
+          padding: 14px;
+        }
+
+        .finding {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .status,
+        .priority,
+        details {
+          grid-column: 1;
+        }
+
+        table {
+          table-layout: fixed;
+        }
+
+        th,
+        td,
+        td code {
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topline">
+        <div>
+          <div class="kicker" id="baseline">Trail audit ledger / loading</div>
+          <h1>Comprehensive Review Dashboard</h1>
+        </div>
+        <div class="meta" aria-label="Review summary">
+          <div class="metric"><strong id="metricTotal">0</strong><span>findings</span></div>
+          <div class="metric"><strong id="metricP0">0</strong><span>P0 risk</span></div>
+          <div class="metric"><strong id="metricP1">0</strong><span>P1 risk</span></div>
+          <div class="metric"><strong id="metricFail">0</strong><span>failed gates</span></div>
+        </div>
+      </header>
+
+      <section class="brief" aria-label="Review context">
+        <div class="note">
+          <p id="scope">Loading findings from tasks/review/2026-04-28/findings.json.</p>
+          <ul id="notes"></ul>
+          <div class="load-error" id="loadError">
+            Could not load findings.json. Serve this directory with a local static server, for example:
+            <code>python3 -m http.server 5176</code>, then open
+            <code>http://localhost:5176/dashboard.html</code>.
+          </div>
+        </div>
+        <div class="command-table" aria-label="Command results">
+          <table>
+            <thead>
+              <tr>
+                <th>Gate</th>
+                <th>Status</th>
+                <th>Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="commandRows"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="filters" aria-label="Finding filters">
+        <div class="field">
+          <label for="search">Search</label>
+          <input id="search" type="search" placeholder="id, title, file, command" />
+        </div>
+        <div class="field">
+          <label>Severity</label>
+          <div class="severity-toggles" id="severityToggles"></div>
+        </div>
+        <div class="field">
+          <label for="surface">Surface</label>
+          <select id="surface"></select>
+        </div>
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status"></select>
+        </div>
+        <div class="field">
+          <label for="confidence">Confidence</label>
+          <select id="confidence">
+            <option value="all">All</option>
+            <option value="high">High: 0.80+</option>
+            <option value="medium">Medium: 0.60-0.79</option>
+            <option value="low">Low: below 0.60</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="source">Old / new</label>
+          <select id="source">
+            <option value="all">All</option>
+            <option value="new">New findings</option>
+            <option value="old">Old report revalidation</option>
+            <option value="fixed">Fixed old findings</option>
+            <option value="still-valid">Still-valid old findings</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="verification">Verification</label>
+          <select id="verification">
+            <option value="all">All</option>
+            <option value="proven">Proven locally</option>
+            <option value="likely">Likely</option>
+            <option value="blocked">Blocked locally</option>
+            <option value="fixed">Fixed / revalidated</option>
+          </select>
+        </div>
+        <button class="reset" id="resetFilters" type="button">Reset filters</button>
+      </section>
+
+      <div class="sections" id="sections"></div>
+
+      <p class="footer">
+        Temporary artifact. Source data:
+        <a href="./findings.json">tasks/review/2026-04-28/findings.json</a>.
+      </p>
+    </main>
+
+    <script type="application/json" id="findingsData">{"meta": {"project": "Trail", "baseline": "dev@f0e25577", "review_date": "2026-04-28", "scope": "Full local audit, audit-only, no production accounts or external secrets", "dashboard": "tasks/review/2026-04-28/dashboard.html", "notes": ["Findings marked fixed are revalidated old findings, not active bugs.", "Supabase pgTAP was attempted but blocked because local Supabase/Postgres was not running on 127.0.0.1:54322.", "Account browser checks used local test env values and did not authenticate a real user."]}, "command_results": [{"command": "pnpm lint", "status": "failed", "summary": "Fails in apps/marketing app/components/landing/Hero.tsx:144 with react-hooks/set-state-in-effect."}, {"command": "pnpm test", "status": "failed", "summary": "Recursive test gate fails at extension/tests/transport-contracts.test.ts because event/auth-transition is present in protocols but missing from expected constants."}, {"command": "pnpm typecheck", "status": "passed", "summary": "All workspace typecheck targets completed successfully."}, {"command": "pnpm -C apps/marketing build", "status": "passed_with_warnings", "summary": "Build succeeds; SSG emits repeated Node --localstorage-file warnings."}, {"command": "pnpm -C apps/account build", "status": "failed", "summary": "Fails without env stubs while collecting /api/v1/plans page data: missing NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, TRAIL_EXTENSION_JWT_SECRET, DATABASE_URL."}, {"command": "pnpm -C extension check", "status": "passed_with_warnings", "summary": "Typecheck, lint, and format pass; ESLint reports 3 warnings."}, {"command": "pnpm -C extension test", "status": "failed", "summary": "Fails at transport-contracts.test.ts due AUTH_TRANSITION contract drift."}, {"command": "pnpm -C extension build", "status": "passed_with_warnings", "summary": "Production build succeeds; warns about unresolved font file references, dynamic/static import overlap, and chunks over 500 kB."}, {"command": "pnpm -C extension exec playwright test", "status": "failed", "summary": "5 tests ran: 2 passed, 3 failed on stale onboarding/settings expected UI text."}, {"command": "pnpm -C apps/account test -- targeted account API/security tests", "status": "failed", "summary": "148 tests passed, 8 failed, 1 suite failed. Failures include missing Supabase env in tests, NOWPayments db.from mock mismatch, and unsupported grant type expected code drift."}, {"command": "pnpm -C apps/marketing test", "status": "passed", "summary": "11 tests passed; expected test stderr logs Telegram API error for failure-path test."}, {"command": "pnpm -C packages/db test", "status": "passed", "summary": "3 tests passed."}, {"command": "pnpm exec supabase test db", "status": "blocked", "summary": "Blocked locally: failed to connect to 127.0.0.1:54322, connection refused."}, {"command": "pnpm audit --prod", "status": "failed", "summary": "10 production vulnerabilities: 2 high, 7 moderate, 1 low. Includes Next.js DoS and Picomatch ReDoS."}, {"command": "Browser checks: marketing/account/extension preview", "status": "partial", "summary": "Marketing pages load. Account pages redirect to login when unauthenticated but emit next-intl INVALID_KEY errors for dotted message keys. Extension preview server reports unresolved imports for RenameNodeDialog and #i18n modules."}], "findings": [{"id": "SEC-001", "severity": "P0", "surface": "account-api", "category": "security-auth", "status": "confirmed-codepath", "confidence": 0.9, "title": "Public billing/subscription APIs accept unsigned internal:<uuid> bearer tokens", "impact": "Any caller that knows or guesses a user UUID can ask public billing/subscription routes to resolve that user without a signed extension token or cookie session. The code comment says this token is for in-process proxy routes, but the public route handlers opt into it directly.", "evidence": ["apps/account/src/server/auth/get-authenticated-user.ts:56-59 resolves internal:<uuid> when allowInternal is true.", "apps/account/app/api/v1/subscription/route.ts:21-22 and apps/account/app/api/v1/billing/route.ts:24-25 pass allowInternal: true on public Request handlers.", "rg found allowInternal usage across billing, portal, subscription, checkout, cancel, and resume API routes."], "repro": "Send Authorization: Bearer internal:<victim-user-uuid> to a route that passes allowInternal after local DB has a matching user row.", "commands": ["rg -n \"allowInternal|internal:\" apps/account --glob '!**/.next/**'"], "files": ["apps/account/src/server/auth/get-authenticated-user.ts:56", "apps/account/app/api/v1/subscription/route.ts:22", "apps/account/app/api/v1/billing/route.ts:25"], "owner_area": "account security", "old_finding_status": "new", "fix_priority": 1}, {"id": "SEC-002", "severity": "P1", "surface": "account-auth", "category": "identity-integrity", "status": "confirmed", "confidence": 0.86, "title": "Server ensurePublicUser still hardcodes email_verified=true and does not call the sync RPC", "impact": "Migration 013 explicitly added sync_public_user_from_auth to keep public.users aligned with auth.users, but the account server path still writes optimistic email_verified=true and ignores duplicates. Email verification state can drift depending on which surface provisions the row.", "evidence": ["apps/account/src/server/backend/user.ts:83-95 upserts email_verified: true with ignoreDuplicates.", "supabase/migrations/013_email_verified_source_of_truth.sql:12-16 says server code should call sync_public_user_from_auth and replace this drift.", "extension/src/shared/auth/auth-orchestrator.ts:204-206 does call the RPC, so behavior differs by surface."], "repro": "Create or refresh a web account path where public.users exists or email verification changes; compare public.users.email_verified to auth.users.email_confirmed_at.", "commands": ["rg -n \"sync_public_user_from_auth|email_verified\" apps/account extension supabase --glob '!**/.next/**'"], "files": ["apps/account/src/server/backend/user.ts:90", "supabase/migrations/013_email_verified_source_of_truth.sql:12"], "owner_area": "account auth", "old_finding_status": "still-valid-partial", "fix_priority": 2}, {"id": "SEC-003", "severity": "P1", "surface": "account-auth", "category": "session-revocation", "status": "confirmed", "confidence": 0.88, "title": "Global extension-session revoke still uses read-modify-write instead of atomic auth_session_version RPC", "impact": "Concurrent revocations can lose an auth_session_version increment, leaving some access tokens valid longer than intended. Migration 013 added bump_auth_session_version specifically to replace this pattern.", "evidence": ["apps/account/src/server/backend/oauth.ts:505-523 reads auth_session_version then updates it with current + 1.", "supabase/migrations/013_email_verified_source_of_truth.sql:50-68 defines bump_auth_session_version and documents the race."], "repro": "Run concurrent revokeAllExtensionSessionsForUser calls and observe whether version increments once or twice.", "commands": ["rg -n \"auth_session_version|bump_auth_session_version\" apps/account supabase --glob '!**/.next/**'"], "files": ["apps/account/src/server/backend/oauth.ts:505", "supabase/migrations/013_email_verified_source_of_truth.sql:52"], "owner_area": "account auth", "old_finding_status": "still-valid", "fix_priority": 2}, {"id": "SEC-004", "severity": "P0", "surface": "extension-settings", "category": "data-deletion", "status": "confirmed", "confidence": 0.92, "title": "Account deletion fallback still soft-deletes every accessible trail when RPC fails", "impact": "If request_account_deletion fails, the extension falls back to updating trails where id != all-zero UUID. Today RLS scopes damage to the caller, but any RLS regression turns this into a cross-tenant wipe, and even the scoped behavior deletes all of the user's trails on an RPC failure.", "evidence": ["extension/src/apps/settings/pages/AccountPage.tsx:440-445 runs supabase.from('trails').update(...).neq('id', all-zero) when rpcResult.error is present.", "This was a P0 in the 2026-04-19 review and remains present."], "repro": "Force request_account_deletion RPC to fail and observe fallback update over trails with only neq('id', zero) as a predicate.", "commands": ["rg -n \"request_account_deletion|neq\\(\" extension/src/apps/settings/pages/AccountPage.tsx"], "files": ["extension/src/apps/settings/pages/AccountPage.tsx:440"], "owner_area": "extension account settings", "old_finding_status": "still-valid", "fix_priority": 1}, {"id": "DATA-001", "severity": "P1", "surface": "account-sync", "category": "data-integrity", "status": "confirmed", "confidence": 0.82, "title": "Single-trail upsert remains read-then-write without a transaction", "impact": "Concurrent sync requests for the same trail can both observe no existing row or stale metadata, causing unique conflicts or last-write surprises outside a transaction.", "evidence": ["apps/account/src/server/backend/trails-sync.ts:345-352 reads the existing row.", "apps/account/src/server/backend/trails-sync.ts:400-426 then separately updates or inserts."], "repro": "Fire concurrent PUT/upsert requests for the same trail id and device/user under the same timestamp window.", "commands": ["nl -ba apps/account/src/server/backend/trails-sync.ts | sed -n '345,426p'"], "files": ["apps/account/src/server/backend/trails-sync.ts:345", "apps/account/src/server/backend/trails-sync.ts:418"], "owner_area": "account sync", "old_finding_status": "still-valid", "fix_priority": 2}, {"id": "DATA-002", "severity": "P1", "surface": "account-sync", "category": "data-integrity", "status": "confirmed", "confidence": 0.8, "title": "ensureSyncDevices still reassigns existing device ids across users", "impact": "If the same device id appears under a different account, the server updates the device owner instead of rejecting or namespacing it. This can break trails that reference the previous owner's device id.", "evidence": ["apps/account/src/server/backend/trails-sync.ts:162-170 logs device ownership reassignment and then updates the device."], "repro": "Sync two accounts with the same persisted device id and inspect devices.user_id before and after the second sync.", "commands": ["nl -ba apps/account/src/server/backend/trails-sync.ts | sed -n '156,170p'"], "files": ["apps/account/src/server/backend/trails-sync.ts:162"], "owner_area": "account sync", "old_finding_status": "still-valid", "fix_priority": 2}, {"id": "TEST-001", "severity": "P1", "surface": "extension", "category": "test-gate", "status": "confirmed", "confidence": 1, "title": "Extension aggregate test gate is red from AUTH_TRANSITION protocol contract drift", "impact": "The primary extension test script stops at transport-contracts.test.ts, hiding later tests in the chained script and blocking CI.", "evidence": ["pnpm test and pnpm -C extension test both fail with actual EXTENSION_MESSAGE containing event/auth-transition while expected list does not.", "extension/src/shared/transport/protocols.ts:21 declares AUTH_TRANSITION; extension/tests/transport-contracts.test.ts:47 expected list omits it."], "repro": "Run pnpm -C extension test.", "commands": ["pnpm test", "pnpm -C extension test"], "files": ["extension/src/shared/transport/protocols.ts:21", "extension/tests/transport-contracts.test.ts:47"], "owner_area": "extension test harness", "old_finding_status": "new", "fix_priority": 1}, {"id": "TEST-002", "severity": "P1", "surface": "extension", "category": "e2e", "status": "confirmed", "confidence": 1, "title": "Extension Playwright e2e suite is stale: 3 of 5 tests fail", "impact": "Release-relevant browser automation does not reflect the current onboarding/settings UI, so e2e cannot be trusted as a shipping gate.", "evidence": ["pnpm -C extension exec playwright test: onboarding heading 'Welcome to Trail' not found.", "Privacy onboarding heading 'What Trail records' not found.", "Settings heading 'Trail Settings' not found.", "2 tests pass, 3 fail."], "repro": "Run pnpm -C extension build && pnpm -C extension exec playwright test.", "commands": ["pnpm -C extension exec playwright test"], "files": ["extension/tests/e2e/onboarding.spec.ts:12", "extension/tests/e2e/onboarding.spec.ts:41", "extension/tests/e2e/smoke.spec.ts:15"], "owner_area": "extension e2e", "old_finding_status": "still-valid", "fix_priority": 1}, {"id": "TEST-003", "severity": "P1", "surface": "extension", "category": "test-coverage", "status": "confirmed", "confidence": 1, "title": "Manual smoke/ui stubs still pass with assert.ok(true)", "impact": "The extension test script presents critical auth/offline/export/UI scenarios as executable tests, but they only log manual instructions and always pass.", "evidence": ["extension/tests/smoke-e2e.test.ts:4-8 documents always-passing stubs.", "extension/tests/ui-interaction.test.ts:4-8 documents always-passing stubs.", "rg found 17 occurrences of 'stub - automation pending' across these files."], "repro": "Inspect smoke-e2e.test.ts and ui-interaction.test.ts; each scenario ends with assert.ok(true).", "commands": ["rg -n \"assert\\.ok\\(true|stub\" extension/tests"], "files": ["extension/tests/smoke-e2e.test.ts:31", "extension/tests/ui-interaction.test.ts:34"], "owner_area": "extension test coverage", "old_finding_status": "still-valid", "fix_priority": 2}, {"id": "TEST-004", "severity": "P1", "surface": "account-api", "category": "test-harness", "status": "confirmed", "confidence": 0.95, "title": "Targeted account API tests are red from env, mock, and response-code drift", "impact": "The account API suite currently mixes real failures and harness failures, which makes auth/billing regression review unreliable.", "evidence": ["Targeted account test run: 148 passed, 8 failed, 1 suite failed.", "trails.test.ts fails at import because NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are missing.", "nowpayments-webhook.test.ts fails because route uses db.from but mock does not provide it.", "oauth.test.ts unsupported grant type expected unsupported_grant_type but route returns VALIDATION_ERROR."], "repro": "Run the targeted account test command recorded in command_results.", "commands": ["pnpm -C apps/account test -- src/lib/__tests__/auth.test.ts app/api/v1/__tests__/billing.test.ts app/api/v1/__tests__/subscription.test.ts app/api/v1/__tests__/nowpayments-webhook.test.ts app/api/v1/__tests__/oauth.test.ts app/api/v1/__tests__/trails-sync.test.ts"], "files": ["apps/account/src/env.ts:23", "apps/account/app/api/v1/billing/webhooks/nowpayments/route.ts:233", "apps/account/app/api/v1/__tests__/oauth.test.ts:240"], "owner_area": "account tests", "old_finding_status": "new", "fix_priority": 1}, {"id": "CI-001", "severity": "P1", "surface": "ci-neon", "category": "ci-release", "status": "confirmed", "confidence": 1, "title": "Neon preview workflow calls missing root script db:migrate:deploy", "impact": "PR database preview/migration validation likely fails before schema diff, because the workflow invokes a script absent from package.json.", "evidence": [".github/workflows/neon-workflow.yml:67-68 runs pnpm db:migrate:deploy.", "Root package.json scripts include db:migrate and db:types, but not db:migrate:deploy."], "repro": "Run rg -n 'db:migrate:deploy' .github/workflows package.json.", "commands": ["rg -n \"db:migrate:deploy\" .github/workflows package.json"], "files": [".github/workflows/neon-workflow.yml:68", "package.json:18"], "owner_area": "devops", "old_finding_status": "new", "fix_priority": 2}, {"id": "CI-002", "severity": "P1", "surface": "ci-extension", "category": "ci-release", "status": "confirmed", "confidence": 1, "title": "Extension workflows cache against missing extension/pnpm-lock.yaml", "impact": "CI, release, and security audit workflows reference a lockfile that does not exist, while root pnpm-lock.yaml changes do affect extension installs. This causes cache drift and path-trigger blind spots.", "evidence": ["test -f extension/pnpm-lock.yaml returned missing.", ".github/workflows/ci-extension.yml:36, release-extension.yml:42, and security.yml:46 use cache-dependency-path: extension/pnpm-lock.yaml.", "git ls-files shows root and nested app/package lockfiles but no extension lockfile."], "repro": "Run test -f extension/pnpm-lock.yaml and inspect workflow cache-dependency-path entries.", "commands": ["test -f extension/pnpm-lock.yaml && echo exists || echo missing", "git ls-files '*pnpm-lock.yaml'"], "files": [".github/workflows/ci-extension.yml:36", ".github/workflows/release-extension.yml:42", ".github/workflows/security.yml:46"], "owner_area": "devops", "old_finding_status": "new", "fix_priority": 2}, {"id": "CI-003", "severity": "P1", "surface": "extension-release", "category": "ci-release", "status": "confirmed", "confidence": 0.95, "title": "Extension release gate is weaker than extension CI", "impact": "The tag release workflow can package and upload a draft extension without running the same format and Playwright e2e gates used by CI.", "evidence": ["ci-extension.yml runs Format check and E2E Playwright.", "release-extension.yml runs lint, typecheck, test, build, package, upload, but not format:check or Playwright e2e."], "repro": "Compare .github/workflows/ci-extension.yml and release-extension.yml.", "commands": ["nl -ba .github/workflows/ci-extension.yml", "nl -ba .github/workflows/release-extension.yml"], "files": [".github/workflows/ci-extension.yml:44", ".github/workflows/ci-extension.yml:59", ".github/workflows/release-extension.yml:47"], "owner_area": "release", "old_finding_status": "new", "fix_priority": 2}, {"id": "CI-004", "severity": "P2", "surface": "supabase-ci", "category": "ci-release", "status": "confirmed-and-blocked-local", "confidence": 0.88, "title": "Supabase pgTAP path is locally blocked and CI uses unpinned CLI plus missing seed file", "impact": "Database-policy verification is not reproducible locally without starting Supabase, and CI can drift with latest CLI behavior. config.toml enables seed.sql but the file is absent.", "evidence": ["pnpm exec supabase test db failed locally: connection refused on 127.0.0.1:54322.", "ci-supabase.yml:20-23 uses supabase/setup-cli version: latest.", "supabase/config.toml:60-65 enables ./seed.sql; test -f supabase/seed.sql returned missing."], "repro": "Run pnpm exec supabase test db without local Supabase running; inspect ci-supabase.yml and supabase/config.toml.", "commands": ["pnpm exec supabase test db", "test -f supabase/seed.sql && echo present || echo missing"], "files": [".github/workflows/ci-supabase.yml:23", "supabase/config.toml:65"], "owner_area": "database ci", "old_finding_status": "new", "fix_priority": 3}, {"id": "SEC-005", "severity": "P1", "surface": "dependencies", "category": "security-dependencies", "status": "confirmed", "confidence": 1, "title": "Production dependency audit reports 10 vulnerabilities including high Next.js and Picomatch advisories", "impact": "The app ships with vulnerable versions according to pnpm audit. The highest impact item is Next.js Server Components DoS, patched in >=16.2.3; current Next.js is 16.1.6.", "evidence": ["pnpm audit --prod found 10 vulnerabilities: 2 high, 7 moderate, 1 low.", "High advisories: Picomatch ReDoS and Next.js DoS with Server Components.", "Moderate advisories include Next.js request smuggling, image cache growth, postponed resume buffering, Server Actions CSRF, follow-redirects header leak, and PostCSS XSS."], "repro": "Run pnpm audit --prod.", "commands": ["pnpm audit --prod"], "files": ["package.json:31", "pnpm-lock.yaml"], "owner_area": "dependencies", "old_finding_status": "new", "fix_priority": 2}, {"id": "BUILD-001", "severity": "P1", "surface": "marketing", "category": "quality-gate", "status": "confirmed", "confidence": 1, "title": "Workspace lint fails on marketing Hero useEffect setState", "impact": "The top-level lint gate is red, so CI should block and any later lint findings are masked until this is fixed.", "evidence": ["pnpm lint fails at apps/marketing/app/components/landing/Hero.tsx:144.", "ESLint rule react-hooks/set-state-in-effect rejects synchronous setEnableVideo(false) inside useEffect."], "repro": "Run pnpm lint.", "commands": ["pnpm lint"], "files": ["apps/marketing/app/components/landing/Hero.tsx:144"], "owner_area": "marketing frontend", "old_finding_status": "new", "fix_priority": 1}, {"id": "BUILD-002", "severity": "P2", "surface": "account", "category": "build-reproducibility", "status": "confirmed", "confidence": 0.9, "title": "Account build fails locally without CI env stubs", "impact": "The documented local build command is not self-contained; /api/v1/plans imports server env during page-data collection and fails before build completion.", "evidence": ["pnpm -C apps/account build fails: missing NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, TRAIL_EXTENSION_JWT_SECRET, DATABASE_URL.", "ci-web.yml works around this with env stubs, but README quickstart still mentions stale Prisma scripts instead of these env requirements."], "repro": "Run pnpm -C apps/account build in a clean shell without app env files.", "commands": ["pnpm -C apps/account build"], "files": ["apps/account/src/env.ts:23", ".github/workflows/ci-web.yml:35"], "owner_area": "account dev experience", "old_finding_status": "new", "fix_priority": 3}, {"id": "I18N-001", "severity": "P1", "surface": "account", "category": "runtime-i18n", "status": "confirmed-browser", "confidence": 0.96, "title": "Account app emits next-intl INVALID_KEY errors from dotted message keys", "impact": "Every account route inspected logs a runtime i18n error because keys under the errors namespace contain dots. This can break translated error rendering and pollutes browser console during normal navigation.", "evidence": ["Browser checks on /login, /onboarding, /trails, /activity, /billing, /settings showed next-intl INVALID_KEY errors.", "apps/account/messages/en.json and ru.json define errors.auth.unauthorized, trail.notFound, billing.missingPlan, onboarding.resetFailed as flat dotted keys."], "repro": "Start account dev server and open http://localhost:4001/login; inspect browser console.", "commands": ["Browser local account route check", "rg -n 'auth\\.unauthorized|trail\\.notFound|billing\\.missingPlan' apps/account/messages"], "files": ["apps/account/messages/en.json:117", "apps/account/messages/ru.json:117"], "owner_area": "account i18n", "old_finding_status": "new", "fix_priority": 2}, {"id": "UI-001", "severity": "P2", "surface": "marketing", "category": "accessibility", "status": "likely", "confidence": 0.72, "title": "Feedback widget dialog focuses textarea but has no visible focus trap or focus restore", "impact": "Keyboard users can likely tab behind the modal, and closing the widget may not restore focus to the trigger. This is a high-friction support path.", "evidence": ["FeedbackWidget sets aria-modal=true and focuses textarea with setTimeout.", "No focus-trap implementation or trigger focus restore is visible around the dialog open/close code."], "repro": "Open feedback widget, tab through focusable elements, close with Escape, and check focus location.", "commands": ["Browser marketing route check", "nl -ba apps/marketing/app/components/FeedbackWidget.tsx | sed -n '59,174p'"], "files": ["apps/marketing/app/components/FeedbackWidget.tsx:64", "apps/marketing/app/components/FeedbackWidget.tsx:160"], "owner_area": "marketing ui", "old_finding_status": "new", "fix_priority": 4}, {"id": "UI-002", "severity": "P2", "surface": "account", "category": "accessibility", "status": "confirmed-codepath", "confidence": 0.84, "title": "Account trail cards are clickable Cards instead of links/buttons, and actions are hover-hidden", "impact": "The card navigation is not semantic for keyboard and assistive tech users, while the action menu is invisible until hover/focus. This is the primary account trail navigation surface.", "evidence": ["trails-list.tsx:161-168 renders Card with onClick router.push.", "trails-list.tsx:190-196 renders icon button hidden with opacity-0 until group hover/focus."], "repro": "Keyboard through /trails with sample data and check whether each card is reachable and announced as a link.", "commands": ["nl -ba 'apps/account/app/(dashboard)/trails/trails-list.tsx' | sed -n '159,196p'"], "files": ["apps/account/app/(dashboard)/trails/trails-list.tsx:161", "apps/account/app/(dashboard)/trails/trails-list.tsx:193"], "owner_area": "account ui", "old_finding_status": "new", "fix_priority": 4}, {"id": "UI-003", "severity": "P2", "surface": "account-extension", "category": "touch-keyboard", "status": "confirmed-codepath", "confidence": 0.8, "title": "Multiple important actions are hover-only or opacity-hidden", "impact": "Touch users and keyboard users without exact focus paths may miss open/external/rename/delete actions in account and extension tree surfaces.", "evidence": ["apps/account/app/(dashboard)/trails/[id]/trail-detail.tsx:290 hides external link until group hover.", "extension/src/apps/sidepanel/ui/components/TreeDropdown.tsx:519 hides item actions until group hover or selected state."], "repro": "Use touch emulation or keyboard-only navigation on trail detail and extension TreeDropdown.", "commands": ["rg -n \"opacity-0 group-hover\" apps extension --glob '!**/.next/**'"], "files": ["apps/account/app/(dashboard)/trails/[id]/trail-detail.tsx:290", "extension/src/apps/sidepanel/ui/components/TreeDropdown.tsx:519"], "owner_area": "account and extension ui", "old_finding_status": "new", "fix_priority": 4}, {"id": "UI-004", "severity": "P2", "surface": "extension", "category": "accessibility-responsive", "status": "confirmed-codepath", "confidence": 0.82, "title": "Extension onboarding uses fixed-height dialog and non-modal dialog semantics for modal-like overlays", "impact": "The wizard can clip on short sidepanel heights and celebration/commitment overlays may be announced as dialogs while allowing background interaction semantics.", "evidence": ["OnboardingWizard DialogContent uses h-[480px] max-w-[400px].", "TourCelebration uses role=dialog aria-modal=false while covering the sidepanel."], "repro": "Open extension preview or sidepanel at short heights and run keyboard/screen-reader dialog checks through onboarding.", "commands": ["nl -ba extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx | sed -n '293,296p'", "rg -n \"role=\\\"dialog\\\"|aria-modal=\\\"false\\\"\" extension/src/apps/sidepanel/ui/onboarding"], "files": ["extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx:295", "extension/src/apps/sidepanel/ui/onboarding/celebration/TourCelebration.tsx:98"], "owner_area": "extension onboarding", "old_finding_status": "new", "fix_priority": 4}, {"id": "UI-005", "severity": "P2", "surface": "extension", "category": "responsive-density", "status": "likely", "confidence": 0.68, "title": "Graph node fixed dimensions risk truncating long titles and URLs", "impact": "Trail's core value is scannable research context. Fixed 160 x 60 nodes can hide meaningful title/URL distinctions in dense research sessions.", "evidence": ["TrailNode uses min-h-[60px] w-[160px] with compact title/detail presentation.", "This needs sample long-label browser verification before fixing."], "repro": "Load preview data or a real tree with long page titles and compare visible node labels at multiple zoom levels.", "commands": ["nl -ba extension/src/features/graph/components/TrailNode.tsx | sed -n '140,164p'"], "files": ["extension/src/features/graph/components/TrailNode.tsx:145"], "owner_area": "extension graph", "old_finding_status": "new", "fix_priority": 5}, {"id": "DOC-001", "severity": "P2", "surface": "docs", "category": "developer-experience", "status": "confirmed", "confidence": 0.95, "title": "README and env comments still describe removed Prisma/Better Auth/tRPC workflows", "impact": "New contributors and agents following README will run nonexistent scripts and build the wrong mental model of the backend stack.", "evidence": ["README references Prisma, Better Auth, tRPC, db:generate, db:migrate:deploy, db:studio.", "Root package.json does not define db:generate, db:migrate:deploy, or db:studio.", "apps/account/.env.example still says DATABASE_URL is required for Prisma CLI."], "repro": "Run rg -n 'Prisma|Better Auth|tRPC|db:migrate:deploy|db:generate' README.md apps/account/.env.example package.json.", "commands": ["rg -n \"db:migrate:deploy|db:generate|Prisma|Better Auth|tRPC\" README.md apps/account/.env.example package.json"], "files": ["README.md:9", "README.md:42", "apps/account/.env.example:1", "package.json:18"], "owner_area": "docs", "old_finding_status": "new", "fix_priority": 5}, {"id": "REL-001", "severity": "P2", "surface": "extension-build", "category": "performance-release", "status": "confirmed", "confidence": 0.86, "title": "Extension production build passes with unresolved font references and >500 kB chunk warnings", "impact": "The extension ships a 551 kB background chunk and 635 kB react-vendor chunk. Build also leaves several font URL references unresolved at build time.", "evidence": ["pnpm -C extension build completed successfully.", "Warnings: Geist font file references did not resolve at build time; settings.ts is dynamically and statically imported; chunks larger than 500 kB."], "repro": "Run pnpm -C extension build.", "commands": ["pnpm -C extension build"], "files": ["extension/wxt.config.ts:35"], "owner_area": "extension performance", "old_finding_status": "new", "fix_priority": 5}, {"id": "BUILD-003", "severity": "P2", "surface": "extension-preview", "category": "preview-harness", "status": "confirmed-browser-server-log", "confidence": 0.93, "title": "Extension preview:ui starts but Vite cannot resolve sidepanel imports", "impact": "The local UI preview route is not trustworthy for sidepanel/onboarding review because Vite reports unresolved imports for a missing RenameNodeDialog component and the #i18n alias. This blocks the requested browser preview path from exercising the real extension UI.", "evidence": ["pnpm -C extension preview:ui served on localhost:5174, then Vite logged failed import analysis for extension/preview/PreviewApp.tsx:3.", "Vite also logged unresolved #i18n imports from OnboardingWizard.tsx, onboarding wizard screens, and useDeleteFlow.ts.", "rg --files extension/src | rg 'Rename|rename|i18n' found inline-rename-context.tsx but no RenameNodeDialog file."], "repro": "Run pnpm -C extension preview:ui and open the preview route; observe Vite import-analysis errors for @apps/sidepanel/ui/components/RenameNodeDialog and #i18n.", "commands": ["pnpm -C extension preview:ui", "rg -n \"preview:ui|RenameNodeDialog|#i18n\" extension/package.json extension/preview extension/src --glob '!**/dist/**' --glob '!**/node_modules/**'", "rg --files extension/src | rg 'Rename|rename|i18n'"], "files": ["extension/package.json:11", "extension/preview/PreviewApp.tsx:3", "extension/src/apps/sidepanel/ui/onboarding/OnboardingWizard.tsx:14", "extension/src/apps/sidepanel/ui/hooks/useDeleteFlow.ts:3"], "owner_area": "extension dev preview", "old_finding_status": "new", "fix_priority": 3}, {"id": "REVAL-001", "severity": "P0", "surface": "supabase-rls", "category": "old-finding-revalidation", "status": "fixed-in-code-unverified-local-db", "confidence": 0.82, "title": "Old P0 users RLS column-write issue appears fixed by migration 014 and pgTAP coverage", "impact": "The old finding should not remain active unless pgTAP fails in a running Supabase environment.", "evidence": ["supabase/migrations/014_users_column_grants.sql revokes broad update and grants a safe column allow-list.", "supabase/tests/rls_users.test.sql asserts users cannot update email_verified or auth_session_version.", "Local pgTAP could not run because Supabase was not started."], "repro": "Start local Supabase and run pnpm exec supabase test db.", "commands": ["pnpm exec supabase test db"], "files": ["supabase/migrations/014_users_column_grants.sql", "supabase/tests/rls_users.test.sql"], "owner_area": "database security", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-002", "severity": "P0", "surface": "supabase-account-deletion", "category": "old-finding-revalidation", "status": "fixed-in-code-unverified-local-db", "confidence": 0.82, "title": "Old P0 account-deletion RPC revocation gap appears fixed by migration 008 and pgTAP coverage", "impact": "The RPC now revokes extension_device_sessions and oauth_refresh_tokens and bumps auth_session_version; local DB verification remains blocked.", "evidence": ["supabase/migrations/008_fix_account_deletion_rpc.sql updates extension_device_sessions and oauth_refresh_tokens and bumps auth_session_version.", "supabase/tests/request_account_deletion.test.sql asserts these effects."], "repro": "Start local Supabase and run pnpm exec supabase test db.", "commands": ["pnpm exec supabase test db"], "files": ["supabase/migrations/008_fix_account_deletion_rpc.sql", "supabase/tests/request_account_deletion.test.sql"], "owner_area": "database security", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-003", "severity": "P0", "surface": "extension-sync", "category": "old-finding-revalidation", "status": "fixed-in-code", "confidence": 0.9, "title": "Old MV3 setInterval sync-pull and Supabase autoRefreshToken issue appears fixed", "impact": "Periodic sync now uses chrome.alarms and Supabase autoRefreshToken is disabled for the extension client.", "evidence": ["extension/src/background/sync/sync-engine.ts:85-90 documents chrome.alarms as authoritative.", "sync-engine.ts:1445-1449 creates trail-sync-pull alarm.", "service-worker.ts:36-43 registers onAlarm at module top level.", "shared/lib/supabase.ts:39-42 sets autoRefreshToken: false."], "repro": "Inspect listed files; runtime alarm wake behavior still deserves a browser/service-worker trace in a later fix pass.", "commands": ["rg -n \"chrome\\.alarms|autoRefreshToken|setInterval\" extension/src"], "files": ["extension/src/background/sync/sync-engine.ts:85", "extension/src/background/service-worker.ts:39", "extension/src/shared/lib/supabase.ts:42"], "owner_area": "extension sync", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-004", "severity": "P0", "surface": "extension-sync", "category": "old-finding-revalidation", "status": "fixed-in-code", "confidence": 0.88, "title": "Old pending-op skipped-as-terminal loss appears fixed", "impact": "Skipped push outcomes are no longer removed from the pending queue, and cold-start drain waits for the first signed-in transition.", "evidence": ["sync-engine.ts:182-188 says skipped is not terminal.", "sync-engine.ts:1512-1516 documents waiting for signed-in transition to avoid the old queue-loss bug."], "repro": "Queue a pending push, wake the service worker signed out, then sign in and confirm the queue drains after auth settles.", "commands": ["rg -n \"skipped|drainPendingOps\" extension/src/background/sync/sync-engine.ts"], "files": ["extension/src/background/sync/sync-engine.ts:182", "extension/src/background/sync/sync-engine.ts:1512"], "owner_area": "extension sync", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-005", "severity": "P1", "surface": "account-import", "category": "old-finding-revalidation", "status": "fixed-in-code", "confidence": 0.9, "title": "Old import-device ownership collision appears fixed", "impact": "Import device ids are now scoped by user id, so one user's import device should not collide with another user's import device.", "evidence": ["apps/account/app/api/v1/trails/import/route.ts:16-17 returns import:<userId>.", "The old hardcoded import device id is no longer present."], "repro": "Import trails under two users and compare devices.id values.", "commands": ["rg -n \"importDeviceId|IMPORT_DEVICE_ID\" apps/account/app/api/v1/trails/import/route.ts"], "files": ["apps/account/app/api/v1/trails/import/route.ts:16"], "owner_area": "account API", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-006", "severity": "P1", "surface": "account-api", "category": "old-finding-revalidation", "status": "fixed-in-code", "confidence": 0.9, "title": "Old permissive chrome-extension CORS issue appears fixed", "impact": "CORS now allowlists explicit extension IDs instead of startsWith chrome-extension://, and omits Access-Control-Allow-Origin for disallowed origins.", "evidence": ["apps/account/src/server/api/cors.ts parses OAUTH_ALLOWED_EXTENSION_IDS into exact origins.", "corsHeaders only emits Access-Control-Allow-Origin when origin is in the allowlist."], "repro": "Run cors tests or call OPTIONS with a random chrome-extension:// origin.", "commands": ["pnpm -C apps/account test -- src/server/api/__tests__/cors.test.ts"], "files": ["apps/account/src/server/api/cors.ts:4", "apps/account/src/server/api/cors.ts:23"], "owner_area": "account security", "old_finding_status": "fixed", "fix_priority": 0}, {"id": "REVAL-007", "severity": "P0", "surface": "architecture", "category": "old-finding-revalidation", "status": "fixed-in-code", "confidence": 0.9, "title": "Old packages/trpc ghost-router finding appears resolved", "impact": "The old trpc package is gone and the remaining package is auth-token. A stray packages/ui directory only contains ignored node_modules bins.", "evidence": ["test -d packages/trpc returned missing.", "find packages -maxdepth 2 -name package.json lists auth-token, config, content, db only.", "packages/ui has no package.json and only ignored node_modules bin entries."], "repro": "Run test -d packages/trpc and find packages -maxdepth 2 -name package.json.", "commands": ["test -d packages/trpc && echo trpc-exists || echo trpc-missing", "find packages -maxdepth 2 -name package.json -print"], "files": ["packages/auth-token/package.json"], "owner_area": "architecture", "old_finding_status": "fixed", "fix_priority": 0}]}</script>
+
+    <script>
+      const sectionDefs = [
+        {
+          id: "risk",
+          title: "P0/P1 Risk Register",
+          body: "Confirmed and likely high-impact risks that should drive the immediate fix backlog.",
+          match: (f) => ["P0", "P1"].includes(f.severity) && !String(f.status).startsWith("fixed"),
+        },
+        {
+          id: "security",
+          title: "Security, Auth, Data Boundaries",
+          body: "Auth bypass candidates, session revocation, account deletion, RLS, billing, and sync integrity boundaries.",
+          match: (f) =>
+            /security|identity|session|account-deletion|data-integrity|sync-integrity|rls|billing/.test(f.category) ||
+            /account security|account auth|account sync|supabase/.test(f.owner_area),
+        },
+        {
+          id: "extension",
+          title: "Extension Runtime And Sync Convergence",
+          body: "Runtime contracts, auth transitions, sidepanel behavior, build health, sync convergence, and extension test drift.",
+          match: (f) =>
+            /extension/.test(f.surface) ||
+            /contract|runtime|sync-convergence|extension/.test(f.category) ||
+            /extension/.test(f.owner_area),
+        },
+        {
+          id: "ui",
+          title: "UI, UX, Accessibility, Responsive",
+          body: "Keyboard semantics, focus management, responsive constraints, localization, and brand/design-rule issues.",
+          match: (f) => /accessibility|responsive|i18n|ui-|a11y/.test(f.category) || /ux|marketing|account ui/.test(f.owner_area),
+        },
+        {
+          id: "ci",
+          title: "CI, Release, Test Gates",
+          body: "Failing local gates, weaker release gates, dependency audit risks, build blockers, and pipeline drift.",
+          match: (f) => /ci|release|dependency|build|qa-gate|test-fixture|e2e/.test(f.category),
+        },
+        {
+          id: "tests",
+          title: "Stale Or Misleading Tests",
+          body: "Tests that fail because the implementation moved, mocks drifted, or product expectations no longer match preview screens.",
+          match: (f) => /test|fixture|e2e|contract/.test(f.category),
+        },
+        {
+          id: "old",
+          title: "Old Report Revalidation",
+          body: "Prior findings rechecked as fixed, still valid, superseded, or otherwise constrained by local verification.",
+          match: (f) => f.old_finding_status && f.old_finding_status !== "new",
+        },
+      ];
+
+      let model = { meta: {}, command_results: [], findings: [] };
+      const filters = {
+        severities: new Set(["P0", "P1", "P2"]),
+        surface: "all",
+        status: "all",
+        confidence: "all",
+        source: "all",
+        verification: "all",
+        search: "",
+      };
+
+      const els = {
+        baseline: document.querySelector("#baseline"),
+        scope: document.querySelector("#scope"),
+        notes: document.querySelector("#notes"),
+        loadError: document.querySelector("#loadError"),
+        commandRows: document.querySelector("#commandRows"),
+        sections: document.querySelector("#sections"),
+        severityToggles: document.querySelector("#severityToggles"),
+        surface: document.querySelector("#surface"),
+        status: document.querySelector("#status"),
+        confidence: document.querySelector("#confidence"),
+        source: document.querySelector("#source"),
+        verification: document.querySelector("#verification"),
+        search: document.querySelector("#search"),
+        reset: document.querySelector("#resetFilters"),
+        metricTotal: document.querySelector("#metricTotal"),
+        metricP0: document.querySelector("#metricP0"),
+        metricP1: document.querySelector("#metricP1"),
+        metricFail: document.querySelector("#metricFail"),
+      };
+
+      init();
+
+      async function init() {
+        try {
+          const inline = document.getElementById("findingsData");
+          if (inline && inline.textContent.trim()) {
+            model = JSON.parse(inline.textContent);
+          } else {
+            const response = await fetch("./findings.json", { cache: "no-store" });
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            model = await response.json();
+          }
+          wireFilters();
+          render();
+        } catch (error) {
+          els.loadError.style.display = "block";
+          els.baseline.textContent = "Trail audit ledger / findings unavailable";
+          els.scope.textContent = "The dashboard shell loaded, but findings.json was not available to the browser.";
+          els.commandRows.innerHTML = "";
+          els.sections.innerHTML = `<div class="empty">No findings loaded. Serve this directory over localhost to enable the dashboard.</div>`;
+        }
+      }
+
+      function wireFilters() {
+        const severities = unique(model.findings.map((f) => f.severity)).sort();
+        els.severityToggles.innerHTML = severities
+          .map(
+            (severity) => `
+              <label class="chip-toggle">
+                <input type="checkbox" value="${escapeAttr(severity)}" checked />
+                <span>${escapeHtml(severity)}</span>
+              </label>`,
+          )
+          .join("");
+
+        els.severityToggles.querySelectorAll("input").forEach((input) => {
+          input.addEventListener("change", () => {
+            if (input.checked) filters.severities.add(input.value);
+            else filters.severities.delete(input.value);
+            render();
+          });
+        });
+
+        fillSelect(els.surface, ["all", ...unique(model.findings.map((f) => f.surface)).sort()]);
+        fillSelect(els.status, ["all", ...unique(model.findings.map((f) => f.status)).sort()]);
+
+        [els.surface, els.status, els.confidence, els.source, els.verification].forEach((select) => {
+          select.addEventListener("change", () => {
+            filters[select.id] = select.value;
+            render();
+          });
+        });
+
+        els.search.addEventListener("input", () => {
+          filters.search = els.search.value.trim().toLowerCase();
+          render();
+        });
+
+        els.reset.addEventListener("click", () => {
+          filters.severities = new Set(severities);
+          filters.surface = "all";
+          filters.status = "all";
+          filters.confidence = "all";
+          filters.source = "all";
+          filters.verification = "all";
+          filters.search = "";
+          els.severityToggles.querySelectorAll("input").forEach((input) => (input.checked = true));
+          [els.surface, els.status, els.confidence, els.source, els.verification].forEach((select) => (select.value = "all"));
+          els.search.value = "";
+          render();
+        });
+      }
+
+      function render() {
+        const findings = model.findings || [];
+        const filtered = findings.filter(matchesFilters);
+        const p0 = findings.filter((f) => f.severity === "P0").length;
+        const p1 = findings.filter((f) => f.severity === "P1").length;
+        const failedGates = (model.command_results || []).filter((c) => c.status === "failed" || c.status === "blocked").length;
+
+        els.baseline.textContent = `Trail audit ledger / ${model.meta?.baseline || "local baseline"} / ${model.meta?.review_date || ""}`;
+        els.scope.textContent = model.meta?.scope || "Full local audit.";
+        els.notes.innerHTML = (model.meta?.notes || []).map((note) => `<li>${escapeHtml(note)}</li>`).join("");
+        els.metricTotal.textContent = String(findings.length);
+        els.metricP0.textContent = String(p0);
+        els.metricP1.textContent = String(p1);
+        els.metricFail.textContent = String(failedGates);
+
+        els.commandRows.innerHTML = (model.command_results || [])
+          .map(
+            (command) => `
+              <tr>
+                <td><code>${escapeHtml(command.command)}</code></td>
+                <td class="command-${escapeAttr(command.status)}">${escapeHtml(command.status)}</td>
+                <td>${escapeHtml(command.summary || "")}</td>
+              </tr>`,
+          )
+          .join("");
+
+        els.sections.innerHTML = sectionDefs
+          .map((section) => renderSection(section, filtered.filter(section.match)))
+          .join("");
+      }
+
+      function renderSection(section, findings) {
+        const body = findings.length
+          ? `<div class="ledger">${findings
+              .sort((a, b) => severityRank(a.severity) - severityRank(b.severity) || a.fix_priority - b.fix_priority || a.id.localeCompare(b.id))
+              .map(renderFinding)
+              .join("")}</div>`
+          : `<div class="empty">No findings in this section match the active filters.</div>`;
+
+        return `
+          <section class="section" id="${escapeAttr(section.id)}">
+            <div class="section-head">
+              <div>
+                <h2>${escapeHtml(section.title)}</h2>
+                <p>${escapeHtml(section.body)}</p>
+              </div>
+              <div class="count">${findings.length}</div>
+            </div>
+            ${body}
+          </section>`;
+      }
+
+      function renderFinding(finding) {
+        const verification = verificationState(finding);
+        return `
+          <article class="finding">
+            <div>
+              <div class="id">${escapeHtml(finding.id)}</div>
+              <div class="severity ${escapeAttr(finding.severity)}">${escapeHtml(finding.severity)}</div>
+            </div>
+            <div>
+              <div class="titleline">
+                <strong>${escapeHtml(finding.title)}</strong>
+              </div>
+              <div class="tags">
+                <span class="tag">${escapeHtml(finding.surface)}</span>
+                <span class="tag">${escapeHtml(finding.category)}</span>
+                <span class="tag">${escapeHtml(verification)}</span>
+                <span class="tag">old: ${escapeHtml(finding.old_finding_status || "new")}</span>
+              </div>
+              <p>${escapeHtml(finding.impact)}</p>
+            </div>
+            <div class="status">
+              status: ${escapeHtml(finding.status)}<br />
+              owner: ${escapeHtml(finding.owner_area)}<br />
+              confidence: ${Number(finding.confidence).toFixed(2)}
+            </div>
+            <div class="priority">
+              <span>fix priority ${escapeHtml(String(finding.fix_priority))}</span>
+              <div class="bar" aria-hidden="true"><span style="width:${Math.min(100, Math.max(8, 100 - (Number(finding.fix_priority) - 1) * 18))}%"></span></div>
+            </div>
+            <details>
+              <summary>Evidence, repro, commands, files</summary>
+              <div class="details-grid">
+                ${detailList("Evidence", finding.evidence)}
+                ${detailList("Commands", finding.commands)}
+                ${detailList("Files", finding.files)}
+                <div class="detail-block">
+                  <h4>Repro</h4>
+                  <code>${escapeHtml(finding.repro || "Not recorded")}</code>
+                </div>
+              </div>
+            </details>
+          </article>`;
+      }
+
+      function detailList(title, items) {
+        const values = Array.isArray(items) && items.length ? items : ["Not recorded"];
+        return `
+          <div class="detail-block">
+            <h4>${escapeHtml(title)}</h4>
+            <ul>${values.map((item) => `<li><code>${escapeHtml(item)}</code></li>`).join("")}</ul>
+          </div>`;
+      }
+
+      function matchesFilters(finding) {
+        if (!filters.severities.has(finding.severity)) return false;
+        if (filters.surface !== "all" && finding.surface !== filters.surface) return false;
+        if (filters.status !== "all" && finding.status !== filters.status) return false;
+        if (!matchesConfidence(finding.confidence)) return false;
+        if (!matchesSource(finding)) return false;
+        if (filters.verification !== "all" && verificationState(finding) !== filters.verification) return false;
+        if (filters.search && !haystack(finding).includes(filters.search)) return false;
+        return true;
+      }
+
+      function matchesConfidence(value) {
+        if (filters.confidence === "all") return true;
+        const score = Number(value);
+        if (filters.confidence === "high") return score >= 0.8;
+        if (filters.confidence === "medium") return score >= 0.6 && score < 0.8;
+        if (filters.confidence === "low") return score < 0.6;
+        return true;
+      }
+
+      function matchesSource(finding) {
+        const oldStatus = finding.old_finding_status || "new";
+        if (filters.source === "all") return true;
+        if (filters.source === "new") return oldStatus === "new";
+        if (filters.source === "old") return oldStatus !== "new";
+        if (filters.source === "fixed") return oldStatus.startsWith("fixed");
+        if (filters.source === "still-valid") return oldStatus.startsWith("still-valid");
+        return true;
+      }
+
+      function verificationState(finding) {
+        const status = String(finding.status || "");
+        if (status.startsWith("fixed")) return "fixed";
+        if (status.includes("blocked")) return "blocked";
+        if (status.includes("likely") || status.includes("needs-live")) return "likely";
+        return "proven";
+      }
+
+      function haystack(finding) {
+        return [
+          finding.id,
+          finding.title,
+          finding.impact,
+          finding.surface,
+          finding.category,
+          finding.status,
+          finding.owner_area,
+          finding.old_finding_status,
+          ...(finding.evidence || []),
+          ...(finding.commands || []),
+          ...(finding.files || []),
+        ]
+          .join(" ")
+          .toLowerCase();
+      }
+
+      function fillSelect(select, values) {
+        select.innerHTML = values
+          .map((value) => `<option value="${escapeAttr(value)}">${escapeHtml(value === "all" ? "All" : value)}</option>`)
+          .join("");
+      }
+
+      function severityRank(severity) {
+        return { P0: 0, P1: 1, P2: 2, P3: 3 }[severity] ?? 9;
+      }
+
+      function unique(values) {
+        return [...new Set(values.filter(Boolean))];
+      }
+
+      function escapeHtml(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function escapeAttr(value) {
+        return escapeHtml(value).replaceAll("`", "&#096;");
+      }
+    </script>
+  </body>
+</html>
