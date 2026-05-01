@@ -15,7 +15,7 @@ jobs:
   pgtap:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
 
       - name: Install Supabase CLI
         uses: supabase/setup-cli@v1
