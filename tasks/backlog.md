@@ -32,6 +32,24 @@
 - `extension/src/shared/lib/logger.ts` created
 - TODO: Gradually migrate console.* calls to use `createLogger()`
 
+### UI-001: TreeDropdown UX issues
+File: `extension/src/apps/sidepanel/ui/components/TreeDropdown.tsx`
+
+**Critical**
+- [ ] Delete archived tree без confirm dialog — destructive, ставит серверный delete в очередь (line 241, `handleDeleteArchived`)
+- [ ] Action-кнопки невидимы на touch — `opacity-0 group-hover:opacity-100` ломает мобильный/тач UX (line 479)
+- [ ] Sync state не показывается — `_syncing` помечен unused, нет визуального индикатора (line 158)
+
+**UX patterns**
+- [ ] Rename доступен только через double-click, не discoverable — добавить кнопку или tooltip-подсказку (lines 337, 469)
+- [ ] Слово "archived" дублируется в meta каждого элемента, хотя они уже в секции "saved" (line 415)
+- [ ] Заменить кастомный `data-tooltip` на shadcn `<Tooltip>` для консистентности (lines 297, 357, и далее)
+
+**Polish**
+- [ ] Header "trees" lowercase vs "saved" uppercase tracking — стилевое несоответствие (line 306)
+- [ ] Empty state CTA указывает на крошечную `+` иконку — заменить на кликабельную кнопку прямо в empty state (lines 402-406)
+- [ ] `confirmNewTree` setting меняет только title диалога, не поведение — упростить или удалить (line 568)
+
 ## P3 - Nice to Have
 
 - Refresh token replay detection
