@@ -1,0 +1,3 @@
+# One-shot migration artifacts — local-only, never committed.
+migration-state.json
+migration-audit/
