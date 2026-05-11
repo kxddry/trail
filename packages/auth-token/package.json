@@ -8,6 +8,6 @@
     "@trail/db": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^25.3.1"
+    "@types/node": "^25.7.0"
   }
 }
