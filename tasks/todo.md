@@ -414,3 +414,13 @@ This makes xyflow's internal `nodeInternals` track the drag position via the con
 - pane.css: removed 22 lines (the `data-drag-active` block + preamble).
 - The new `finalNodes` memo is the only new per-tick work during drag: a single O(N) array `.map` where unchanged nodes pass through by identity. xyflow's nodes-prop diff finds exactly one changed object and updates its transform + the few incident edges.
 - `getIntersectingNodes`, validity ring, reparent commit on drop — all unchanged.
+
+### Follow-up: relayout transition was animating the dragged node
+
+User reported after the first fix that edges followed but the node itself still trailed the cursor. Root cause: `relayout.css` applies `transition: transform 350ms ease-in-out` to **every** `.react-flow__node` when the `graph--relayout-animated` class is on the container (which it almost always is). That transition was intended for tree-topology morphs (collapse/expand) — but it also fires during drag, so each React-state-driven transform write was being tweened over 350ms instead of jumping immediately. The cursor moved, the node interpolated behind it.
+
+Connected edges have no `d` transition, so they snap — which is why the previous fix made them follow instantly while the node alone lagged.
+
+Fix: xyflow adds a `.dragging` class to the actively-dragged node (see `useDrag` in `@xyflow/react`). One CSS rule in `relayout.css` clears the transform transition on `.react-flow__node.dragging`, so the dragged node lands its new transform in the same paint as the pointermove. Other nodes keep their relayout interpolation.
+
+- [x] Edit `extension/src/features/graph/motion/relayout.css`: add `.react-flow__node.dragging { transition: none }` override.
