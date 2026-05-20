@@ -424,3 +424,48 @@ Connected edges have no `d` transition, so they snap — which is why the previo
 Fix: xyflow adds a `.dragging` class to the actively-dragged node (see `useDrag` in `@xyflow/react`). One CSS rule in `relayout.css` clears the transform transition on `.react-flow__node.dragging`, so the dragged node lands its new transform in the same paint as the pointermove. Other nodes keep their relayout interpolation.
 
 - [x] Edit `extension/src/features/graph/motion/relayout.css`: add `.react-flow__node.dragging { transition: none }` override.
+
+---
+
+## React Flow Antipatterns Audit — 2026-05-20
+
+### Goal
+Find every React Flow / @xyflow/react antipattern in `extension/src/features/graph/`. No code changes — produce a review report.
+
+### Scope (files with @xyflow/react usage)
+- `components/TrailGraph.tsx` (872 lines, main consumer)
+- `components/TrailNode.tsx` (357 lines, custom node)
+- `components/GraphControls.tsx` (62 lines)
+- `components/LodController.tsx` (26 lines)
+- `hooks/useGraphLayout.ts` (87 lines)
+- `hooks/useCmdWheelZoom.ts` (71 lines)
+- `motion/useCameraControls.ts` (169 lines)
+- `motion/useNodeLifecycle.ts` (232 lines)
+- `lod.ts`, `types.ts`
+
+### Plan
+1. Read main files into context.
+2. Launch 3 parallel Explore subagents:
+   - **Agent A**: TrailGraph.tsx — state, props, memoization, handlers
+   - **Agent B**: TrailNode.tsx + LOD + motion hooks — node render perf
+   - **Agent C**: useGraphLayout + useCameraControls + useCmdWheelZoom — layout, camera, side-effects
+3. Synthesize findings, dedupe, rank by impact (perf vs correctness vs maintainability).
+4. Write `tasks/reports/react-flow-antipatterns.md` with file:line citations.
+5. Commit + push to `claude/find-react-flow-antipatterns-neXa9`.
+
+### Review
+Полный отчёт: `tasks/reports/2026-05-20-react-flow-antipatterns.md`.
+
+**Резюме:** код React Flow слоя в `extension/src/features/graph/` очень тщательно оптимизирован — большинство канонических антипаттернов (новые `nodeTypes`, отсутствие мемоизации nodes/edges, вложенные провайдеры, тяжёлый `node.data`) **отсутствуют**.
+
+Найдено **5 настоящих** антипаттернов:
+1. **Критический** — `useMemo` мутирует 4 рефа и читает `performance.now()` (`useNodeLifecycle.ts:66-200`). Работает только потому, что Strict Mode сегодня не double-invoke'ит `useMemo`. Сломается под React Compiler / concurrent rendering / возможным ужесточением React 19+.
+2. **Критический** — присваивание `displayNodesRef.current = displayNodes` в теле рендера (`TrailGraph.tsx:564-565`).
+3. **Заметный** — inline `proOptions={{...}}` literal (`TrailGraph.tsx:850`).
+4. **Заметный** — `applyNodeMetadata` + `treeToNodes` пересоздают все ~5к node-объектов при любом изменении metadata (`layout.ts:158`, `transforms.ts:49-117, 75-91`). Дампируется RF-диффом и `TrailNode` memo, но даёт GC-пики.
+5. **Заметный** — `onNodesChange` молча игнорирует не-position changes (`TrailGraph.tsx:212-221`) без комментария "почему".
+
+И ~4 спорных паттерна (O(N) finds, identity-churn smoothCenter, getIntersectingNodes per-frame, per-node useUpdateNodeInternals) — minor.
+
+Кода не менял: задача — audit-only. Если решите фиксить, приоритеты в отчёте.
+
