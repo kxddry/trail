@@ -363,3 +363,64 @@ Adapter shims (`findNodeById`, `getChildren`, `getRoot`, `iter`) operate on the 
 - **Fix #3 makes `getTreeState` synchronously expensive on cache miss** — verify no other caller depends on the snapshot returning in <X ms. Currently only the bootstrap path calls `getTreeState`.
 - **Fix #5 must NOT skip when the cohort is small** — onboarding tree (1–5 nodes), empty-state-to-first-node, etc., where the "entering" animation is actually a desired UX cue.
 - Verify `tree.size()` in `background/state/nav-tree.ts` — if it's a walk rather than a maintained counter, fix it (one-line change).
+
+---
+
+## Fix drag-to-reparent lag (2026-05-20)
+
+### Problem
+
+After commit `d7e7a94` ("cursor-tight drag via imperative DOM"):
+1. The dragged node still doesn't follow the cursor with zero lag.
+2. Connected edges (branches) do not move during drag — they only update on release.
+
+### Root cause
+
+Current `handleNodesChange` wrote `--drag-x`/`--drag-y` CSS variables on the dragged node's DOM element; an `!important` rule in `pane.css` overrode xyflow's inline transform. Empirically (and per the `882b9fd → d7e7a94` post-mortem), in xyflow v12 controlled mode:
+- The rendered node position comes from the React-controlled `nodes` prop. Without a state update, the dragged node stays at its layout position visually AND xyflow's internal `nodeInternals.position` (used for edge endpoint resolution) stays frozen.
+- The CSS-variable workaround moved the node visually but did NOT advance `nodeInternals`, so edge `d` paths stayed pinned to the source's pre-drag position.
+
+The prior "round-trip through React state" attempt was actually correct — the lag it caused came from putting `dragOverride` inside `displayNodes`'s deps, forcing a full-tree map (~5000 entries) + a `useNodeLifecycle` pass downstream on every pointermove tick. ~5000 × 2 array iterations per tick is what added 30–50ms, not React state per se.
+
+### Fix
+
+Restore React-state-driven drag position, applied AFTER the heavy memos so they stay cold:
+
+- New `dragPosition: { id, x, y } | null` state, updated in `onNodesChange` on every `position+dragging` change.
+- Cleared in `onNodeDragStop`.
+- Override applied in a new downstream `finalNodes` memo: `lifecycleNodes → finalNodes`. Single O(N) pass per tick, only the dragged node gets a new object reference.
+- `displayNodes`/`lifecycleNodes` deps unchanged → those memos stay cold.
+- Dropped the `data-drag-active` / `!important` CSS hack; React state is the single source of truth.
+
+This makes xyflow's internal `nodeInternals` track the drag position via the controlled `nodes` prop → incident edges follow the dragged node in real time.
+
+### Plan
+
+- [x] Edit `extension/src/features/graph/components/TrailGraph.tsx`:
+  - [x] Add `dragPosition` state.
+  - [x] Rewrite `handleNodesChange` to `setDragPosition` (with reference-stable bailout).
+  - [x] Drop `clearDragTransform`; call `setDragPosition(null)` in `handleNodeDragStop`.
+  - [x] Add `finalNodes` memo (after `lifecycleNodes`); use it as ReactFlow `nodes` prop.
+  - [x] Update inline doc comments to reflect new approach.
+- [x] Edit `extension/src/features/graph/pane.css`:
+  - [x] Remove the `[data-drag-active="true"]` `!important` rule and its preamble comment.
+- [x] Typecheck (no new errors from our files), lint, prettier, relevant unit tests (`reparent.test.ts`, `graph-layout.test.ts`) — all green.
+- [x] Commit and push to `claude/fix-drag-reparent-lag-NddIp`.
+- [ ] Open PR to `main`.
+
+### Review
+
+- TrailGraph.tsx: +49/-28 lines net; the drag-handler section is the only logic change, the rest is doc comments.
+- pane.css: removed 22 lines (the `data-drag-active` block + preamble).
+- The new `finalNodes` memo is the only new per-tick work during drag: a single O(N) array `.map` where unchanged nodes pass through by identity. xyflow's nodes-prop diff finds exactly one changed object and updates its transform + the few incident edges.
+- `getIntersectingNodes`, validity ring, reparent commit on drop — all unchanged.
+
+### Follow-up: relayout transition was animating the dragged node
+
+User reported after the first fix that edges followed but the node itself still trailed the cursor. Root cause: `relayout.css` applies `transition: transform 350ms ease-in-out` to **every** `.react-flow__node` when the `graph--relayout-animated` class is on the container (which it almost always is). That transition was intended for tree-topology morphs (collapse/expand) — but it also fires during drag, so each React-state-driven transform write was being tweened over 350ms instead of jumping immediately. The cursor moved, the node interpolated behind it.
+
+Connected edges have no `d` transition, so they snap — which is why the previous fix made them follow instantly while the node alone lagged.
+
+Fix: xyflow adds a `.dragging` class to the actively-dragged node (see `useDrag` in `@xyflow/react`). One CSS rule in `relayout.css` clears the transform transition on `.react-flow__node.dragging`, so the dragged node lands its new transform in the same paint as the pointermove. Other nodes keep their relayout interpolation.
+
+- [x] Edit `extension/src/features/graph/motion/relayout.css`: add `.react-flow__node.dragging { transition: none }` override.
