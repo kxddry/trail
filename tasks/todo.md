@@ -469,3 +469,46 @@ Find every React Flow / @xyflow/react antipattern in `extension/src/features/gra
 
 Кода не менял: задача — audit-only. Если решите фиксить, приоритеты в отчёте.
 
+## Tree storage: unify active vs stored split (refactor, 2026-05-23)
+
+**Problem.** `extension/src/background/services/tree-storage.ts` keeps the active tree's data under `activeTreeItem` (single global key) while every other tree lives under `treeBlobKey(id)` with an index entry. The "active" role is conflated with the storage tier, so every "operate on tree by id" call site has to branch on `if (active.id === treeId)`. When a call site forgets the branch, the active tree behaves as if it doesn't exist.
+
+**Evidence of the smell.**
+- `doPushTree` (`extension/src/background/sync/sync-engine.ts:465-468`) — explicit active-vs-stored fork.
+- `DELETE_TREE` (`extension/src/background/messaging/handlers/tree-lifecycle-handlers.ts:501-596`) — two full code paths under `isActive`.
+- `stashActiveTree` / `takeStoredTree` (`tree-storage.ts:786, 817`) — exist only to shuttle data between the two tiers.
+- `EXPORT_TREE` (fixed 2026-05-23 in `tree-lifecycle-handlers.ts:624`) — forgot the branch, threw "Tree not found" on the current trail's share / export.
+- Several handlers implicitly assume "the active tree may or may not have an index entry" — this is the bug surface.
+
+**Target shape.**
+1. **Storage keys.** Every tree (including the active one) lives under `treeBlobKey(id)`. `activeTreeMetaItem` reduces to `activeTreeIdItem: string` (just a pointer).
+2. **Index.** Every tree has an entry, no exceptions. No special-casing the active id in or out of the index.
+3. **Hot path stays cheap.** Keep `cachedTree`, `scheduleSave`, `flushSaveNow` exactly as today — they're the reason for the split in the first place. The flush writes to `treeBlobKey(activeId)` instead of `activeTreeItem`. Same debounce, same coalescing, identical cost on the per-navigation write path.
+4. **Reads unify.** `getFullStoredRecord(id)` works for the active id too because the blob lives in the same place. When `id === activeId` and `cachedTree` is dirty, serve from the in-memory cache; otherwise decode the blob. One code path for every "load tree by id" call.
+5. **Migration.** One-shot on SW startup: if `activeTreeItem` exists, decode it, write to `treeBlobKey(activeId)`, ensure index entry, delete `activeTreeItem`. Idempotent — safe to re-run on every wake until the legacy key is gone.
+
+**Branches that disappear after the refactor.**
+- `if (active.id === treeId)` in `doPushTree`.
+- The `isActive` fork in `DELETE_TREE`.
+- The two paths in `stashActiveTree` / `takeStoredTree` (becomes "swap the `activeTreeIdItem` pointer").
+- The active-vs-stored branch we just added to `EXPORT_TREE`.
+- The "active tree isn't in the index" assumption scattered across snapshot builders, switcher UI, and sync-engine code.
+
+**Risk.**
+- Hot-path regression if the flush key swap is done wrong. Validate with `bench:sidepanel-cold-load` and a per-navigation write-latency probe before/after.
+- Migration races at SW startup. Run migration under the existing `withTreeLock` and gate every read of `activeTreeItem` behind a "legacy fallback" until the migration has been observed to complete at least once.
+- Index growth: the active tree now always has an entry. Tree-list UI already filters by stub-ness; verify it doesn't double-count.
+
+**Out of scope.**
+- Compression format changes. Keep `encodeTree` / `decodeTree` as-is.
+- Sync protocol changes. The server has no idea which tree is "active" today and that stays true.
+- UI changes. The switcher already treats the active tree as just another row by id.
+
+**Definition of done.**
+- [ ] `activeTreeItem` is removed from `storage-items.ts`; only the migration reads it.
+- [ ] No call site in `extension/src/background/` branches on `active.id === treeId` for storage-routing purposes.
+- [ ] `stashActiveTree` and `takeStoredTree` are deleted or reduced to pointer swaps.
+- [ ] `getFullStoredRecord(activeId)` returns the live tree.
+- [ ] Existing tests pass; add one new test that exports / shares / unloads the active tree by id without special-casing.
+- [ ] Cold-load bench (`pnpm run bench:sidepanel-cold-load`) within noise of the pre-refactor baseline.
+
