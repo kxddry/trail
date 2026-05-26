@@ -1,5 +1,65 @@
 # Trail - Adultify: Production-Grade Product
 
+## UUID v7 for shared trees (replace random-word codes) — Plan (2026-05-26)
+
+### Goal
+Shared trees use **UUID v7** identifiers instead of the random base64
+codes ("random words"). Delete code left unused by the switch.
+
+### Findings
+- Share **code** = PK of `shared_trail_links`, currently
+  `base64url(gen_random_uuid())` (v4, 122 random bits), minted
+  server-side in `create_share_link` (latest def = migration 021). This
+  is the visible `/s/<code>` identifier the user calls "random words".
+- Imported **trail id**: `import_shared_trail` (latest def = migration
+  026) mints the new trail id with `gen_random_uuid()` (v4) — the only
+  v4 trail id in an otherwise all-v7 trail space (normal trails minted
+  client-side via `uuidv7()` in `tree-storage.ts`, synced via
+  `upsert_trail`, which trusts the client id). Genuine inconsistency.
+- `uuid.ts` `uuidv7()` is THE only v7 mint path (per `ids.ts`). PG is
+  v17 (no native `uuidv7()` until PG18) → v7 must be client-minted,
+  consistent with every other PK. Import is extension-driven, so we can
+  pass a client-minted trail id into the RPC.
+- Marketing `/s/[code]` does no code-format validation → format change
+  safe. `sanitize.ts` touches only the snapshot, not the code.
+- Security: v4→v7 for the code drops entropy 122→74 bits (still
+  uncrawlable) + leaks creation time (lowest-sensitivity). Codebase
+  already accepts this for every other PK. Accepted (advisor-confirmed).
+
+### Plan
+- [x] `029_share_uuidv7_ids.sql`: redefine `create_share_link` (accept
+      `p_code text`, validate v7, drop server-side gen + retry loop) and
+      `import_shared_trail` (accept `p_new_trail_id uuid`, validate v7).
+      Drop old signatures; re-GRANT. Add `_rollback/029...`.
+- [x] `share-api.ts`: `createShareLink`/`importSharedTrail` mint
+      `uuidv7()` and pass the new params.
+- [x] `database.types.ts`: add `p_code` / `p_new_trail_id` to the Args.
+- [x] Delete unused code: `extension/src/features/sharing/flags.ts`
+      (zero importers; doc-comment admits "not consulted at runtime").
+- [x] Verify: extension typecheck clean (0 errors), full extension test
+      suite 160/160 pass. Validated the PG v7-regex + version-nibble
+      checks against the live DB via a non-mutating no-FROM SELECT
+      (v7 accepted any-case; v4 and old base64 codes rejected).
+
+### Review (2026-05-26)
+- Share code is now a client-minted UUID v7 (the visible /s/<code> is a
+  real v7 string, not base64-of-v4). Imported trail ids are v7 too, so
+  imported trails match every other trail in the system.
+- Server no longer generates codes; it validates the client-minted v7
+  shape and keeps a single defensive unique_violation guard (no retry
+  loop — collision across 74 random bits is astronomically unlikely).
+- `migrations-rement.ts` was checked and left alone (it's the active
+  node id re-mint helper, imported by migrations.ts + its test; not dead
+  and outside sharing scope).
+- NOT applied to prod — `make migrate` + the matching extension build
+  are the deploy step (see note below).
+
+### Deploy note
+RPC signatures change. Deploy migration (`make migrate`) + the updated
+extension together — an old extension build calls the removed signatures
+and would fail to create/import shares until updated. (Not applied to
+prod by this change.)
+
 ## Shared Trails + apps/account Retirement — Plan (2026-05-19)
 
 ### Reframing (evidence-backed, see file:line)
