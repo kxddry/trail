@@ -29,3 +29,13 @@
 - **Mistake**: I interpreted "current onboarding flow" as the account web onboarding and reviewed the wrong surface before the user clarified they meant the extension onboarding.
 - **Rule**: When a repo has multiple onboarding surfaces, first map every onboarding implementation in code and confirm the relevant surface from surrounding context before giving recommendations.
 - **Why**: "Onboarding" is a product-wide concept, not a unique screen. Reviewing the wrong flow wastes time and produces misleading guidance even if the UX analysis itself is sound.
+
+## 2026-05-27: Porting desktop gestures to a public web page — account for touch
+- **Mistake**: Porting the extension graph's pan/zoom to the public `/s/<code>` share page, I mirrored the extension's `zoomOnPinch={false}` (it relies on `useCmdWheelZoom`, which is wheel-only). User corrected: `zoomOnPinch = true`. The extension is desktop-only (side panel), so it never needed real touchscreen pinch; a public web page can be opened on a tablet/touch laptop where pinch is a touch event the wheel handler can't catch.
+- **Rule**: When porting interaction code from a desktop-only surface (extension/Electron) to a public web page, re-evaluate touch: enable `zoomOnPinch` (touchscreen pinch) and verify touch pan. Don't blindly copy the desktop prop set. Note that a capture-phase `useCmdWheelZoom` that `stopPropagation()`s the ctrlKey wheel on the container shields d3-zoom from the trackpad pinch, so enabling `zoomOnPinch` adds touch support without double-zoom on trackpads.
+- **Why**: "Match the extension" optimizes for the desktop reference, but the share page's audience includes touch devices. Mirroring desktop-only choices silently drops mobile/tablet interactions.
+
+## 2026-05-26: Use Opus 4.7 for subagents, not Sonnet
+- **Mistake**: I spawned the share-page exploration and auth-trace subagents on Sonnet 4.6. User corrected: "opus 4.7 not sonnet 4.6".
+- **Rule**: When spawning subagents (Agent tool) for this user, set `model="opus"` for any substantive investigation/research/audit. Never haiku, and default to Opus 4.7 over Sonnet for diagnostic work unless told otherwise.
+- **Why**: The user prioritizes analysis quality on subtle bugs (e.g. auth-state races) over subagent speed/cost.

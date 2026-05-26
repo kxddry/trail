@@ -1,5 +1,50 @@
 # Trail - Adultify: Production-Grade Product
 
+## Share page: import gate + pan/zoom parity (2026-05-27)
+
+### Issue 1 — "Sign in to import" shows even when logged in
+Root cause (two independent traces + direct source read): `ShareImportPrompt.tsx:49`
+reads sign-in state from the sidepanel zustand store (`s.authState`), which is
+**push-only** — set solely by a one-shot `AUTH_STATE` broadcast from the
+background SW. In the common warm-SW case that broadcast fires before the
+sidepanel's listener (registered in a `useEffect` in `useRuntimeMessages`)
+exists, so the value stays at its initial `{ status: "unknown" }` forever →
+`signedIn === false` → "Sign in". It is the ONLY consumer of `s.authState`;
+every sibling (TreeDropdown, ShareDialog, settings) uses pull-based `useAuthState()`.
+
+- [x] Replace `useStore((s) => s.authState.status === "signed-in")` with `useAuthState().status === "signed-in"` (matches TreeDropdown)
+- [x] Swap the now-unused `useStore` import for `useAuthState` (+ comment on why not the store)
+- [x] Type-check the extension — green
+
+### Issue 2 — two-finger pan / pinch zoom like the extension
+Root cause: share graph uses `panOnDrag` + `panOnScroll={false}`. On a trackpad,
+a two-finger swipe is a bare wheel event → `useCmdWheelZoom` ignores it (no
+modifier) and ReactFlow ignores it (`panOnScroll={false}`) → the page scrolls
+instead of the graph panning. The extension uses `panOnScroll` + `panOnScrollSpeed={1}`.
+
+- [x] Add `panOnScroll` + `panOnScrollSpeed={1}` (two-finger pan); keep `panOnDrag` (mouse) + `useCmdWheelZoom` (trackpad pinch + Cmd/Ctrl-scroll)
+- [x] `zoomOnPinch` **enabled** (per user) so real touchscreen pinch works — public page, unlike desktop-only extension. No double-zoom: useCmdWheelZoom captures the ctrlKey wheel on the container and `stopPropagation()`s it, so d3-zoom (descendant pane) never sees the trackpad pinch.
+- [x] Update help text ("Swipe or drag to pan…") + stale code comment
+- [x] Type-check the marketing app — green
+
+### Verification
+- [x] Extension typecheck green; ShareImportPrompt.tsx prettier + eslint clean.
+- [x] Marketing typecheck green; shared-trail-graph.tsx eslint clean.
+- [x] Confirmed extension reference props (`TrailGraph.tsx:405-410`): only diff is
+  `panOnDrag` (share=true since no selection; extension=false for marquee).
+- [ ] **Needs a browser** (can't do here): warm-SW → open sidepanel via web
+  Import → button reads "Confirm" not "Sign in"; trackpad two-finger pan; pinch
+  (trackpad + touch). Mechanism verified by code + prop parity with proven code.
+
+### Notes / follow-ups
+- `s.authState` in the sidepanel store is now dead (no consumers). Left in place
+  per minimal-impact; flag for future cleanup.
+- Layout overhaul (immersive full-height canvas) deliberately out of scope.
+  Scroll-trap over the 640px box is minor (only a footer below it).
+- Issue 1 presumes the user is signed into the **extension** (chrome.storage
+  session), not just the website. If a fresh browser still shows "Sign in",
+  that's genuine signed-out, not this bug.
+
 ## UUID v7 for shared trees (replace random-word codes) — Plan (2026-05-26)
 
 ### Goal
