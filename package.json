@@ -20,7 +20,7 @@
     "prepare": "husky"
   },
   "devDependencies": {
-    "@supabase/supabase-js": "^2.103.3",
+    "@supabase/supabase-js": "^2.108.2",
     "@types/node": "^25.6.0",
     "@types/pg": "^8.20.0",
     "cypress": "^15.11.0",
@@ -28,7 +28,7 @@
     "eslint-config-next": "^16.1.6",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
-    "next": "16.2.3",
+    "next": "16.2.9",
     "pg": "^8.20.0",
     "supabase": "^2.84.5"
   }
