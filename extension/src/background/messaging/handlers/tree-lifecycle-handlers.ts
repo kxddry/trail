@@ -265,6 +265,23 @@ async function switchTree(
   await notifyTreesUpdate(await buildTreesSnapshot());
 }
 
+/**
+ * Stash the current tree (no data loss — pushes an undo snapshot) and
+ * switch to a fresh, empty tree with the given label. Shared by the
+ * NEW_TREE RPC handler and the toolbar-icon context menu so both entry
+ * points behave identically.
+ */
+export async function createNewTreeWithLabel(label: string): Promise<void> {
+  const current = await treeStorage.getOrCreateTree();
+  if (current.getRoot()) {
+    snapshot(current, "New tree");
+  }
+  await treeStorage.stashActiveTree();
+  const meta = treeStorage.createMeta(label);
+  const nextTree = new NavigationTree();
+  await switchTree(nextTree, meta, null, null, null);
+}
+
 export const treeLifecycleHandlers = defineRpcHandlers({
   async [RPC_METHOD.GET_TREE]() {
     await authReady;
@@ -442,14 +459,7 @@ export const treeLifecycleHandlers = defineRpcHandlers({
   },
 
   async [RPC_METHOD.NEW_TREE](message) {
-    const current = await treeStorage.getOrCreateTree();
-    if (current.getRoot()) {
-      snapshot(current, "New tree");
-    }
-    await treeStorage.stashActiveTree();
-    const meta = treeStorage.createMeta(message.label);
-    const nextTree = new NavigationTree();
-    await switchTree(nextTree, meta, null, null, null);
+    await createNewTreeWithLabel(message.label);
   },
 
   async [RPC_METHOD.OPEN_TREE](message) {

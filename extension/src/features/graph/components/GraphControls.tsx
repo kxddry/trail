@@ -2,6 +2,7 @@ import { useReactFlow } from "@xyflow/react";
 import { Icons } from "@ui/components/icons";
 import { Button } from "@ui/components/ui/button";
 import { ButtonTooltip } from "@ui/components/button-tooltip";
+import type { WheelMode } from "@shared/types/settings.js";
 
 type GraphControlsProps = {
   /**
@@ -11,9 +12,46 @@ type GraphControlsProps = {
    */
   onFocusCurrentOrFallback: () => void;
   canFocus: boolean;
+  /** Grab-hand pan tool — true while the tool is active. */
+  panToolActive: boolean;
+  onTogglePanTool: () => void;
+  /** Current scroll-wheel mode (drives the cycle button's icon + label). */
+  wheelMode: WheelMode;
+  /**
+   * Advance `wheelMode` to the next mode. Omitted by read-only hosts
+   * (e.g. the public share page), which hide the toggle entirely.
+   */
+  onCycleWheelMode?: () => void;
 };
 
-export function GraphControls({ onFocusCurrentOrFallback, canFocus }: GraphControlsProps) {
+const WHEEL_MODE_LABEL: Record<WheelMode, string> = {
+  pan: "Scroll: pan",
+  scroll: "Scroll: vertical",
+  scrollHorizontal: "Scroll: horizontal",
+  zoom: "Scroll: zoom",
+};
+
+function WheelModeIcon({ mode }: { mode: WheelMode }) {
+  switch (mode) {
+    case "pan":
+      return <Icons.Move />;
+    case "scroll":
+      return <Icons.ArrowsVertical />;
+    case "scrollHorizontal":
+      return <Icons.ArrowsHorizontal />;
+    case "zoom":
+      return <Icons.ZoomIn />;
+  }
+}
+
+export function GraphControls({
+  onFocusCurrentOrFallback,
+  canFocus,
+  panToolActive,
+  onTogglePanTool,
+  wheelMode,
+  onCycleWheelMode,
+}: GraphControlsProps) {
   const { zoomIn, zoomOut } = useReactFlow();
 
   return (
@@ -49,6 +87,32 @@ export function GraphControls({ onFocusCurrentOrFallback, canFocus }: GraphContr
           <Icons.LocateFixed />
         </Button>
       </ButtonTooltip>
+      <ButtonTooltip
+        label={panToolActive ? "Pan tool — on (drag to move)" : "Pan tool — drag to move"}
+        side="left"
+      >
+        <Button
+          variant={panToolActive ? "secondary" : "outline"}
+          size="icon"
+          aria-label="Pan tool"
+          aria-pressed={panToolActive}
+          onClick={onTogglePanTool}
+        >
+          <Icons.Hand />
+        </Button>
+      </ButtonTooltip>
+      {onCycleWheelMode && (
+        <ButtonTooltip label={`${WHEEL_MODE_LABEL[wheelMode]} · click to change`} side="left">
+          <Button
+            variant="outline"
+            size="icon"
+            aria-label={WHEEL_MODE_LABEL[wheelMode]}
+            onClick={onCycleWheelMode}
+          >
+            <WheelModeIcon mode={wheelMode} />
+          </Button>
+        </ButtonTooltip>
+      )}
     </div>
   );
 }

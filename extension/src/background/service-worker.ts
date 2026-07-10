@@ -14,6 +14,7 @@ import { maybeReclaimStorage } from "./services/storage-retention.js";
 import { wireStorageRetention } from "./services/storage-retention-wiring.js";
 import { EXTENSION_MESSAGE, fireExtensionEvent } from "@shared/transport/extension-messaging.js";
 import { treeStorage } from "./services/tree-storage.js";
+import { initContextMenu } from "./context-menu.js";
 import { tabManager } from "./state/tab-manager.js";
 import { hydrateNavPatterns } from "./navigation/nav-pattern-tracker.js";
 import { getSupabaseClient } from "@shared/lib/supabase.js";
@@ -184,6 +185,10 @@ if (import.meta.env.FIREFOX) {
     });
   }
 }
+
+// Toolbar-icon right-click "New tree". Registers its onInstalled (menu
+// create) and onClicked listeners synchronously at SW startup.
+initContextMenu();
 
 // Pre-compute layout positions so sidepanel opens instantly
 void warmLayoutPositions();

@@ -22,6 +22,7 @@ import { Kbd } from "@ui/components/ui/kbd";
 import { Separator } from "@ui/components/ui/separator";
 import { ButtonTooltip } from "@ui/components/button-tooltip";
 import { useStore } from "../state/store.js";
+import { createTree } from "../shared/create-tree.js";
 import { Icons } from "./Icon.js";
 import { browser } from "@shared/platform/webext.js";
 import { navigateToNodeId } from "../../api/tree.js";
@@ -180,6 +181,17 @@ function PaletteBody({ onClose }: { onClose: () => void }) {
         )}
         <CommandSeparator />
         <CommandGroup heading={i18n.t("sidepanel.search.headingActions")}>
+          <CommandItem
+            value="new-tree"
+            onSelect={() => {
+              onClose();
+              void createTree();
+            }}
+          >
+            <Icons.GitBranchPlus className="size-3.5" />
+            {i18n.t("trees.newTree")}
+            <Kbd className="ml-auto">⇧N</Kbd>
+          </CommandItem>
           <CommandItem value="open-settings" onSelect={openSettings}>
             <Icons.Settings className="size-3.5" />
             {i18n.t("sidepanel.search.openSettings")}

@@ -234,6 +234,9 @@ export default defineConfig({
         "webNavigation",
         "alarms",
         "identity",
+        // Right-click "New tree" on the toolbar icon. Cross-browser
+        // (Chrome MV3 + Firefox both support contextMenus / menus).
+        "contextMenus",
       ],
       // Fonts are loaded from extension-owned pages (sidepanel, settings,
       // login, onboarding) which don't need `web_accessible_resources` —

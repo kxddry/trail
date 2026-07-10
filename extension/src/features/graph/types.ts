@@ -128,6 +128,14 @@ export type TrailGraphProps = {
   onChainUnfoldToggle: (nodeId: NodeId) => void;
   onSelectionChange: (nodeIds: Set<NodeId>) => void;
   /**
+   * Advance `settings.wheelMode` to the next mode (pan → scroll →
+   * scrollHorizontal → zoom → pan). Wired by the host surface so the
+   * in-canvas wheel-mode toggle can persist through the settings store
+   * without the graph package importing it. Omitted by read-only hosts
+   * (e.g. the public share page), which simply hide the toggle.
+   */
+  onCycleWheelMode?: () => void;
+  /**
    * Optional children rendered as direct descendants of `<ReactFlow>`,
    * giving them access to `useReactFlow` / `useInternalNode` /
    * `useStore` from xyflow without exposing the graph package to

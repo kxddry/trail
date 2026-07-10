@@ -74,7 +74,15 @@ export function useBootstrap(): {
   // initial bootstrap query and stale until reload.
   useEffect(() => {
     return settingsItem.watch((value) => {
-      if (value) setSettings(value);
+      if (!value) return;
+      // The watched value is the RAW stored blob, which lacks any setting
+      // added after it was last written (e.g. a freshly-shipped field on
+      // an upgraded profile). The initial bootstrap settings (from
+      // getSettings()) are already default-merged, so layer the raw value
+      // over them — a missing key keeps its merged default instead of
+      // becoming `undefined` and breaking consumers.
+      const prev = useStore.getState().settings;
+      setSettings(prev ? { ...prev, ...value } : value);
     });
   }, [setSettings]);
 

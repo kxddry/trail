@@ -4,6 +4,7 @@ import type {
   LayoutMode,
   GraphDensity,
   TitleTruncation,
+  WheelMode,
 } from "@shared/types/settings.js";
 import type { ThemeId } from "@shared/types/theme.js";
 import { THEME_PRESETS } from "@shared/styles/theme-presets.js";
@@ -171,6 +172,37 @@ export function AppearancePage({ settings, onUpdate }: AppearancePageProps) {
           </Field>
 
           <Field>
+            <FieldLabel htmlFor="wheel-mode">
+              {i18n.t("settings.appearance.wheelModeLabel")}
+            </FieldLabel>
+            <Select
+              value={settings.wheelMode ?? "pan"}
+              onValueChange={(v) => onUpdate({ wheelMode: v as WheelMode })}
+            >
+              <SelectTrigger id="wheel-mode" className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent position="popper" sideOffset={6} className={SELECT_CONTENT_CLASS}>
+                <SelectGroup>
+                  <SelectItem value="pan">{i18n.t("settings.appearance.wheelModePan")}</SelectItem>
+                  <SelectItem value="scroll">
+                    {i18n.t("settings.appearance.wheelModeScroll")}
+                  </SelectItem>
+                  <SelectItem value="scrollHorizontal">
+                    {i18n.t("settings.appearance.wheelModeScrollHorizontal")}
+                  </SelectItem>
+                  <SelectItem value="zoom">
+                    {i18n.t("settings.appearance.wheelModeZoom")}
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FieldDescription>
+              {i18n.t("settings.appearance.wheelModeDescription")}
+            </FieldDescription>
+          </Field>
+
+          <Field>
             <FieldLabel htmlFor="title-truncation">
               {i18n.t("settings.appearance.truncationLabel")}
             </FieldLabel>
@@ -259,6 +291,21 @@ export function AppearancePage({ settings, onUpdate }: AppearancePageProps) {
               id="dim-closed-nodes"
               checked={settings.dimClosedNodes}
               onCheckedChange={(v) => onUpdate({ dimClosedNodes: v })}
+            />
+          </Field>
+          <Field orientation="horizontal">
+            <FieldContent>
+              <FieldLabel htmlFor="node-animations">
+                {i18n.t("settings.appearance.nodeAnimations")}
+              </FieldLabel>
+              <FieldDescription>
+                {i18n.t("settings.appearance.nodeAnimationsDescription")}
+              </FieldDescription>
+            </FieldContent>
+            <Switch
+              id="node-animations"
+              checked={settings.nodeAnimations ?? false}
+              onCheckedChange={(v) => onUpdate({ nodeAnimations: v })}
             />
           </Field>
         </FieldGroup>

@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { redo, undo } from "../../api/commands.js";
 import { useStore } from "../state/store.js";
+import { createTree } from "../shared/create-tree.js";
 import { Icons } from "./Icon.js";
 import PinnedDropdown from "./PinnedDropdown.js";
 import TreeDropdown from "./TreeDropdown.js";
@@ -12,6 +13,7 @@ import { ButtonTooltip } from "@ui/components/button-tooltip";
 
 const UNDO_KEYS = ["meta", "Z"] as const;
 const REDO_KEYS = ["meta", "shift", "Z"] as const;
+const NEW_TREE_KEYS = ["shift", "N"] as const;
 
 export default function FloatingControls() {
   const commandState = useStore((state) => state.commandState);
@@ -73,6 +75,19 @@ export default function FloatingControls() {
         <ButtonGroup>
           <PinnedDropdown />
           <TreeDropdown />
+          <ButtonTooltip label="New tree" keys={NEW_TREE_KEYS}>
+            <Button
+              id="newTreeToolbarBtn"
+              variant="secondary"
+              size="icon"
+              type="button"
+              aria-label="New tree"
+              onClick={createTree}
+              className="press-feedback"
+            >
+              <Icons.GitBranchPlus />
+            </Button>
+          </ButtonTooltip>
         </ButtonGroup>
       </div>
 

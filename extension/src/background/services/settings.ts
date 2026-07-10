@@ -18,6 +18,7 @@ export const defaultSettings: Settings = {
   },
   titleTruncation: "end",
   graphDensity: "comfortable",
+  wheelMode: "pan",
   showFavicons: true,
   showUrls: true,
   showTagDots: true,
@@ -25,6 +26,7 @@ export const defaultSettings: Settings = {
   showAudioIndicators: true,
   showConnections: true,
   dimClosedNodes: true,
+  nodeAnimations: false,
   confirmNewTree: true,
   shortcutsEnabled: true,
   adaptivePerformance: true,
@@ -98,6 +100,13 @@ function mergeDefaults(raw: unknown): Settings {
     transparentBackground: sanitized.transparentBackground ?? defaultSettings.transparentBackground,
     titleTruncation: sanitized.titleTruncation ?? defaultSettings.titleTruncation,
     graphDensity: sanitized.graphDensity ?? defaultSettings.graphDensity,
+    wheelMode:
+      sanitized.wheelMode === "pan" ||
+      sanitized.wheelMode === "scroll" ||
+      sanitized.wheelMode === "scrollHorizontal" ||
+      sanitized.wheelMode === "zoom"
+        ? sanitized.wheelMode
+        : defaultSettings.wheelMode,
     showFavicons: sanitized.showFavicons ?? defaultSettings.showFavicons,
     showUrls: sanitized.showUrls ?? defaultSettings.showUrls,
     showTagDots: sanitized.showTagDots ?? defaultSettings.showTagDots,
@@ -105,6 +114,7 @@ function mergeDefaults(raw: unknown): Settings {
     showAudioIndicators: sanitized.showAudioIndicators ?? defaultSettings.showAudioIndicators,
     showConnections: sanitized.showConnections ?? defaultSettings.showConnections,
     dimClosedNodes: sanitized.dimClosedNodes ?? defaultSettings.dimClosedNodes,
+    nodeAnimations: sanitized.nodeAnimations ?? defaultSettings.nodeAnimations,
     confirmNewTree: sanitized.confirmNewTree ?? defaultSettings.confirmNewTree,
     shortcutsEnabled: sanitized.shortcutsEnabled ?? defaultSettings.shortcutsEnabled,
     adaptivePerformance: sanitized.adaptivePerformance ?? defaultSettings.adaptivePerformance,

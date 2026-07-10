@@ -16,6 +16,22 @@
   cursor: default;
 }
 
+/*
+ * Grab-hand pan tool. When the tool is active the container gets
+ * `graph--pan-tool` and `selectionOnDrag` is off, so the pane no longer
+ * carries `.selection` and the rule above doesn't apply. Show the
+ * open-hand affordance over empty canvas and the closed hand while a
+ * pan drag is in progress (xyflow adds `.dragging` during a panOnDrag
+ * move). Cursor changes are instant — a pointer state, not motion.
+ */
+.graph--pan-tool .react-flow__pane {
+  cursor: grab;
+}
+
+.graph--pan-tool .react-flow__pane.dragging {
+  cursor: grabbing;
+}
+
 .react-flow__edge,
 .react-flow__edge.selectable {
   pointer-events: none;

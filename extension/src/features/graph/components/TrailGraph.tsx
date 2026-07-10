@@ -5,6 +5,7 @@ import {
   Background,
   BackgroundVariant,
   SelectionMode,
+  PanOnScrollMode,
   useStore,
   type NodeMouseHandler,
 } from "@xyflow/react";
@@ -86,11 +87,37 @@ function TrailGraphInner(props: TrailGraphProps) {
     onBadgeCollapseToggle,
     onChainUnfoldToggle,
     onSelectionChange,
+    onCycleWheelMode,
     children,
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
   useCmdWheelZoom(containerRef);
+
+  // Grab-hand pan tool. Ephemeral (resets on reload) — a transient
+  // interaction mode, not a persisted preference. While active, a pane
+  // drag pans the camera (panOnDrag) instead of starting a marquee, and
+  // node drags are suppressed so a pointerdown anywhere pans. Cmd/Ctrl
+  // +wheel zoom and the scroll-wheel mode are unaffected.
+  const [panTool, setPanTool] = useState(false);
+  const togglePanTool = useCallback(() => setPanTool((v) => !v), []);
+
+  // Scroll-wheel behavior (persisted). `pan` is today's free pan; the
+  // others lock the axis or switch the wheel to zoom. xyflow's d3-zoom
+  // handles bare-wheel zoom in `zoom` mode; useCmdWheelZoom still owns
+  // the modifier/pinch zoom path in every mode (it stopPropagations in
+  // capture phase, so there's no double-zoom).
+  // `?? "pan"` guards against a settings blob saved before `wheelMode`
+  // existed (the field can be absent on an upgraded profile until the
+  // next save) — without it the wheel-mode control would read undefined.
+  const wheelMode = settings.wheelMode ?? "pan";
+  const wheelIsZoom = wheelMode === "zoom";
+  const panOnScrollMode =
+    wheelMode === "scroll"
+      ? PanOnScrollMode.Vertical
+      : wheelMode === "scrollHorizontal"
+        ? PanOnScrollMode.Horizontal
+        : PanOnScrollMode.Free;
 
   const relayoutAnimated = useRelayoutEnabled();
   const hoverGlow = useHoverHighlightEnabled();
@@ -186,7 +213,11 @@ function TrailGraphInner(props: TrailGraphProps) {
     ],
   );
 
-  const lifecycleEnabled = useNodeLifecycleEnabled();
+  // Node enter/exit/return fade animations are an opt-in user setting
+  // (off by default) — the fades flicker when fast zoom/pan churns the
+  // viewport-culled node set. Still AND-gated by the motion flags +
+  // reduced-motion check inside the hook.
+  const lifecycleEnabled = useNodeLifecycleEnabled() && (settings.nodeAnimations ?? false);
   const lifecycleNodes = useNodeLifecycle(displayNodes, lifecycleEnabled);
 
   // Batched updateNodeInternals when handle assignments change between renders.
@@ -348,6 +379,7 @@ function TrailGraphInner(props: TrailGraphProps) {
           lifecycleEnabled && "graph--lifecycle-on",
           isReshaping && "graph--reshaping",
           isPanning && "graph--panning",
+          panTool && "graph--pan-tool",
         )}
         onPointerDownCapture={marquee.onContainerPointerDown}
         onPointerUpCapture={marquee.onContainerPointerUp}
@@ -369,7 +401,7 @@ function TrailGraphInner(props: TrailGraphProps) {
           onSelectionEnd={marquee.onSelectionEnd}
           onMoveStart={handleMoveStart}
           onMoveEnd={handleMoveEnd}
-          selectionOnDrag
+          selectionOnDrag={!panTool}
           selectionMode={SelectionMode.Partial}
           multiSelectionKeyCode={MULTI_SELECT_KEYS}
           // ReactFlow's default `deleteKeyCode` is "Backspace" — it
@@ -395,14 +427,20 @@ function TrailGraphInner(props: TrailGraphProps) {
           // (tree-layout.ts), which spaces mindmap siblings out so
           // fewer cross the edge per frame.
           onlyRenderVisibleElements
-          nodesDraggable
+          nodesDraggable={!panTool}
           nodeDragThreshold={5}
           nodesConnectable={false}
           connectOnClick={false}
-          panOnDrag={false}
-          panOnScroll
+          // Pan tool claims left-drag for camera panning; otherwise drag
+          // is owned by marquee (selectionOnDrag) / node reparent.
+          panOnDrag={panTool}
+          // Wheel behavior driven by settings.wheelMode. `zoom` mode hands
+          // bare-wheel zoom to xyflow's d3-zoom (zoomOnScroll); the others
+          // pan with the axis locked per panOnScrollMode.
+          panOnScroll={!wheelIsZoom}
+          panOnScrollMode={panOnScrollMode}
           panOnScrollSpeed={1}
-          zoomOnScroll={false}
+          zoomOnScroll={wheelIsZoom}
           zoomOnPinch={false}
           zoomOnDoubleClick={false}
           fitView={false}
@@ -413,7 +451,14 @@ function TrailGraphInner(props: TrailGraphProps) {
         >
           <GraphBackground />
           <LodController targetRef={containerRef} />
-          <GraphControls onFocusCurrentOrFallback={focusCurrentOrFallback} canFocus={canFocus} />
+          <GraphControls
+            onFocusCurrentOrFallback={focusCurrentOrFallback}
+            canFocus={canFocus}
+            panToolActive={panTool}
+            onTogglePanTool={togglePanTool}
+            wheelMode={wheelMode}
+            onCycleWheelMode={onCycleWheelMode}
+          />
           {children}
         </ReactFlow>
       </div>

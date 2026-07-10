@@ -30,7 +30,9 @@ import {
 } from "@ui/components/ui/empty";
 import { TooltipProvider } from "@ui/components/ui/tooltip";
 import type { NodeId, Url } from "@shared/types/ids.js";
+import type { WheelMode } from "@shared/types/settings.js";
 import { navigateToNodeId, renameNode, reparentNode } from "../api/tree.js";
+import { saveSettings } from "../api/settings.js";
 import { showOperationError } from "./shared/show-operation-error.js";
 import { captureEvent } from "@shared/lib/observability.js";
 
@@ -102,6 +104,20 @@ export default function App() {
   const inlineRenameTargetId = useStore((s) => s.renameTarget);
   const startInlineRename = useStore((s) => s.startInlineRename);
   const cancelInlineRename = useStore((s) => s.cancelInlineRename);
+  const setSettings = useStore((s) => s.setSettings);
+
+  // Cycle the in-canvas scroll-wheel mode and persist it. Mirrors the
+  // setSettings + saveSettings pattern the keyboard shortcuts use, kept
+  // here so the graph package never imports the sidepanel store/api.
+  const handleCycleWheelMode = useCallback(() => {
+    const current = useStore.getState().settings;
+    if (!current) return;
+    const order: WheelMode[] = ["pan", "scroll", "scrollHorizontal", "zoom"];
+    const next = order[(order.indexOf(current.wheelMode) + 1) % order.length] ?? "pan";
+    const nextSettings = { ...current, wheelMode: next };
+    setSettings(nextSettings);
+    void saveSettings(nextSettings);
+  }, [setSettings]);
 
   const handleNodeClick = useCallback((nodeId: NodeId, url: string) => {
     void navigateToNodeId(nodeId, url as Url);
@@ -216,6 +232,7 @@ export default function App() {
               onBadgeCollapseToggle={toggleBadgeCollapse}
               onChainUnfoldToggle={toggleChainUnfolded}
               onSelectionChange={handleSelectionChange}
+              onCycleWheelMode={handleCycleWheelMode}
             />
           </Suspense>
         )}

@@ -23,6 +23,17 @@ export type TitleTruncation = "start" | "middle" | "end";
 
 export type GraphDensity = "compact" | "comfortable" | "spacious";
 
+/**
+ * What the mouse wheel / two-finger scroll does over the graph. Maps onto
+ * xyflow's `PanOnScrollMode` (Free/Vertical/Horizontal) plus zoom:
+ *   - `pan`             — free pan, both axes (default, today's behavior)
+ *   - `scroll`          — pan locked to the vertical axis
+ *   - `scrollHorizontal`— pan locked to the horizontal axis
+ *   - `zoom`            — cursor-anchored zoom
+ * Cmd/Ctrl+wheel and trackpad pinch always zoom regardless of this setting.
+ */
+export type WheelMode = "pan" | "scroll" | "scrollHorizontal" | "zoom";
+
 export type PrivacySettings = {
   /**
    * Hostname patterns (supports `*` wildcard, case-insensitive) that Trail
@@ -84,6 +95,7 @@ export type Settings = {
   layout: LayoutSettings;
   titleTruncation: TitleTruncation;
   graphDensity: GraphDensity;
+  wheelMode: WheelMode;
   showFavicons: boolean;
   showUrls: boolean;
   showTagDots: boolean;
@@ -91,6 +103,12 @@ export type Settings = {
   showAudioIndicators: boolean;
   showConnections: boolean;
   dimClosedNodes: boolean;
+  /**
+   * Node enter/exit/return motion (fade-in / fade-out / settle) in the
+   * graph. Off by default — the fades can flicker when fast zoom/pan
+   * churns the viewport-culled node set. Reduced-motion always wins.
+   */
+  nodeAnimations: boolean;
   confirmNewTree: boolean;
   shortcutsEnabled: boolean;
   adaptivePerformance: boolean;

@@ -7,6 +7,7 @@ import { redo, undo } from "../../api/commands.js";
 import { navigateToNodeId, setCurrentNode } from "../../api/tree.js";
 import { saveSettings } from "../../api/settings.js";
 import { bulkPin, bulkUnpin, fireAndForget, openInNewTab, togglePin } from "../../api/actions.js";
+import { createTree } from "../shared/create-tree.js";
 import { useStore } from "../state/store.js";
 import { getNode, getParent, iter } from "../state/tree-index.js";
 import { IS_MAC_PLATFORM } from "@ui/components/shortcut";
@@ -251,6 +252,11 @@ function buildBindings(): KeyBindingMap {
     "Shift+KeyF": gate(({ state }) => state.setTagFilterOpen(!state.ui.tagFilterOpen)),
     "Shift+KeyL": gate(({ state }) => cycleLayoutMode(state), always),
     "Shift+KeyC": gate(({ state }) => toggleConnections(state), always),
+
+    // New tree (also exposed via the toolbar button, command palette, and
+    // the toolbar icon's right-click menu). `always` so it works even with
+    // the Trees popover open.
+    "Shift+KeyN": gate(() => fireAndForget(createTree(), "create tree"), always),
 
     // Pin toggle (plain P)
     KeyP: gate(({ state }) => togglePinned(state, getTargetNodeIds(state)), whenNotOverlay),
