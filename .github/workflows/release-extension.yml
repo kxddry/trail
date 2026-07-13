@@ -31,7 +31,7 @@ jobs:
           fi
           echo "VERSION=${GITHUB_REF_NAME#chrome-v}" >> "$GITHUB_ENV"
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: pnpm/action-setup@v5
 
