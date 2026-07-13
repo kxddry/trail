@@ -15,7 +15,7 @@
     "./types": "./src/types.ts"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.103.3",
+    "@supabase/supabase-js": "^2.110.3",
     "server-only": "0.0.1"
   },
   "devDependencies": {
