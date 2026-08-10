@@ -23,14 +23,14 @@
   "devDependencies": {
     "@supabase/supabase-js": "^2.103.3",
     "@types/node": "^25.6.0",
-    "@types/pg": "^8.20.0",
-    "cypress": "^15.11.0",
+    "@types/pg": "^8.20.4",
+    "cypress": "^15.20.0",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.6",
+    "eslint-config-next": "^16.3.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "next": "16.2.3",
-    "pg": "^8.20.0",
-    "supabase": "^2.84.5"
+    "pg": "^8.22.0",
+    "supabase": "^2.112.0"
   }
 }
